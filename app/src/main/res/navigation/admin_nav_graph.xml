@@ -1,0 +1,64 @@
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:startDestination="@id/adminDashboardFragment">
+
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.example.myapplication.admin.AdminDashboardFragment"
+        android:label="Admin Dashboard" >
+        <!-- Action from AdminDashboardFragment to CreateEventFragment -->
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_createEventFragment"
+            app:destination="@id/createEventFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/createEventFragment"
+        android:name="com.example.myapplication.client.admin.createevent.CreateEventFragment"
+        android:label="Create Event" >
+        <!-- Action from CreateEventFragment to LocationPickerFragment -->
+        <action
+            android:id="@+id/action_createEventFragment_to_locationPickerFragment"
+            app:destination="@id/locationPickerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/locationPickerFragment"
+        android:name="com.example.myapplication.client.admin.location.LocationPickerFragment"
+        android:label="Location Picker" />
+    <fragment
+        android:id="@+id/adminProfileFragment"
+        android:name="com.example.myapplication.admin.AdminProfileFragment"
+        android:label="Admin Profile">
+        <action
+            android:id="@+id/action_adminProfileFragment_to_editAdminProfileFragment"
+            app:destination="@id/editAdminProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/editAdminProfileFragment"
+        android:name="com.example.myapplication.admin.EditAdminProfileFragment"
+        android:label="Edit Admin Profile" />
+
+
+    <fragment
+        android:id="@+id/adminSettingsFragment"
+        android:name="com.example.myapplication.admin.AdminSettingsFragment"
+        android:label="Admin Settings" >
+        <action
+            android:id="@+id/action_adminSettingsFragment_to_editAdminProfileFragment"
+            app:destination="@id/editAdminProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/transitionFragment"
+        android:name="com.example.myapplication.client.auth.TransitionFragment"
+        android:label="Switching..." />
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.myapplication.client.home.HomeFragment"
+        android:label="Home" />
+
+
+</navigation>

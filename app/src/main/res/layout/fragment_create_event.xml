@@ -1,0 +1,284 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/create_event_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Heading -->
+        <TextView
+            android:id="@+id/tvCreateEventHeading"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Create New Event"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/tvTitleLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+        <EditText
+            android:id="@+id/etEventTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter event title"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Description -->
+        <TextView
+            android:id="@+id/tvDescriptionLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Description"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+        <EditText
+            android:id="@+id/etEventDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter event description"
+            android:inputType="textMultiLine"
+            android:layout_marginBottom="16dp"
+            android:minLines="3"/>
+
+        <!-- Categories -->
+        <TextView
+            android:id="@+id/tvCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Categories"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+        <LinearLayout
+            android:id="@+id/llCategoriesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- Example category tile -->
+            <TextView
+                android:id="@+id/tvCategoryExample"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Music"
+                android:padding="8dp"
+                android:background="@drawable/category_tile_bg"
+                android:textColor="@android:color/white"
+                android:layout_marginEnd="8dp"/>
+            <!-- Add button -->
+            <Button
+                android:id="@+id/btnAddCategory"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- Date and Time -->
+        <TextView
+            android:id="@+id/tvDateTimeLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Select Date &amp; Time"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+        <LinearLayout
+            android:id="@+id/llDateTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btnSelectDate"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Select Date"/>
+            <Button
+                android:id="@+id/btnSelectTime"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Select Time"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+        <!-- Location -->
+        <TextView
+            android:id="@+id/tvLocationLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+        <EditText
+            android:id="@+id/etLocationName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Enter location name"
+            android:layout_marginBottom="8dp"/>
+        <Button
+            android:id="@+id/btnPinLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pin on Map"
+            android:layout_marginBottom="16dp"/>
+
+        <!-- Images -->
+        <TextView
+            android:id="@+id/tvImagesLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Images"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+        <LinearLayout
+            android:id="@+id/llImagesContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="16dp">
+
+            <!-- Add button -->
+            <Button
+                android:id="@+id/btnAddImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+"
+                android:padding="8dp"/>
+        </LinearLayout>
+
+        <!-- RSVP -->
+        <TextView
+            android:id="@+id/tvRSVPLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="RSVP"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+        <Button
+            android:id="@+id/btnAddGuest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Guest"
+            android:layout_marginBottom="8dp"/>
+
+        <!-- Guest container to show added guests -->
+        <LinearLayout
+            android:id="@+id/llGuestContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="16dp"/>
+
+
+        <LinearLayout
+            android:id="@+id/llAudienceCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/btnDecreaseAudience"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="-"/>
+            <EditText
+                android:id="@+id/etAudienceCount"
+                android:layout_width="50dp"
+                android:layout_height="wrap_content"
+                android:inputType="number"
+                android:gravity="center"
+                android:text="0"/>
+            <Button
+                android:id="@+id/btnIncreaseAudience"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="+" />
+        </LinearLayout>
+
+        <!-- Ticket Price -->
+        <TextView
+            android:id="@+id/tvTicketPriceLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ticket Price"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+        <RadioGroup
+            android:id="@+id/rgTicketPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <RadioButton
+                android:id="@+id/rbFree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Free"/>
+            <RadioButton
+                android:id="@+id/rbAddPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Price"
+                android:layout_marginStart="16dp"/>
+
+
+        </RadioGroup>
+        <TextView
+            android:id="@+id/tvTicketPrices"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textSize="14sp"
+            android:layout_marginTop="8dp"/>
+
+        <!-- Bottom Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btnReview"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Review"
+                android:layout_marginStart="8dp"
+                />
+            <Button
+                android:id="@+id/btnSaveForLater"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Save for Later"
+                android:layout_marginStart="8dp"/>
+            <Button
+                android:id="@+id/btnPublish"
+                android:layout_width="match_parent"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Publish"
+                android:layout_marginStart="8dp"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>
