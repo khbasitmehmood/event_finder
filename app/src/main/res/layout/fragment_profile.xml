@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <!-- Profile Header Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_profile"
+                android:background="@drawable/ic_profile"
+                android:padding="5dp" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="15dp">
+
+                <TextView
+                    android:id="@+id/profileName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Basit Mehmood"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/profileEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="basit123@gmail.com"
+                    android:textSize="14sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E0E0E0"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- Theme Option -->
+        <LinearLayout
+            android:id="@+id/btnTheme"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="15dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_theme" />
+
+            <TextView
+                android:id="@+id/optionTitleTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Theme"
+                android:textSize="16sp"
+                android:layout_marginStart="15dp" />
+        </LinearLayout>
+
+        <!-- Watchlist Option -->
+        <LinearLayout
+            android:id="@+id/btnWatchlist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="15dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_favorite" />
+
+            <TextView
+                android:id="@+id/optionTitleWatchlist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Watchlist"
+                android:textSize="16sp"
+                android:layout_marginStart="15dp" />
+        </LinearLayout>
+
+        <!-- Logout Option -->
+        <LinearLayout
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="15dp"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_profile" />
+
+            <TextView
+                android:id="@+id/optionTitleLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Logout"
+                android:textSize="16sp"
+                android:layout_marginStart="15dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnSwitchAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Switch to Admin Mode"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
+
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="@drawable/auth_gradient"
+    android:gravity="bottom"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:theme="@style/ThemeOverlay.AppCompat.Dark">
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/ivAdminPhoto"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:padding="2dp"
+        android:src="@drawable/ic_profile"
+        app:strokeColor="@android:color/white"
+        app:strokeWidth="2dp"
+        app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Full"
+        app:tint="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvAdminName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:text="Admin User"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+        android:textColor="@android:color/white"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvAdminEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="admin@epicevents.com"
+        android:textColor="#E0F2F1"
+        android:textSize="14sp" />
+
+</LinearLayout>

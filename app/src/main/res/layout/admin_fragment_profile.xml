@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@android:color/white">
+
+    <!-- ONLY ONE DIRECT CHILD -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal">
+
+        <!-- PROFILE IMAGE -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="65dp"
+            app:cardElevation="4dp">
+            <ImageView
+                android:id="@+id/ivAdminProfile"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:src="@drawable/ic_profile"
+                android:scaleType="centerCrop"
+                android:clickable="true"
+                android:focusable="true"/>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- NAME -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"/>
+
+        <TextView
+            android:id="@+id/tvAdminName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="Admin Name"
+            android:background="@drawable/rounded_edittext"/>
+
+        <!-- EMAIL -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Email"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tvAdminEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="admin@example.com"
+            android:background="@drawable/rounded_edittext"/>
+
+        <!-- CONTACT -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contact Number"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tvAdminContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="+92-300-0000000"
+            android:background="@drawable/rounded_edittext"/>
+
+        <!-- ORGANIZATION -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Organization"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tvAdminOrganization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="Company (Owner)"
+            android:background="@drawable/rounded_edittext"/>
+
+        <!-- EVENTS -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total Successful Events"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tvTotalEvents"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="5"
+            android:background="@drawable/rounded_edittext"/>
+
+        <!-- RATING -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Admin Rating"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tvAdminRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="4.8 / 5"
+            android:background="@drawable/rounded_edittext"/>
+
+        <!-- INTRO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Introduction"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"/>
+
+        <TextView
+            android:id="@+id/tvAdminIntro"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="Brief introduction about admin."
+            android:background="@drawable/rounded_edittext"
+            android:lines="3"/>
+
+        <!-- SAVE BUTTON -->
+        <Button
+            android:id="@+id/btnSaveProfile"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:text="Save Profile"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp"/>
+    </LinearLayout>
+</ScrollView>
