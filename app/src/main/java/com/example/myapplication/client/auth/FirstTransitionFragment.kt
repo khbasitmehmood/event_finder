@@ -33,7 +33,7 @@ class FirstTransitionFragment : Fragment(R.layout.fragment_first_transition) { /
                     e.printStackTrace()
                 }
             }
-        }, 3000)
+        }, 1000)
     }
 
     override fun onDestroyView() {

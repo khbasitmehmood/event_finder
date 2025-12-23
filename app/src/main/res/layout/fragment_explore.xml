@@ -3,27 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F8F9FD"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="20dp">
 
-    <!-- Search Bar -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Explore"
+        android:textColor="#000000"
+        android:textSize="34sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp"/>
+
     <EditText
         android:id="@+id/etSearchEvents"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:hint="Search events"
+        android:layout_height="55dp"
+        android:hint="Search events, places..."
         android:padding="12dp"
         android:background="@drawable/search_bg"
         android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="8dp"
-        android:textSize="16sp" />
+        android:drawablePadding="12dp"
+        android:textSize="16sp"
+        android:textColorHint="#C7C7CC"
+        android:elevation="2dp"/>
 
-    <!-- Category Chips -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:overScrollMode="never">
+        android:layout_marginTop="20dp"
+        android:overScrollMode="never"
+        android:scrollbars="none">
 
         <LinearLayout
             android:id="@+id/chipContainer"
@@ -36,43 +47,55 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Music"
-                android:layout_marginEnd="8dp"
-                style="@style/Widget.MaterialComponents.Chip.Filter" />
+                app:chipBackgroundColor="#FFFFFF"
+                app:chipStrokeColor="#EFEFF4"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="20dp"
+                android:layout_marginEnd="8dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipEducation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Education"
-                android:layout_marginEnd="8dp"
-                style="@style/Widget.MaterialComponents.Chip.Filter" />
+                app:chipBackgroundColor="#FFFFFF"
+                app:chipStrokeColor="#EFEFF4"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="20dp"
+                android:layout_marginEnd="8dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipSports"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Sports"
-                android:layout_marginEnd="8dp"
-                style="@style/Widget.MaterialComponents.Chip.Filter" />
+                app:chipBackgroundColor="#FFFFFF"
+                app:chipStrokeColor="#EFEFF4"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="20dp"
+                android:layout_marginEnd="8dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipBusiness"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Business"
-                android:layout_marginEnd="8dp"
-                style="@style/Widget.MaterialComponents.Chip.Filter" />
+                app:chipBackgroundColor="#FFFFFF"
+                app:chipStrokeColor="#EFEFF4"
+                app:chipStrokeWidth="1dp"
+                app:chipCornerRadius="20dp"
+                android:layout_marginEnd="8dp" />
 
         </LinearLayout>
     </HorizontalScrollView>
 
-    <!-- RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerExploreEvents"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:paddingLeft="10dp"
-        android:layout_weight="1" />
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:paddingBottom="80dp" />
 
 </LinearLayout>

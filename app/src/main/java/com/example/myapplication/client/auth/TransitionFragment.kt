@@ -40,7 +40,7 @@ class TransitionFragment : Fragment(R.layout.fragment_transition) {
             if (isAdded && !isRemoving) {
                 navigateToDestination(target)
             }
-        }, 2000)
+        }, 1000)
     }
 
     private fun navigateToDestination(target: String) {
