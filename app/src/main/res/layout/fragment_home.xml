@@ -33,21 +33,66 @@
                 app:queryHint="Search events..." />
         </com.google.android.material.card.MaterialCardView>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Categories"
-            android:textColor="#004D40"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvCategories"
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal" />
+            android:layout_marginTop="20dp"
+            android:overScrollMode="never"
+            android:scrollbars="none">
+
+            <LinearLayout
+                android:id="@+id/chipContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipMusic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Music"
+                    app:chipBackgroundColor="#FFFFFF"
+                    app:chipStrokeColor="#EFEFF4"
+                    app:chipStrokeWidth="1dp"
+                    app:chipCornerRadius="20dp"
+                    android:layout_marginEnd="8dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipEducation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Education"
+                    app:chipBackgroundColor="#FFFFFF"
+                    app:chipStrokeColor="#EFEFF4"
+                    app:chipStrokeWidth="1dp"
+                    app:chipCornerRadius="20dp"
+                    android:layout_marginEnd="8dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipSports"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Sports"
+                    app:chipBackgroundColor="#FFFFFF"
+                    app:chipStrokeColor="#EFEFF4"
+                    app:chipStrokeWidth="1dp"
+                    app:chipCornerRadius="20dp"
+                    android:layout_marginEnd="8dp" />
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipBusiness"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Business"
+                    app:chipBackgroundColor="#FFFFFF"
+                    app:chipStrokeColor="#EFEFF4"
+                    app:chipStrokeWidth="1dp"
+                    app:chipCornerRadius="20dp"
+                    android:layout_marginEnd="8dp" />
+
+            </LinearLayout>
+        </HorizontalScrollView>
+
 
         <TextView
             android:id="@+id/tvFeaturedTitle"
@@ -64,7 +109,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:clipToPadding="false" />
+            android:clipToPadding="false"
+            android:orientation="horizontal"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -91,12 +137,14 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="20dp"
-        android:layout_marginBottom="80dp"
+        android:layout_marginBottom="50dp"
         android:text="Chat"
+        android:textAllCaps="false"
         android:textColor="@android:color/white"
-        app:backgroundTint="#00796B"
-        app:icon="@drawable/music_note_2_24px"
+        app:backgroundTint="#007AFF"
+        app:icon="@drawable/chat_add_on_24px"
         app:iconTint="@android:color/white"
-        app:elevation="12dp" />
+        app:elevation="8dp"
+        app:cornerRadius="20dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

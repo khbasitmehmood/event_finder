@@ -2,119 +2,197 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="#000000">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <ImageView
-                android:id="@+id/ivDetailImage"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:scaleType="centerCrop"
-                android:src="@drawable/event_img" />
+                android:layout_height="450dp">
+
+                <ImageView
+                    android:id="@+id/ivDetailImage"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/event_img" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/bottom_shadow_gradient" />
+            </RelativeLayout>
 
             <LinearLayout
+                android:id="@+id/contentLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:paddingHorizontal="24dp"
+                android:paddingTop="32dp"
+                android:paddingBottom="100dp"
+                android:layout_marginTop="-60dp"
+                android:background="@drawable/detail_content_bg">
 
                 <TextView
                     android:id="@+id/tvDetailTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Event Title"
-                    android:textColor="#004D40"
-                    android:textSize="26sp"
+                    android:textColor="#FFFFFF"
+                    android:textSize="32sp"
+                    android:lineHeight="38sp"
+                    android:fontFamily="sans-serif-black"
                     android:textStyle="bold" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:layout_marginTop="24dp"
+                    android:orientation="vertical">
 
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/music_note_2_24px"
-                        app:tint="#00796B" />
-
-                    <TextView
-                        android:id="@+id/tvDetailDate"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="Dec 25, 2025"
-                        android:textColor="#424242"
-                        android:textSize="16sp" />
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="16dp">
+
+                        <View
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_circle_translucent"
+                            android:foreground="@drawable/music_note_2_24px"
+                            android:foregroundGravity="center"
+                            android:foregroundTint="#FFFFFF"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="LOCATION"
+                                android:textColor="#8E8E93"
+                                android:textSize="11sp"
+                                android:letterSpacing="0.1"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvDetailLocation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Venue Name, City"
+                                android:textColor="#FFFFFF"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical">
+
+                        <View
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_circle_translucent"
+                            android:foreground="@drawable/music_note_2_24px"
+                            android:foregroundGravity="center"
+                            android:foregroundTint="#FFFFFF"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:layout_marginStart="16dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="DATE &amp; TIME"
+                                android:textColor="#8E8E93"
+                                android:textSize="11sp"
+                                android:letterSpacing="0.1"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvDetailDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Friday, 28 Feb 2025"
+                                android:textColor="#FFFFFF"
+                                android:textSize="15sp" />
+                        </LinearLayout>
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
+                <View
                     android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#33FFFFFF"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="32dp"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/music_note_2_24px"
-                        app:tint="#00796B" />
-
-                    <TextView
-                        android:id="@+id/tvDetailLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="Stadium, City"
-                        android:textColor="#424242"
-                        android:textSize="16sp" />
-                </LinearLayout>
+                    android:text="ABOUT THE EVENT"
+                    android:textColor="#8E8E93"
+                    android:textSize="12sp"
+                    android:letterSpacing="0.1"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:lineSpacingExtra="4dp"
-                    android:text="Description goes here. Join us for an amazing event experience with music, networking, and fun!"
-                    android:textColor="#616161"
-                    android:textSize="15sp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnRegister"
-                    android:layout_width="match_parent"
-                    android:layout_height="60dp"
-                    android:layout_marginTop="32dp"
-                    android:text="Register Now"
-                    android:textAllCaps="false"
-                    android:textSize="18sp"
-                    app:backgroundTint="#00796B"
-                    app:cornerRadius="12dp" />
+                    android:layout_marginTop="12dp"
+                    android:lineSpacingMultiplier="1.4"
+                    android:text="This exclusive session brings together the best audio-visual experiences in a curated environment. Join us for a night of unparalleled entertainment."
+                    android:textColor="#E0E0E0"
+                    android:textSize="16sp" />
 
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnRegister"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_gravity="bottom"
+        android:layout_margin="24dp"
+        android:text="RSVP NOW"
+        android:textColor="#000000"
+        android:textStyle="bold"
+        android:letterSpacing="0.05"
+        app:cornerRadius="20dp"
+        app:backgroundTint="#FFFFFF"
+        app:elevation="8dp" />
+
     <ImageButton
         android:id="@+id/btnBack"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
         android:layout_margin="16dp"
-        android:background="@android:color/transparent"
+        android:background="@drawable/bg_circle_translucent"
         android:src="@drawable/arrow_back_24px"
-        app:tint="#004D40" />
+        android:padding="12dp"
+        android:scaleType="centerInside"
+        app:tint="#FFFFFF" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -1,143 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#F8F9FD">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
+        android:orientation="vertical">
 
-        <!-- Profile Header Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical">
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingTop="40dp"
+            android:paddingBottom="30dp"
+            android:background="#FFFFFF">
 
             <ImageView
                 android:id="@+id/profileImage"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:src="@drawable/ic_profile"
-                android:background="@drawable/ic_profile"
-                android:padding="5dp" />
+                android:scaleType="centerCrop"
+                android:background="@android:color/transparent" />
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/profileName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginStart="15dp">
+                android:text="Basit Mehmood"
+                android:textColor="#000000"
+                android:textSize="22sp"
+                android:layout_marginTop="12dp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/profileName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Basit Mehmood"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/profileEmail"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="basit123@gmail.com"
-                    android:textSize="14sp" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/profileEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="basit123@gmail.com"
+                android:textColor="#8E8E93"
+                android:textSize="16sp"
+                android:layout_marginTop="4dp" />
         </LinearLayout>
 
-        <!-- Divider -->
-        <View
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E0E0E0"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_height="wrap_content"
+            android:background="#F2F2F7"
+            android:letterSpacing="0.1"
+            android:padding="16dp"
+            android:text="PREFERENCES"
+            android:textColor="#546E7A"
+            android:textSize="12sp" />
 
-        <!-- Theme Option -->
         <LinearLayout
             android:id="@+id/btnTheme"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingVertical="15dp"
+            android:padding="16dp"
+            android:background="#FFFFFF"
             android:gravity="center_vertical">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_theme" />
 
             <TextView
                 android:id="@+id/optionTitleTheme"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Theme"
-                android:textSize="16sp"
-                android:layout_marginStart="15dp" />
+                android:textColor="#000000"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@android:drawable/ic_media_play"
+                android:rotation="0"
+                app:tint="#C7C7CC" />
         </LinearLayout>
 
-        <!-- Watchlist Option -->
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EFEFF4" android:layout_marginStart="16dp"/>
+
         <LinearLayout
             android:id="@+id/btnWatchlist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingVertical="15dp"
+            android:padding="16dp"
+            android:background="#FFFFFF"
             android:gravity="center_vertical">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_favorite" />
+                android:src="@android:drawable/ic_input_add"
+                app:tint="#007AFF" />
 
             <TextView
                 android:id="@+id/optionTitleWatchlist"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Watchlist"
+                android:textColor="#000000"
                 android:textSize="16sp"
                 android:layout_marginStart="15dp" />
+
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@android:drawable/ic_media_play"
+                app:tint="#C7C7CC" />
         </LinearLayout>
 
-        <!-- Logout Option -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#F2F2F7"
+            android:letterSpacing="0.1"
+            android:padding="16dp"
+            android:text="ACCOUNT"
+            android:textColor="#546E7A"
+            android:textSize="12sp" />
+
         <LinearLayout
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:paddingVertical="15dp"
+            android:padding="16dp"
+            android:background="#FFFFFF"
             android:gravity="center_vertical">
 
             <ImageView
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:src="@drawable/ic_profile" />
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="#FF3B30" />
 
             <TextView
                 android:id="@+id/optionTitleLogout"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Logout"
+                android:textColor="#FF3B30"
                 android:textSize="16sp"
                 android:layout_marginStart="15dp" />
         </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="1dp" android:background="#EFEFF4" android:layout_marginStart="16dp"/>
 
         <LinearLayout
             android:id="@+id/btnSwitchAdmin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:background="#FFFFFF"
+            android:gravity="center_vertical">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_myplaces"
+                app:tint="#007AFF" />
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="Switch to Admin Mode"
-                android:textSize="16sp"/>
-        </LinearLayout>
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:layout_marginStart="15dp" />
 
+            <ImageView
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:src="@android:drawable/ic_media_play"
+                app:tint="#C7C7CC" />
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

@@ -10,7 +10,7 @@ import com.example.myapplication.R
 import com.example.myapplication.client.chatbot.ChatbotFragment
 import com.example.myapplication.databinding.FragmentHomeBinding
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController // Optional but helpful
+import androidx.navigation.fragment.findNavController
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -27,34 +27,33 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         setupUI()
         loadData()
-        setupScrollBehavior() // Integrated Scroll Logic
+        setupScrollBehavior()
         runEntranceAnimations()
     }
 
     private fun setupUI() {
-        // 1. Categories
-        binding.rvCategories.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvCategories.adapter = CategoryAdapter(categories)
+        // 1. Categories - Keep same
 
-        // 2. Featured - Now navigating on click
+
+        // 2. Featured - Uses the item_event_card.xml via the adapter
         binding.rvFeatured.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvFeatured.adapter = EventAdapter(featuredEvents,true) { event ->
+        binding.rvFeatured.adapter = EventAdapter(featuredEvents, true) { event ->
             navigateToDetail(event)
         }
 
-        // 3. Upcoming - Now navigating on click
+        // 3. Upcoming - Uses the item_upcoming_event.xml via the adapter
+        // Changed to LinearLayoutManager.VERTICAL if you want a list, or keep HORIZONTAL for a row
         binding.rvUpcoming.layoutManager = LinearLayoutManager(context)
-        binding.rvUpcoming.adapter = EventAdapter(upcomingEvents,false) { event ->
+        binding.rvUpcoming.adapter = EventAdapter(upcomingEvents, false) { event ->
             navigateToDetail(event)
         }
 
-        // 4. Chat Button Navigation
+        // 4. Chat Button Navigation - Keep same
         binding.btnChat.setOnClickListener {
             try {
-                androidx.navigation.fragment.NavHostFragment.findNavController(this)
-                    .navigate(R.id.chatbotFragment)
+                NavHostFragment.findNavController(this).navigate(R.id.chatbotFragment)
             } catch (e: Exception) {
-                requireActivity().supportFragmentManager.beginTransaction()
+                parentFragmentManager.beginTransaction()
                     .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
                     .replace(R.id.nav_host_fragment, ChatbotFragment())
                     .addToBackStack(null)
@@ -63,11 +62,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    /**
-     * Helper function to handle navigation to the Detail Screen
-     */
     private fun navigateToDetail(event: EventItem) {
-        // 1. Create a bundle and put your event data inside
         val bundle = Bundle().apply {
             putInt("EVENT_ID", event.id)
             putString("EVENT_TITLE", event.title)
@@ -76,34 +71,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             event.imageRes?.let { putInt("EVENT_IMAGE", it) }
         }
 
+        // ONLY use findNavController.
+        // If it's red, make sure you added the fragment to nav_graph.xml
         try {
-            // 2. Pass the bundle to the NavController
-            androidx.navigation.fragment.NavHostFragment.findNavController(this)
-                .navigate(R.id.eventDetailFragment, bundle)
+            findNavController().navigate(R.id.eventDetailFragment, bundle)
         } catch (e: Exception) {
-            // 3. Fallback: Manual transaction also supports arguments
-            val detailFragment = EventDetailFragment().apply {
-                arguments = bundle
-            }
-
-            requireActivity().supportFragmentManager.beginTransaction()
-                .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
-                .replace(R.id.nav_host_fragment, detailFragment)
-                .addToBackStack(null)
-                .commit()
+            // Log the error so you know if the ID is wrong
+            android.util.Log.e("NAV_ERROR", "Check if eventDetailFragment ID exists in nav_graph.xml")
         }
     }
-    /**
-     * 🏁 Premium Touch: FAB Shrink/Extend on Scroll
-     */
+
     private fun setupScrollBehavior() {
-        // Using homeScrollView to match the ID in your updated fragment_home.xml
         binding.homeScrollView.setOnScrollChangeListener { _, _, scrollY, _, oldScrollY ->
             if (scrollY > oldScrollY + 10) {
-                // Scrolling Down -> Hide text to save space
                 binding.btnChat.shrink()
             } else if (scrollY < oldScrollY - 10) {
-                // Scrolling Up -> Show "Chat" text again
                 binding.btnChat.extend()
             }
         }
@@ -113,16 +95,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_fall_down)
         anim.interpolator = OvershootInterpolator(1.2f)
 
+        // Added more views to the animation list for a smoother entrance
         val viewsToAnimate = listOfNotNull(
             binding.searchCard,
             binding.tvFeaturedTitle,
-            binding.rvFeatured
+            binding.rvFeatured,
+          // binding.tvUpcomingTitle,
+            binding.rvUpcoming
         )
 
         viewsToAnimate.forEachIndexed { index, view ->
             view.visibility = View.INVISIBLE
             view.postDelayed({
-                if (_binding != null) { // Check for null to prevent crashes on fast navigation
+                if (_binding != null) {
                     view.visibility = View.VISIBLE
                     view.startAnimation(anim)
                 }
@@ -136,10 +121,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         upcomingEvents.clear()
 
         categories.add(Category("Music", R.drawable.music_note_2_24px))
-        featuredEvents.add(EventItem(1, "Gala 2025", "Stadium", "Dec 25", R.drawable.event_img))
-        upcomingEvents.add(EventItem(2, "Workshop", "Hall A", "Jan 10", R.drawable.event_img_2))
 
-        binding.rvCategories.adapter?.notifyDataSetChanged()
+        // Updated data to look better with the new cards
+        featuredEvents.add(EventItem(1, "Tech Conference 2024", "Lahore Expo Center", "12 DEC", R.drawable.event_img))
+        featuredEvents.add(EventItem(2, "Music Festival", "Stadium", "20 DEC", R.drawable.event_img_2))
+
+        upcomingEvents.add(EventItem(3, "AI Workshop", "Hall A", "10 Jan 2025", R.drawable.event_img))
+        upcomingEvents.add(EventItem(4, "Startup Meet", "Arfa Tower", "15 Jan 2025", R.drawable.event_img_2))
+
         binding.rvFeatured.adapter?.notifyDataSetChanged()
         binding.rvUpcoming.adapter?.notifyDataSetChanged()
     }

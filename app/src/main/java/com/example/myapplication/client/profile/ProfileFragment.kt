@@ -1,55 +1,45 @@
 package com.example.myapplication.client.profile
 
-import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
-import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import com.example.myapplication.MainActivity
 import com.example.myapplication.R
-import com.example.myapplication.utils.ModeManager
-import com.example.myapplication.admin.AdminActivity
+import com.example.myapplication.databinding.FragmentProfileBinding
 
+class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
-class ProfileFragment : Fragment() {
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_profile, container, false)
-    }
+    private var _binding: FragmentProfileBinding? = null
+    private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Link the binding to the view
+        _binding = FragmentProfileBinding.bind(view)
 
-        val btnTheme = view.findViewById<LinearLayout>(R.id.btnTheme)
-        val btnWatchlist = view.findViewById<LinearLayout>(R.id.btnWatchlist)
-        val btnLogout = view.findViewById<LinearLayout>(R.id.btnLogout)
-        val btnSwitchAdmin = view.findViewById<LinearLayout>(R.id.btnSwitchAdmin) // ✅ ONLY ONCE
-
-        btnTheme.setOnClickListener {
-            Toast.makeText(requireContext(), "Theme option clicked", Toast.LENGTH_SHORT).show()
+        // 1. WATCHLIST CLICK
+        binding.btnWatchlist.setOnClickListener {
+            try {
+                findNavController().navigate(R.id.watchlistFragment)
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Navigation failed", Toast.LENGTH_SHORT).show()
+            }
         }
 
-        btnWatchlist.setOnClickListener {
-            findNavController().navigate(R.id.watchlistFragment)
+        // 2. SWITCH TO ADMIN CLICK
+        // This MUST match the ID in your XML exactly
+        binding.btnSwitchAdmin.setOnClickListener {
+            // Show a toast to verify the click is actually happening
+            Toast.makeText(requireContext(), "Switching...", Toast.LENGTH_SHORT).show()
+
+            (requireActivity() as? MainActivity)?.switchDashboard(toAdmin = true)
         }
+    }
 
-        btnLogout.setOnClickListener {
-            Toast.makeText(requireContext(), "Logged out", Toast.LENGTH_SHORT).show()
-        }
-
-        btnSwitchAdmin.setOnClickListener {
-            ModeManager.setAdminMode(requireContext(), true)
-            val intent = Intent(requireContext(), AdminActivity::class.java)
-            startActivity(intent)
-
-            // Close user activity so back doesn't return
-            requireActivity().finish()        }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null // Clean up binding to avoid memory leaks
     }
 }
