@@ -3,7 +3,6 @@ package com.eventfinder.app.client.auth
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.view.animation.OvershootInterpolator
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
@@ -42,27 +41,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun applyEntranceAnimations() {
-        val anim = AnimationUtils.loadAnimation(requireContext(), R.anim.item_animation_fall_down)
-        anim.interpolator = OvershootInterpolator(1.2f)
-
-        val views = listOfNotNull(
-            binding.loginCard,
-            binding.tilEmail,
-            binding.tilPassword,
-            binding.tvForgotPassword,
-            binding.btnLogin,
-            binding.tvToSignup
-        )
-
-        views.forEach { it.visibility = View.INVISIBLE }
-        views.forEachIndexed { index, view ->
-            view.postDelayed({
-                if (_binding != null) { // Safety check to prevent crash if fragment closed
-                    view.visibility = View.VISIBLE
-                    view.startAnimation(anim)
-                }
-            }, index * 100L)
-        }
+        val slideInAnimation =
+            AnimationUtils.loadAnimation(context, R.anim.item_animation_fall_down)
+        binding.loginCard.startAnimation(slideInAnimation)
     }
 
     override fun onDestroyView() {

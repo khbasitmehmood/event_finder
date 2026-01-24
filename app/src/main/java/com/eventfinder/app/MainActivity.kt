@@ -7,10 +7,12 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.eventfinder.app.databinding.ActivityMainBinding
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+
     // Track current mode to prevent accidental resets
     private var isAdminMode = false
 
@@ -19,11 +21,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
 
-        // Initialize visibility and setup
         setupNavigation()
     }
 
@@ -31,10 +32,13 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setupWithNavController(navController)
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            // Use IDs from BOTH graphs here
             val dashboardIds = setOf(
-                R.id.homeFragment, R.id.exploreFragment, R.id.favouritesFragment, R.id.profileFragment,
-                R.id.adminDashboardFragment, R.id.createEventFragment // Add your admin home ID
+                R.id.homeFragment,
+                R.id.exploreFragment,
+                R.id.favouritesFragment,
+                R.id.profileFragment,
+                R.id.adminDashboardFragment,
+                R.id.createEventFragment // Add your admin home ID
             )
 
             if (dashboardIds.contains(destination.id)) {
