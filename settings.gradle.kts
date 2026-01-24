@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "EventBaaz"
+rootProject.name = "EventFinder"
 include(":app")

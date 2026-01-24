@@ -2,7 +2,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:startDestination="@id/adminDashboardFragment"> <fragment
-    android:id="@+id/adminDashboardFragment" android:name="com.eventbaaz.app.admin.AdminDashboardFragment"
+    android:id="@+id/adminDashboardFragment" android:name="com.eventfinder.app.admin.AdminDashboardFragment"
     android:label="Admin Dashboard" >
     <action
         android:id="@+id/action_adminDashboardFragment_to_createEventFragment"
@@ -11,7 +11,7 @@
 
     <fragment
         android:id="@+id/createEventFragment"
-        android:name="com.eventbaaz.app.admin.createevent.CreateEventFragment"
+        android:name="com.eventfinder.app.admin.createevent.CreateEventFragment"
         android:label="Create Event" >
         <!-- Action from CreateEventFragment to LocationPickerFragment -->
         <action
@@ -21,11 +21,11 @@
 
     <fragment
         android:id="@+id/locationPickerFragment"
-        android:name="com.eventbaaz.app.admin.Location.LocationPickerFragment"
+        android:name="com.eventfinder.app.admin.Location.LocationPickerFragment"
         android:label="Location Picker" />
     <fragment
         android:id="@+id/adminProfileFragment"
-        android:name="com.eventbaaz.app.admin.AdminProfileFragment"
+        android:name="com.eventfinder.app.admin.AdminProfileFragment"
         android:label="Admin Profile">
         <action
             android:id="@+id/action_adminProfileFragment_to_editAdminProfileFragment"
@@ -34,13 +34,13 @@
 
     <fragment
         android:id="@+id/editAdminProfileFragment"
-        android:name="com.eventbaaz.app.admin.EditAdminProfileFragment"
+        android:name="com.eventfinder.app.admin.EditAdminProfileFragment"
         android:label="Edit Admin Profile" />
 
 
     <fragment
         android:id="@+id/adminSettingsFragment"
-        android:name="com.eventbaaz.app.admin.AdminSettingsFragment"
+        android:name="com.eventfinder.app.admin.AdminSettingsFragment"
         android:label="Admin Settings" >
         <action
             android:id="@+id/action_adminSettingsFragment_to_editAdminProfileFragment"
@@ -48,12 +48,12 @@
     </fragment>
     <fragment
         android:id="@+id/transitionFragment"
-        android:name="com.eventbaaz.app.client.auth.TransitionFragment"
+        android:name="com.eventfinder.app.client.auth.TransitionFragment"
         android:label="Switching..." />
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.eventbaaz.app.client.home.HomeFragment"
+        android:name="com.eventfinder.app.client.home.HomeFragment"
         android:label="Home" />
 
 

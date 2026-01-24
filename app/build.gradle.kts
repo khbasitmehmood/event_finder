@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.eventbaaz.app"
+    namespace = "com.eventfinder.app"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.eventbaaz.app"
+        applicationId = "com.eventfinder.app"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
