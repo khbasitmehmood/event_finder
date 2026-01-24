@@ -1,20 +1,8 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/main_nav_graph"
-    app:startDestination="@id/firstSplashFragment">
+    app:startDestination="@id/loginFragment">
 
-    <fragment
-        android:id="@+id/firstSplashFragment"
-        android:name="com.eventfinder.app.client.auth.FirstTransitionFragment"
-        android:label="Logo Splash">
-
-        <action
-            android:id="@+id/action_firstTransitionFragment_to_loginFragment"
-            app:destination="@id/loginFragment"
-            app:enterAnim="@anim/slide_in_right"
-            app:exitAnim="@anim/slide_out_left"
-            app:popUpTo="@id/firstSplashFragment"
-            app:popUpToInclusive="true" /> </fragment>
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.eventfinder.app.client.home.HomeFragment"
@@ -63,6 +51,7 @@
             app:popUpTo="@id/transitionFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.eventfinder.app.client.auth.LoginFragment"
@@ -76,6 +65,7 @@
             app:popUpTo="@id/main_nav_graph"
             app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/forgotPasswordFragment"
         android:name="com.eventfinder.app.client.auth.ForgotPasswordFragment" />
@@ -83,7 +73,7 @@
     <fragment
         android:id="@+id/signupFragment"
         android:name="com.eventfinder.app.client.auth.SignupFragment" />
-<fragment
-    android:id="@+id/successFragment"
-    android:name="com.eventfinder.app.client.auth.SuccessFragment"/>
+    <fragment
+        android:id="@+id/successFragment"
+        android:name="com.eventfinder.app.client.auth.SuccessFragment" />
 </navigation>
