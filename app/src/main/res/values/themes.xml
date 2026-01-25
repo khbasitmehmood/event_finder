@@ -1,20 +1,21 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+<resources>
+
+    <style name="Theme.Base" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorOnPrimary">@color/colorPrimary</item>
+        <item name="colorSecondary">@color/colorSecondary</item>
+        <item name="colorSecondaryVariant">@color/colorSecondary</item>
+        <item name="colorOnSecondary">@color/colorOnSecondary</item>
+        <item name="colorSecondaryContainer">@color/colorSecondaryContainer</item>
+        <item name="android:statusBarColor">@color/statusBarColorLight</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:navigationBarColor">@color/statusBarColorLight</item>
+        <!-- Do NOT draw behind system bars -->
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:windowBackground">@drawable/auth_gradient</item>
     </style>
 
-    <style name="Theme.MyApplication" parent="Base.Theme.MyApplication" />
 
-    <style name="Widget.App.BottomNavigationView" parent="Widget.Material3.BottomNavigationView">
-        <item name="itemActiveIndicatorStyle">@style/App.ActiveIndicator</item>
-        <item name="itemIconTint">@color/nav_item_colors</item>
-        <item name="itemTextColor">@color/nav_item_colors</item>
-    </style>
+    <style name="Theme.MyApplication" parent="Theme.Base"/>
 
-    <style name="App.ActiveIndicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
-        <item name="android:color">#4A4D61</item> <item name="android:width">60dp</item>
-        <item name="android:height">40dp</item>
-    </style>
 </resources>

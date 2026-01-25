@@ -28,7 +28,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         setupUI()
         loadData()
         setupScrollBehavior()
-        runEntranceAnimations()
+//        runEntranceAnimations()
     }
 
     private fun setupUI() {
@@ -36,7 +36,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
         // 2. Featured - Uses the item_event_card.xml via the adapter
-        binding.rvFeatured.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvFeatured.layoutManager =
+            LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
         binding.rvFeatured.adapter = EventAdapter(featuredEvents, true) { event ->
             navigateToDetail(event)
         }
@@ -54,7 +55,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 NavHostFragment.findNavController(this).navigate(R.id.chatbotFragment)
             } catch (e: Exception) {
                 parentFragmentManager.beginTransaction()
-                    .setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right)
+                    .setCustomAnimations(
+                        R.anim.slide_in_right,
+                        R.anim.slide_out_left,
+                        R.anim.slide_in_left,
+                        R.anim.slide_out_right
+                    )
                     .replace(R.id.nav_host_fragment, ChatbotFragment())
                     .addToBackStack(null)
                     .commit()
@@ -77,7 +83,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(R.id.eventDetailFragment, bundle)
         } catch (e: Exception) {
             // Log the error so you know if the ID is wrong
-            android.util.Log.e("NAV_ERROR", "Check if eventDetailFragment ID exists in nav_graph.xml")
+            android.util.Log.e(
+                "NAV_ERROR",
+                "Check if eventDetailFragment ID exists in nav_graph.xml"
+            )
         }
     }
 
@@ -100,7 +109,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             binding.searchCard,
             binding.tvFeaturedTitle,
             binding.rvFeatured,
-          // binding.tvUpcomingTitle,
+            // binding.tvUpcomingTitle,
             binding.rvUpcoming
         )
 
@@ -123,11 +132,43 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         categories.add(Category("Music", R.drawable.music_note_2_24px))
 
         // Updated data to look better with the new cards
-        featuredEvents.add(EventItem(1, "Tech Conference 2024", "Lahore Expo Center", "12 DEC", R.drawable.event_img))
-        featuredEvents.add(EventItem(2, "Music Festival", "Stadium", "20 DEC", R.drawable.event_img_2))
+        featuredEvents.add(
+            EventItem(
+                1,
+                "Tech Conference 2024",
+                "Lahore Expo Center",
+                "12 DEC",
+                R.drawable.event_img
+            )
+        )
+        featuredEvents.add(
+            EventItem(
+                2,
+                "Music Festival",
+                "Stadium",
+                "20 DEC",
+                R.drawable.event_img_2
+            )
+        )
 
-        upcomingEvents.add(EventItem(3, "AI Workshop", "Hall A", "10 Jan 2025", R.drawable.event_img))
-        upcomingEvents.add(EventItem(4, "Startup Meet", "Arfa Tower", "15 Jan 2025", R.drawable.event_img_2))
+        upcomingEvents.add(
+            EventItem(
+                3,
+                "AI Workshop",
+                "Hall A",
+                "10 Jan 2025",
+                R.drawable.event_img
+            )
+        )
+        upcomingEvents.add(
+            EventItem(
+                4,
+                "Startup Meet",
+                "Arfa Tower",
+                "15 Jan 2025",
+                R.drawable.event_img_2
+            )
+        )
 
         binding.rvFeatured.adapter?.notifyDataSetChanged()
         binding.rvUpcoming.adapter?.notifyDataSetChanged()

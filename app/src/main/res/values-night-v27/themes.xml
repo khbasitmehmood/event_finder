@@ -1,5 +1,6 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
     <style name="Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Brand colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -22,8 +23,8 @@
 
         <!-- Optional: nav bar matches white UI -->
         <item name="android:navigationBarColor">@color/statusBarColorLight</item>
+        <item name="android:windowLightNavigationBar">true</item>
 
         <item name="android:windowBackground">@color/colorBackgroundLight</item>
     </style>
-
 </resources>

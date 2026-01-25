@@ -1,134 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F5F5F5">
+    android:layout_height="match_parent">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/homeScrollView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:paddingBottom="100dp"> <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingBottom="100dp">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/searchCard"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            app:strokeWidth="0dp">
+            android:orientation="vertical"
+            android:padding="16dp">
 
-            <androidx.appcompat.widget.SearchView
-                android:id="@+id/searchView"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/searchCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:iconifiedByDefault="false"
-                app:queryHint="Search events..." />
-        </com.google.android.material.card.MaterialCardView>
+                app:cardCornerRadius="16dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:overScrollMode="never"
-            android:scrollbars="none">
+                <androidx.appcompat.widget.SearchView
+                    android:id="@+id/searchView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:iconifiedByDefault="false"
+                    app:queryHint="Search events..." />
+            </com.google.android.material.card.MaterialCardView>
 
-            <LinearLayout
-                android:id="@+id/chipContainer"
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/chipContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipMusic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="Music"
+                        app:chipBackgroundColor="#FFFFFF"
+                        app:chipCornerRadius="20dp"
+                        app:chipStrokeColor="#EFEFF4"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipEducation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="Education"
+                        app:chipBackgroundColor="#FFFFFF"
+                        app:chipCornerRadius="20dp"
+                        app:chipStrokeColor="#EFEFF4"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSports"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="Sports"
+                        app:chipBackgroundColor="#FFFFFF"
+                        app:chipCornerRadius="20dp"
+                        app:chipStrokeColor="#EFEFF4"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipBusiness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:text="Business"
+                        app:chipBackgroundColor="#FFFFFF"
+                        app:chipCornerRadius="20dp"
+                        app:chipStrokeColor="#EFEFF4"
+                        app:chipStrokeWidth="1dp" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <TextView
+                android:id="@+id/tvFeaturedTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_marginTop="24dp"
+                android:text="Featured Events"
+                android:textColor="#004D40"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipMusic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Music"
-                    app:chipBackgroundColor="#FFFFFF"
-                    app:chipStrokeColor="#EFEFF4"
-                    app:chipStrokeWidth="1dp"
-                    app:chipCornerRadius="20dp"
-                    android:layout_marginEnd="8dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvFeatured"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:clipToPadding="false"
+                android:orientation="horizontal" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipEducation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Education"
-                    app:chipBackgroundColor="#FFFFFF"
-                    app:chipStrokeColor="#EFEFF4"
-                    app:chipStrokeWidth="1dp"
-                    app:chipCornerRadius="20dp"
-                    android:layout_marginEnd="8dp" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:text="Upcoming Near You"
+                android:textColor="#004D40"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipSports"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Sports"
-                    app:chipBackgroundColor="#FFFFFF"
-                    app:chipStrokeColor="#EFEFF4"
-                    app:chipStrokeWidth="1dp"
-                    app:chipCornerRadius="20dp"
-                    android:layout_marginEnd="8dp" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvUpcoming"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:nestedScrollingEnabled="false" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipBusiness"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Business"
-                    app:chipBackgroundColor="#FFFFFF"
-                    app:chipStrokeColor="#EFEFF4"
-                    app:chipStrokeWidth="1dp"
-                    app:chipCornerRadius="20dp"
-                    android:layout_marginEnd="8dp" />
-
-            </LinearLayout>
-        </HorizontalScrollView>
-
-
-        <TextView
-            android:id="@+id/tvFeaturedTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Featured Events"
-            android:textColor="#004D40"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvFeatured"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:clipToPadding="false"
-            android:orientation="horizontal"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Upcoming Near You"
-            android:textColor="#004D40"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvUpcoming"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:nestedScrollingEnabled="false" />
-
-    </LinearLayout>
+        </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -142,9 +141,9 @@
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:backgroundTint="#007AFF"
-        app:icon="@drawable/chat_add_on_24px"
-        app:iconTint="@android:color/white"
+        app:cornerRadius="20dp"
         app:elevation="8dp"
-        app:cornerRadius="20dp" />
+        app:icon="@drawable/chat_add_on_24px"
+        app:iconTint="@android:color/white" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -13,9 +13,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
-    // Track current mode to prevent accidental resets
-    private var isAdminMode = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -49,27 +46,25 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // Inside MainActivity.kt
     fun switchDashboard(toAdmin: Boolean) {
         try {
             binding.bottomNavigation.setOnItemSelectedListener(null)
             binding.bottomNavigation.menu.clear()
 
-            if (toAdmin) {
-                binding.bottomNavigation.inflateMenu(R.menu.admin_sidebar_menu)
-            } else {
+
+            if (toAdmin.not()){
                 binding.bottomNavigation.inflateMenu(R.menu.bottom_nav_menu)
+                navController.setGraph(R.navigation.nav_graph)
+                navController.navigate(R.id.homeFragment)
+                binding.bottomNavigation.setupWithNavController(navController)
+                binding.bottomNavigation.visibility = View.VISIBLE
+            }else{
+                navController.setGraph(R.navigation.admin_nav_graph)
+                navController.navigate(R.id.adminDashboardFragment)
+                binding.bottomNavigation.setupWithNavController(navController)
+                binding.bottomNavigation.visibility = View.GONE
             }
 
-            val graphResId = if (toAdmin) R.navigation.admin_nav_graph else R.navigation.nav_graph
-            navController.setGraph(graphResId)
-
-            // 🔹 FORCE THE UI TO SWITCH IMMEDIATELY
-            val startId = if (toAdmin) R.id.adminDashboardFragment else R.id.homeFragment
-            navController.navigate(startId)
-
-            binding.bottomNavigation.setupWithNavController(navController)
-            binding.bottomNavigation.visibility = View.VISIBLE
 
         } catch (e: Exception) {
             android.util.Log.e("NAV_ERROR", "Switch failed: ${e.message}")

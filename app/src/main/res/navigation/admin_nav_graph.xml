@@ -1,18 +1,19 @@
-<navigation
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:startDestination="@id/adminDashboardFragment"> <fragment
-    android:id="@+id/adminDashboardFragment" android:name="com.eventfinder.app.admin.AdminDashboardFragment"
-    android:label="Admin Dashboard" >
-    <action
-        android:id="@+id/action_adminDashboardFragment_to_createEventFragment"
-        app:destination="@id/createEventFragment" />
-</fragment>
+    app:startDestination="@id/adminDashboardFragment">
+    <fragment
+        android:id="@+id/adminDashboardFragment"
+        android:name="com.eventfinder.app.admin.AdminDashboardFragment"
+        android:label="Admin Dashboard">
+        <action
+            android:id="@+id/action_adminDashboardFragment_to_createEventFragment"
+            app:destination="@id/createEventFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/createEventFragment"
         android:name="com.eventfinder.app.admin.createevent.CreateEventFragment"
-        android:label="Create Event" >
+        android:label="Create Event">
         <!-- Action from CreateEventFragment to LocationPickerFragment -->
         <action
             android:id="@+id/action_createEventFragment_to_locationPickerFragment"
@@ -41,7 +42,7 @@
     <fragment
         android:id="@+id/adminSettingsFragment"
         android:name="com.eventfinder.app.admin.AdminSettingsFragment"
-        android:label="Admin Settings" >
+        android:label="Admin Settings">
         <action
             android:id="@+id/action_adminSettingsFragment_to_editAdminProfileFragment"
             app:destination="@id/editAdminProfileFragment" />

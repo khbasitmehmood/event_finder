@@ -84,7 +84,8 @@
                 android:layout_marginTop="24dp"
                 android:text="Sign In"
                 app:cornerRadius="16dp"
-                android:backgroundTint="#00796B"/>
+                android:backgroundTint="#00796B"
+                />
 
             <TextView
                 android:id="@+id/tvToSignup"
