@@ -24,6 +24,10 @@
     <color name="md_surface_variant">#2C2C2C</color>
     <color name="md_on_surface_variant">#CAC4D0</color>
 
+    <color name="md_surface_container">#1E1E1E</color>
+    <color name="md_surface_container_low">#181818</color>
+    <color name="md_surface_container_high">#2A2A2A</color>
+
     <color name="md_outline">#8E8E8E</color>
     <color name="md_outline_variant">#444444</color>
 

@@ -26,6 +26,10 @@
     <color name="md_surface_variant">#F2F2F2</color>
     <color name="md_on_surface_variant">#444444</color>
 
+    <color name="md_surface_container">#F2F2F2</color>
+    <color name="md_surface_container_low">#F7F7F7</color>
+    <color name="md_surface_container_high">#EAEAEA</color>
+
     <!-- ================= OUTLINES ================= -->
     <color name="md_outline">#C4C4C4</color>
     <color name="md_outline_variant">#E0E0E0</color>
