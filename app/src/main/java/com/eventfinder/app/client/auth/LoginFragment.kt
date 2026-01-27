@@ -16,8 +16,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentLoginBinding.bind(view)
 
-        applyEntranceAnimations()
-
         // 1. Forgot Password -> Uses NavController
         binding.tvForgotPassword.setOnClickListener {
             findNavController().navigate(R.id.forgotPasswordFragment)
@@ -40,11 +38,6 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
     }
 
-    private fun applyEntranceAnimations() {
-        val slideInAnimation =
-            AnimationUtils.loadAnimation(context, R.anim.item_animation_fall_down)
-        binding.loginCard.startAnimation(slideInAnimation)
-    }
 
     override fun onDestroyView() {
         super.onDestroyView()

@@ -18,15 +18,15 @@
                 android:id="@+id/calendarView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_M"
-                android:layout_marginTop="@dimen/spacing_M"
+                android:layout_marginHorizontal="@dimen/spacing_medium"
+                android:layout_marginTop="@dimen/spacing_medium"
                 android:background="@drawable/search_bg" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_M"
-                android:layout_marginTop="@dimen/spacing_L"
+                android:layout_marginHorizontal="@dimen/spacing_medium"
+                android:layout_marginTop="@dimen/spacing_large"
                 android:text="@string/upcoming_operations"
                 android:textColor="#004D40"
                 android:textSize="18sp"
@@ -36,7 +36,7 @@
                 android:id="@+id/recyclerUpcomingEvents"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_M"
+                android:layout_margin="@dimen/spacing_medium"
                 android:clipToPadding="false"
                 android:nestedScrollingEnabled="false" />
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    style="@style/Widget.Material3.CardView.Filled"
     android:layout_width="match_parent"
     android:layout_height="220dp"
     android:layout_marginBottom="16dp"
@@ -9,8 +10,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/gradient_purple">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="50dp"
@@ -50,9 +50,9 @@
                 android:letterSpacing="0.1"
                 android:text="@string/sample_category"
                 android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                android:textColor="@color/colorOnPrimary"
-                app:chipBackgroundColor="@color/colorPrimary"
-                app:chipCornerRadius="@dimen/spacing_M"
+                android:textColor="@color/md_on_primary"
+                app:chipBackgroundColor="@color/md_primary"
+                app:chipCornerRadius="@dimen/spacing_medium"
                 app:chipStrokeWidth="0dp" />
 
             <TextView
@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/sample_event_title"
-                android:textColor="@color/colorPrimary"
+                android:textColor="@color/md_primary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -81,7 +81,7 @@
             android:layout_alignParentEnd="true"
             android:layout_margin="20dp"
             android:background="@drawable/bg_circle_translucent"
-            android:elevation="@dimen/spacing_M"
+            android:elevation="@dimen/spacing_medium"
             android:src="@drawable/ic_like"
             app:tint="@color/red" />
 

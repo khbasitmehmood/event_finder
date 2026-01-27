@@ -1,26 +1,49 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Your App's Primary and Secondary Colors -->
-    <color name="colorPrimary">#1CAE81</color>
-    <color name="colorSecondaryContainer">#331CAE81</color>
-    <color name="colorPrimaryDark">#168965</color> <!-- A darker shade for the status bar -->
-    <color name="colorSecondary">#FFA26B</color>
-    <color name="colorOnPrimary">#FFFFFF</color> <!-- Text/icon color on primary background -->
-    <color name="colorOnSecondary">#000000</color> <!-- Text/icon color on secondary background -->
 
-    <!-- Light theme surfaces (white UI) -->
-    <color name="colorBackgroundLight">#FFFFFF</color>
-    <color name="colorSurfaceLight">#FFFFFF</color>
-    <color name="colorOnBackgroundLight">#1A1A1A</color>
-    <color name="colorOnSurfaceLight">#1A1A1A</color>
-    <color name="statusBarColorLight">#FFFFFF</color>
+    <!-- ================= BRAND COLORS ================= -->
+    <color name="md_primary">#1CAE81</color>
+    <color name="md_on_primary">#FFFFFF</color>
+    <color name="md_primary_container">#D6F4EA</color>
+    <color name="md_on_primary_container">#0B3D2E</color>
 
-    <!-- Dark theme surfaces -->
-    <color name="colorBackgroundDark">#121212</color>
-    <color name="colorSurfaceDark">#1E1E1E</color>
-    <color name="colorOnBackgroundDark">#FFFFFF</color>
-    <color name="colorOnSurfaceDark">#FFFFFF</color>
-    <color name="statusBarColorDark">#121212</color>
+    <color name="md_secondary">#FFA26B</color>
+    <color name="md_on_secondary">#000000</color>
+    <color name="md_secondary_container">#FFE2D1</color>
+    <color name="md_on_secondary_container">#4A2600</color>
+
+    <color name="md_tertiary">#5A8DEE</color>
+    <color name="md_on_tertiary">#FFFFFF</color>
+    <color name="md_tertiary_container">#DCE6FF</color>
+    <color name="md_on_tertiary_container">#001A41</color>
+
+    <!-- ================= BACKGROUND & SURFACE ================= -->
+    <color name="md_background">#FFFFFF</color>
+    <color name="md_on_background">#1C1B1F</color>
+
+    <color name="md_surface">#FFFFFF</color>
+    <color name="md_on_surface">#1C1B1F</color>
+
+    <color name="md_surface_variant">#F2F2F2</color>
+    <color name="md_on_surface_variant">#444444</color>
+
+    <!-- ================= OUTLINES ================= -->
+    <color name="md_outline">#C4C4C4</color>
+    <color name="md_outline_variant">#E0E0E0</color>
+
+    <!-- ================= STATES ================= -->
+    <color name="md_error">#B3261E</color>
+    <color name="md_on_error">#FFFFFF</color>
+    <color name="md_error_container">#F9DEDC</color>
+    <color name="md_on_error_container">#410E0B</color>
+
+    <!-- ================= MISC ================= -->
+    <color name="md_inverse_surface">#313033</color>
+    <color name="md_inverse_on_surface">#F4EFF4</color>
+    <color name="md_inverse_primary">#6FE3C1</color>
+
+    <color name="md_shadow">#000000</color>
+    <color name="md_scrim">#000000</color>
+
 
     <!-- Other colors from your project -->
     <color name="black">#FF000000</color>

@@ -1,5 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="fab_margin">16dp</dimen>
-    <dimen name="spacing_M">16dp</dimen>
-    <dimen name="spacing_L">24dp</dimen>
+    <!-- Generic Spacing -->
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_xlarge">24dp</dimen>
+    <dimen name="spacing_xxlarge">32dp</dimen>
+
+    <!-- Corner Radii -->
+    <dimen name="corner_radius_medium">16dp</dimen>
+    <dimen name="corner_radius_large">28dp</dimen>
+
+    <!-- Elevation -->
+    <dimen name="elevation_medium">12dp</dimen>
+
+    <!-- Component-specific Dimensions -->
+    <dimen name="button_height">56dp</dimen>
+
+    <!-- Text Sizes -->
+    <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_large">28sp</dimen>
 </resources>

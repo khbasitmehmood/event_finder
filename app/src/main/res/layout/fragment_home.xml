@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -14,13 +15,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:orientation="vertical">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/searchCard"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_margin="@dimen/spacing_large"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="4dp"
                 app:strokeWidth="0dp">
@@ -36,8 +37,10 @@
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:clipToPadding="false"
                 android:overScrollMode="never"
+                android:paddingHorizontal="@dimen/spacing_large"
                 android:scrollbars="none">
 
                 <LinearLayout
@@ -97,7 +100,8 @@
                 android:id="@+id/tvFeaturedTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_xlarge"
                 android:text="@string/featured_events"
                 android:textColor="#004D40"
                 android:textSize="18sp"
@@ -107,14 +111,16 @@
                 android:id="@+id/rvFeatured"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_margin="@dimen/spacing_large"
                 android:clipToPadding="false"
-                android:orientation="horizontal" />
+                android:orientation="horizontal"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginHorizontal="@dimen/spacing_large"
+                android:layout_marginTop="@dimen/spacing_xlarge"
                 android:text="@string/upcoming_near_you"
                 android:textColor="#004D40"
                 android:textSize="18sp"
@@ -124,7 +130,7 @@
                 android:id="@+id/rvUpcoming"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_margin="@dimen/spacing_large"
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
@@ -135,14 +141,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginHorizontal="@dimen/spacing_xlarge"
+        android:layout_marginBottom="?actionBarSize"
+        android:backgroundTint="@color/md_primary"
         android:text="@string/chat"
-        android:textAllCaps="false"
         android:textColor="@android:color/white"
-        app:backgroundTint="#007AFF"
-        app:cornerRadius="20dp"
-        app:elevation="8dp"
         app:icon="@drawable/chat_add_on_24px"
         app:iconTint="@android:color/white" />
 
