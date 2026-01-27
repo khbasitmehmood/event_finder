@@ -12,28 +12,28 @@
             android:orientation="vertical" android:padding="32dp" android:gravity="center">
 
             <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="Join Us" android:textSize="28sp" android:textStyle="bold" android:textColor="#004D40"/>
+                android:text="@string/signup_title" android:textSize="28sp" android:textStyle="bold" android:textColor="#004D40"/>
 
             <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:id="@+id/tilUser" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:hint="Full Name" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusBottomEnd="16dp">
+                android:id="@+id/tilUser" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="24dp" android:hint="@string/hint_full_name" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusBottomEnd="16dp">
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent" android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:id="@+id/tilEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Email" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusBottomEnd="16dp">
+                android:id="@+id/tilEmail" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="@string/hint_email" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusBottomEnd="16dp">
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent" android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                android:id="@+id/tilPass" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="Password" app:passwordToggleEnabled="true" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusBottomEnd="16dp">
+                android:id="@+id/tilPass" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:hint="@string/hint_password" app:passwordToggleEnabled="true" app:boxCornerRadiusTopStart="16dp" app:boxCornerRadiusBottomEnd="16dp">
                 <com.google.android.material.textfield.TextInputEditText android:layout_width="match_parent" android:layout_height="wrap_content" android:inputType="textPassword"/>
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton android:id="@+id/btnSignup" android:layout_width="match_parent" android:layout_height="56dp"
-                android:layout_marginTop="24dp" android:text="Create Account" app:cornerRadius="16dp" android:backgroundTint="#00796B"/>
+                android:layout_marginTop="24dp" android:text="@string/btn_create_account" app:cornerRadius="16dp" android:backgroundTint="#00796B"/>
 
             <TextView android:id="@+id/tvBackToLogin" android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:layout_marginTop="16dp" android:text="Already have an account? Login" android:textColor="#00796B" android:padding="8dp"/>
+                android:layout_marginTop="16dp" android:text="@string/signup_to_login" android:textColor="#00796B" android:padding="8dp"/>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

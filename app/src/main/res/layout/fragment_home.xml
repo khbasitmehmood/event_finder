@@ -30,7 +30,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:iconifiedByDefault="false"
-                    app:queryHint="Search events..." />
+                    app:queryHint="@string/search_events_hint" />
             </com.google.android.material.card.MaterialCardView>
 
             <HorizontalScrollView
@@ -51,7 +51,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="Music"
+                        android:text="@string/category_music"
                         app:chipBackgroundColor="#FFFFFF"
                         app:chipCornerRadius="20dp"
                         app:chipStrokeColor="#EFEFF4"
@@ -62,7 +62,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="Education"
+                        android:text="@string/category_education"
                         app:chipBackgroundColor="#FFFFFF"
                         app:chipCornerRadius="20dp"
                         app:chipStrokeColor="#EFEFF4"
@@ -73,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="Sports"
+                        android:text="@string/category_sports"
                         app:chipBackgroundColor="#FFFFFF"
                         app:chipCornerRadius="20dp"
                         app:chipStrokeColor="#EFEFF4"
@@ -84,7 +84,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
-                        android:text="Business"
+                        android:text="@string/category_business"
                         app:chipBackgroundColor="#FFFFFF"
                         app:chipCornerRadius="20dp"
                         app:chipStrokeColor="#EFEFF4"
@@ -98,7 +98,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Featured Events"
+                android:text="@string/featured_events"
                 android:textColor="#004D40"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -115,7 +115,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Upcoming Near You"
+                android:text="@string/upcoming_near_you"
                 android:textColor="#004D40"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -137,7 +137,7 @@
         android:layout_gravity="bottom|end"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="50dp"
-        android:text="Chat"
+        android:text="@string/chat"
         android:textAllCaps="false"
         android:textColor="@android:color/white"
         app:backgroundTint="#007AFF"

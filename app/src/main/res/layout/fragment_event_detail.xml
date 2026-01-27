@@ -50,7 +50,7 @@
                     android:id="@+id/tvDetailTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Event Title"
+                    android:text="@string/event_title_placeholder"
                     android:textColor="#FFFFFF"
                     android:textSize="32sp"
                     android:lineHeight="38sp"
@@ -86,7 +86,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="LOCATION"
+                                android:text="@string/label_location"
                                 android:textColor="#8E8E93"
                                 android:textSize="11sp"
                                 android:letterSpacing="0.1"
@@ -96,7 +96,7 @@
                                 android:id="@+id/tvDetailLocation"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Venue Name, City"
+                                android:text="@string/event_location_placeholder"
                                 android:textColor="#FFFFFF"
                                 android:textSize="15sp" />
                         </LinearLayout>
@@ -124,7 +124,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="DATE &amp; TIME"
+                                android:text="@string/label_date_time"
                                 android:textColor="#8E8E93"
                                 android:textSize="11sp"
                                 android:letterSpacing="0.1"
@@ -134,7 +134,7 @@
                                 android:id="@+id/tvDetailDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Friday, 28 Feb 2025"
+                                android:text="@string/event_date_placeholder"
                                 android:textColor="#FFFFFF"
                                 android:textSize="15sp" />
                         </LinearLayout>
@@ -151,18 +151,19 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ABOUT THE EVENT"
+                    android:text="@string/label_about_event"
                     android:textColor="#8E8E93"
                     android:textSize="12sp"
                     android:letterSpacing="0.1"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/tvDetailDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:lineSpacingMultiplier="1.4"
-                    android:text="This exclusive session brings together the best audio-visual experiences in a curated environment. Join us for a night of unparalleled entertainment."
+                    android:text="@string/event_description_placeholder"
                     android:textColor="#E0E0E0"
                     android:textSize="16sp" />
 
@@ -176,7 +177,7 @@
         android:layout_height="64dp"
         android:layout_gravity="bottom"
         android:layout_margin="24dp"
-        android:text="RSVP NOW"
+        android:text="@string/btn_rsvp_now"
         android:textColor="#000000"
         android:textStyle="bold"
         android:letterSpacing="0.05"

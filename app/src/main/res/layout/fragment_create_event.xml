@@ -23,7 +23,7 @@
                 android:id="@+id/tvCreateEventHeading"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Create New Event"
+                android:text="@string/create_event_heading"
                 android:textColor="#FFFFFF"
                 android:textSize="28sp"
                 android:fontFamily="sans-serif-black"
@@ -47,7 +47,7 @@
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="Event Title"
+                        android:hint="@string/hint_event_title"
                         app:hintTextColor="#8E8E93"
                         app:boxStrokeColor="#007AFF">
                         <com.google.android.material.textfield.TextInputEditText
@@ -62,7 +62,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="16dp"
-                        android:hint="Description"
+                        android:hint="@string/hint_event_description"
                         app:hintTextColor="#8E8E93"
                         app:boxStrokeColor="#007AFF">
                         <com.google.android.material.textfield.TextInputEditText
@@ -99,7 +99,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="55dp"
-                            android:text="Select Date"
+                            android:text="@string/btn_select_date"
                             android:textColor="#007AFF"
                             android:backgroundTint="#252525" />
                         <Button
@@ -108,7 +108,7 @@
                             android:layout_width="0dp"
                             android:layout_weight="1"
                             android:layout_height="55dp"
-                            android:text="Select Time"
+                            android:text="@string/btn_select_time"
                             android:textColor="#007AFF"
                             android:layout_marginStart="8dp"
                             android:backgroundTint="#252525" />

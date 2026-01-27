@@ -1,10 +1,12 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     app:startDestination="@id/adminDashboardFragment">
     <fragment
         android:id="@+id/adminDashboardFragment"
         android:name="com.eventfinder.app.admin.AdminDashboardFragment"
-        android:label="Admin Dashboard">
+        android:label="Admin Dashboard"
+        tools:layout="@layout/fragment_admin_dashboard">
         <action
             android:id="@+id/action_adminDashboardFragment_to_createEventFragment"
             app:destination="@id/createEventFragment" />
@@ -13,8 +15,8 @@
     <fragment
         android:id="@+id/createEventFragment"
         android:name="com.eventfinder.app.admin.createevent.CreateEventFragment"
-        android:label="Create Event">
-        <!-- Action from CreateEventFragment to LocationPickerFragment -->
+        android:label="Create Event"
+        tools:layout="@layout/fragment_create_event">
         <action
             android:id="@+id/action_createEventFragment_to_locationPickerFragment"
             app:destination="@id/locationPickerFragment" />
@@ -23,11 +25,13 @@
     <fragment
         android:id="@+id/locationPickerFragment"
         android:name="com.eventfinder.app.admin.Location.LocationPickerFragment"
-        android:label="Location Picker" />
+        android:label="Location Picker"
+        tools:layout="@layout/admin_fragment_location_picker" />
     <fragment
         android:id="@+id/adminProfileFragment"
         android:name="com.eventfinder.app.admin.AdminProfileFragment"
-        android:label="Admin Profile">
+        android:label="Admin Profile"
+        tools:layout="@layout/admin_fragment_profile">
         <action
             android:id="@+id/action_adminProfileFragment_to_editAdminProfileFragment"
             app:destination="@id/editAdminProfileFragment" />
@@ -36,13 +40,15 @@
     <fragment
         android:id="@+id/editAdminProfileFragment"
         android:name="com.eventfinder.app.admin.EditAdminProfileFragment"
-        android:label="Edit Admin Profile" />
+        android:label="Edit Admin Profile"
+        tools:layout="@layout/fragment_edit_admin_profile" />
 
 
     <fragment
         android:id="@+id/adminSettingsFragment"
         android:name="com.eventfinder.app.admin.AdminSettingsFragment"
-        android:label="Admin Settings">
+        android:label="Admin Settings"
+        tools:layout="@layout/admin_fragment_settings">
         <action
             android:id="@+id/action_adminSettingsFragment_to_editAdminProfileFragment"
             app:destination="@id/editAdminProfileFragment" />
@@ -50,12 +56,14 @@
     <fragment
         android:id="@+id/transitionFragment"
         android:name="com.eventfinder.app.client.auth.TransitionFragment"
-        android:label="Switching..." />
+        android:label="Switching..."
+        tools:layout="@layout/fragment_transition" />
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.eventfinder.app.client.home.HomeFragment"
-        android:label="Home" />
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
 
 
 </navigation>

@@ -26,7 +26,7 @@
                 android:id="@+id/tvTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Welcome Back"
+                android:text="@string/login_title"
                 android:textSize="28sp"
                 android:textStyle="bold"
                 android:textColor="#004D40"/>
@@ -37,7 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
-                android:hint="Email"
+                android:hint="@string/hint_email"
                 app:boxCornerRadiusTopStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
                 app:boxCornerRadiusBottomStart="16dp"
@@ -54,7 +54,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:hint="Password"
+                android:hint="@string/hint_password"
                 app:passwordToggleEnabled="true"
                 app:boxCornerRadiusTopStart="16dp"
                 app:boxCornerRadiusTopEnd="16dp"
@@ -73,7 +73,7 @@
                 android:layout_gravity="end"
                 android:layout_marginTop="8dp"
                 android:padding="4dp"
-                android:text="Forgot Password?"
+                android:text="@string/forgot_password"
                 android:textColor="#00796B"
                 android:textSize="14sp" />
 
@@ -82,7 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
-                android:text="Sign In"
+                android:text="@string/btn_sign_in"
                 app:cornerRadius="16dp"
                 android:backgroundTint="#00796B"
                 />
@@ -92,7 +92,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:text="New user? Create Account"
+                android:text="@string/login_to_signup"
                 android:textColor="#00796B"
                 android:padding="8dp"/>
 

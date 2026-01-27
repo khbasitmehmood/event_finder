@@ -1,50 +1,60 @@
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_nav_graph"
     app:startDestination="@id/loginFragment">
 
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.eventfinder.app.client.home.HomeFragment"
-        android:label="Home" />
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
 
     <fragment
         android:id="@+id/exploreFragment"
         android:name="com.eventfinder.app.client.explore.ExploreFragment"
-        android:label="Explore" />
+        android:label="Explore"
+        tools:layout="@layout/fragment_explore" />
 
     <fragment
         android:id="@+id/favouritesFragment"
         android:name="com.eventfinder.app.client.favourites.FavouritesFragment"
-        android:label="Saved" />
+        android:label="Saved"
+        tools:layout="@layout/fragment_favourites" />
 
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.eventfinder.app.client.profile.ProfileFragment"
-        android:label="Profile" />
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/watchlistFragment"
         android:name="com.eventfinder.app.client.watchlist.WatchlistFragment"
-        android:label="Watchlist" />
+        android:label="Watchlist"
+        tools:layout="@layout/fragment_watchlist" />
 
     <fragment
         android:id="@+id/eventDetailFragment"
         android:name="com.eventfinder.app.client.home.EventDetailFragment"
-        android:label="Event Details" />
+        android:label="Event Details"
+        tools:layout="@layout/fragment_event_detail" />
 
     <fragment
         android:id="@+id/adminDashboardFragment"
         android:name="com.eventfinder.app.admin.AdminDashboardFragment"
-        android:label="Admin Dashboard" />
+        android:label="Admin Dashboard"
+        tools:layout="@layout/fragment_admin_dashboard" />
 
     <fragment
         android:id="@+id/chatbotFragment"
         android:name="com.eventfinder.app.client.chatbot.ChatbotFragment"
-        android:label="Chatbot" />
+        android:label="Chatbot"
+        tools:layout="@layout/fragment_chatbot" />
 
     <fragment
         android:id="@+id/transitionFragment"
-        android:name="com.eventfinder.app.client.auth.TransitionFragment">
+        android:name="com.eventfinder.app.client.auth.TransitionFragment"
+        tools:layout="@layout/fragment_transition">
         <action
             android:id="@+id/action_welcome_to_home"
             app:destination="@id/homeFragment"
@@ -55,7 +65,8 @@
     <fragment
         android:id="@+id/loginFragment"
         android:name="com.eventfinder.app.client.auth.LoginFragment"
-        android:label="Login">
+        android:label="Login"
+        tools:layout="@layout/fragment_login">
 
         <action
             android:id="@+id/action_login_to_welcome"
@@ -68,12 +79,15 @@
 
     <fragment
         android:id="@+id/forgotPasswordFragment"
-        android:name="com.eventfinder.app.client.auth.ForgotPasswordFragment" />
+        android:name="com.eventfinder.app.client.auth.ForgotPasswordFragment"
+        tools:layout="@layout/fragment_forgot_password" />
 
     <fragment
         android:id="@+id/signupFragment"
-        android:name="com.eventfinder.app.client.auth.SignupFragment" />
+        android:name="com.eventfinder.app.client.auth.SignupFragment"
+        tools:layout="@layout/fragment_signup" />
     <fragment
         android:id="@+id/successFragment"
-        android:name="com.eventfinder.app.client.auth.SuccessFragment" />
+        android:name="com.eventfinder.app.client.auth.SuccessFragment"
+        tools:layout="@layout/fragment_auth_success" />
 </navigation>

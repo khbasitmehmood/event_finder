@@ -23,7 +23,7 @@
             android:id="@+id/tvTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Title"
+            android:text="@string/event_title_placeholder"
             android:textStyle="bold"
             android:paddingStart="8dp"
             android:paddingTop="4dp" />
@@ -32,7 +32,7 @@
             android:id="@+id/tvLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location"
+            android:text="@string/event_location"
             android:textSize="12sp"
             android:paddingStart="8dp"
             android:paddingTop="2dp" />
@@ -41,7 +41,7 @@
             android:id="@+id/tvDate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date"
+            android:text="@string/event_date"
             android:textSize="12sp"
             android:paddingStart="8dp"
             android:paddingTop="2dp" />

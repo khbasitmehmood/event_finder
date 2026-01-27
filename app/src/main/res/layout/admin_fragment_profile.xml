@@ -36,7 +36,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Name"
+            android:text="@string/label_name"
             android:textStyle="bold"
             android:layout_marginTop="24dp"/>
 
@@ -45,14 +45,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="Admin Name"
+            android:text="@string/admin_name_placeholder"
             android:background="@drawable/rounded_edittext"/>
 
         <!-- EMAIL -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Email"
+            android:text="@string/label_email"
             android:textStyle="bold"
             android:layout_marginTop="16dp"/>
 
@@ -61,14 +61,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="admin@example.com"
+            android:text="@string/admin_email_placeholder"
             android:background="@drawable/rounded_edittext"/>
 
         <!-- CONTACT -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Contact Number"
+            android:text="@string/label_contact"
             android:textStyle="bold"
             android:layout_marginTop="16dp"/>
 
@@ -77,14 +77,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="+92-300-0000000"
+            android:text="@string/admin_contact_placeholder"
             android:background="@drawable/rounded_edittext"/>
 
         <!-- ORGANIZATION -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Organization"
+            android:text="@string/label_organization"
             android:textStyle="bold"
             android:layout_marginTop="16dp"/>
 
@@ -93,14 +93,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="Company (Owner)"
+            android:text="@string/admin_organization_placeholder"
             android:background="@drawable/rounded_edittext"/>
 
         <!-- EVENTS -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Total Successful Events"
+            android:text="@string/label_total_events"
             android:textStyle="bold"
             android:layout_marginTop="16dp"/>
 
@@ -109,14 +109,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="5"
+            android:text="@string/admin_events_placeholder"
             android:background="@drawable/rounded_edittext"/>
 
         <!-- RATING -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Admin Rating"
+            android:text="@string/label_admin_rating"
             android:textStyle="bold"
             android:layout_marginTop="16dp"/>
 
@@ -125,14 +125,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="4.8 / 5"
+            android:text="@string/admin_rating_placeholder"
             android:background="@drawable/rounded_edittext"/>
 
         <!-- INTRO -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Introduction"
+            android:text="@string/label_introduction"
             android:textStyle="bold"
             android:layout_marginTop="16dp"/>
 
@@ -141,7 +141,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="12dp"
-            android:text="Brief introduction about admin."
+            android:text="@string/admin_intro_placeholder"
             android:background="@drawable/rounded_edittext"
             android:lines="3"/>
 
@@ -150,7 +150,7 @@
             android:id="@+id/btnSaveProfile"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            android:text="Save Profile"
+            android:text="@string/btn_save_profile"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="32dp"/>
     </LinearLayout>

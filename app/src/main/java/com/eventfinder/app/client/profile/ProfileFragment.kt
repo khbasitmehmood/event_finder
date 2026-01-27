@@ -8,6 +8,8 @@ import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.MainActivity
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentProfileBinding
+import com.eventfinder.app.utils.ModeManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
@@ -29,13 +31,33 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
 
         // 2. SWITCH TO ADMIN CLICK
-        // This MUST match the ID in your XML exactly
         binding.btnSwitchAdmin.setOnClickListener {
-            // Show a toast to verify the click is actually happening
-            Toast.makeText(requireContext(), "Switching...", Toast.LENGTH_SHORT).show()
-
-            (requireActivity() as? MainActivity)?.switchDashboard(toAdmin = true)
+            showSwitchToAdminConfirmation()
         }
+    }
+
+    private fun showSwitchToAdminConfirmation() {
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Switch to Admin Mode?")
+            .setMessage("Are you sure you want to switch to the Admin Dashboard?")
+            .setCancelable(true)
+            .setNegativeButton("Cancel") { dialog, _ ->
+                dialog.dismiss()
+            }
+            .setPositiveButton("Switch Now") { _, _ ->
+                performAdminSwitch()
+            }
+            .show()
+    }
+
+    private fun performAdminSwitch() {
+        // Save admin mode preference
+        ModeManager.setAdminMode(requireContext(), true)
+
+        // Show a toast to verify the click is actually happening
+        Toast.makeText(requireContext(), "Switching to Admin Mode...", Toast.LENGTH_SHORT).show()
+
+        (requireActivity() as? MainActivity)?.switchDashboard(toAdmin = true)
     }
 
     override fun onDestroyView() {

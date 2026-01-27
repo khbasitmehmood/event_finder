@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentTransitionBinding
+import com.eventfinder.app.utils.ModeManager
 
 class TransitionFragment : Fragment(R.layout.fragment_transition) {
 
@@ -29,12 +30,15 @@ class TransitionFragment : Fragment(R.layout.fragment_transition) {
             else -> "Loading..."
         }
 
-        // 3. Entrance Animation
+        // 3. Save mode preference
+        ModeManager.setAdminMode(requireContext(), target == "ADMIN")
+
+        // 4. Entrance Animation
         binding.transitionContainer.startAnimation(
             AnimationUtils.loadAnimation(requireContext(), android.R.anim.fade_in)
         )
 
-        // 4. Delay and Navigate with Safety Checks
+        // 5. Delay and Navigate with Safety Checks
         Handler(Looper.getMainLooper()).postDelayed({
             // Check if fragment is still attached to activity to prevent crashes
             if (isAdded && !isRemoving) {
@@ -47,7 +51,7 @@ class TransitionFragment : Fragment(R.layout.fragment_transition) {
         try {
             val navController = NavHostFragment.findNavController(this)
 
-            // 🔹 This is the "Cleanup" logic.
+            // This is the "Cleanup" logic.
             // It clears the Login/Splash history so the user can't go back to them.
             val navOptions = androidx.navigation.NavOptions.Builder()
                 .setPopUpTo(R.id.main_nav_graph, true) // Clears the entire backstack

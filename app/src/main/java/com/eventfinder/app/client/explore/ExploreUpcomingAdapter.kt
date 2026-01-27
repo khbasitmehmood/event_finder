@@ -3,19 +3,17 @@ package com.eventfinder.app.client.explore
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-// REMOVED: import android.R
-// ADDED: The import for your specific binding class
 import com.eventfinder.app.databinding.ItemEventCardBinding
 import com.eventfinder.app.client.home.EventItem
 
 class ExploreUpcomingAdapter(
-    private val eventList: List<EventItem>,
+    private var eventList: List<EventItem>,
     private val onItemClick: (EventItem) -> Unit,
     private val activity: AppCompatActivity
 ) : RecyclerView.Adapter<ExploreUpcomingAdapter.ExploreViewHolder>() {
 
-    // Use the Binding class generated from item_event_card.xml
     inner class ExploreViewHolder(val binding: ItemEventCardBinding)
         : RecyclerView.ViewHolder(binding.root)
 
@@ -32,26 +30,44 @@ class ExploreUpcomingAdapter(
         val item = eventList[position]
 
         holder.binding.apply {
-            // Updated to match the IDs in our new XML
             eventTitle.text = item.title
-            // Since our new design has separate Date and Month,
-            // you might need to split your item.date string or just set one:
-            // tvDate.text = item.date
 
-            // Note: If you kept the IDs tvLocation/tvDate in the XML,
-            // use those here. If you used my code exactly, use:
-            // eventTitle, etc.
-
-            // Open details
             root.setOnClickListener {
                 onItemClick(item)
             }
-
-            // Favorite button (The black circle in our design)
-            // Ensure this ID exists in your item_event_card.xml
-            // btnAddFavourite.setOnClickListener { ... }
         }
     }
 
     override fun getItemCount(): Int = eventList.size
+
+    /**
+     * Update the events list with new data using DiffUtil for efficient updates
+     */
+    fun updateEvents(newEvents: List<EventItem>) {
+        val diffCallback = EventDiffCallback(eventList, newEvents)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        eventList = newEvents
+        diffResult.dispatchUpdatesTo(this)
+    }
+
+    /**
+     * DiffUtil callback for efficient RecyclerView updates
+     */
+    private class EventDiffCallback(
+        private val oldList: List<EventItem>,
+        private val newList: List<EventItem>
+    ) : DiffUtil.Callback() {
+
+        override fun getOldListSize(): Int = oldList.size
+
+        override fun getNewListSize(): Int = newList.size
+
+        override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition].id == newList[newItemPosition].id
+        }
+
+        override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
+            return oldList[oldItemPosition] == newList[newItemPosition]
+        }
+    }
 }
