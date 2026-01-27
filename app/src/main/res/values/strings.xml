@@ -22,6 +22,8 @@
     <string name="category_education">Education</string>
     <string name="category_sports">Sports</string>
     <string name="category_business">Business</string>
+    <string name="category_movies">Movies</string>
+    <string name="category_politics">Politics</string>
     <string name="categories">Categories</string>
 
     <!-- Chips -->

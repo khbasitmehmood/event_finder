@@ -22,6 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/spacing_large"
+                android:backgroundTint="?attr/colorSurfaceContainer"
                 android:hint="@string/search_events_hint" />
 
             <HorizontalScrollView
@@ -45,7 +46,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/spacing_medium"
                         android:text="@string/category_music"
-                        app:chipBackgroundColor="?attr/colorSurface"
+                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
                         app:chipCornerRadius="20dp"
                         app:chipStrokeColor="?attr/colorOutlineVariant"
                         app:chipStrokeWidth="1dp" />
@@ -56,7 +57,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/spacing_medium"
                         android:text="@string/category_education"
-                        app:chipBackgroundColor="?attr/colorSurface"
+                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
                         app:chipCornerRadius="20dp"
                         app:chipStrokeColor="?attr/colorOutlineVariant"
                         app:chipStrokeWidth="1dp" />
@@ -67,7 +68,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/spacing_medium"
                         android:text="@string/category_sports"
-                        app:chipBackgroundColor="?attr/colorSurface"
+                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
                         app:chipCornerRadius="20dp"
                         app:chipStrokeColor="?attr/colorOutlineVariant"
                         app:chipStrokeWidth="1dp" />
@@ -78,7 +79,29 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/spacing_medium"
                         android:text="@string/category_business"
-                        app:chipBackgroundColor="?attr/colorSurface"
+                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
+                        app:chipCornerRadius="20dp"
+                        app:chipStrokeColor="?attr/colorOutlineVariant"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipMovies"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/spacing_medium"
+                        android:text="@string/category_movies"
+                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
+                        app:chipCornerRadius="20dp"
+                        app:chipStrokeColor="?attr/colorOutlineVariant"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipPolitics"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/spacing_medium"
+                        android:text="@string/category_politics"
+                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
                         app:chipCornerRadius="20dp"
                         app:chipStrokeColor="?attr/colorOutlineVariant"
                         app:chipStrokeWidth="1dp" />
@@ -93,8 +116,7 @@
                 android:layout_marginHorizontal="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_xlarge"
                 android:text="@string/featured_events"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="@dimen/text_size_medium"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -109,10 +131,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/spacing_large"
-                android:layout_marginTop="@dimen/spacing_xlarge"
                 android:text="@string/upcoming_near_you"
-                android:textColor="?attr/colorOnSurface"
-                android:textSize="@dimen/text_size_medium"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView

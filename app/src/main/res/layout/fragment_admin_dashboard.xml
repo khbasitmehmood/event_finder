@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -28,8 +27,7 @@
                 android:layout_marginHorizontal="@dimen/spacing_medium"
                 android:layout_marginTop="@dimen/spacing_large"
                 android:text="@string/upcoming_operations"
-                android:textColor="#004D40"
-                android:textSize="18sp"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -43,18 +41,15 @@
         </LinearLayout>
     </ScrollView>
 
-    <com.google.android.material.button.MaterialButton
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnCreateEvent"
+        style="@style/Widget.Material3.ExtendedFloatingActionButton.Icon.Secondary"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="20dp"
-        android:backgroundTint="#00796B"
+        android:layout_margin="@dimen/spacing_xlarge"
         android:text="@string/create_new_event"
-        android:textAllCaps="false"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
-        app:cornerRadius="16dp"
+        android:textSize="@dimen/text_size_medium"
         app:icon="@drawable/music_note_2_24px"
         app:iconGravity="textStart" />
 
