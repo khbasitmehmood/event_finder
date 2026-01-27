@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,22 +16,13 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.google.android.material.card.MaterialCardView
+            <com.google.android.material.search.SearchBar
                 android:id="@+id/searchCard"
+                style="@style/Widget.Material3.SearchBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/spacing_large"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="4dp"
-                app:strokeWidth="0dp">
-
-                <androidx.appcompat.widget.SearchView
-                    android:id="@+id/searchView"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:iconifiedByDefault="false"
-                    app:queryHint="@string/search_events_hint" />
-            </com.google.android.material.card.MaterialCardView>
+                android:hint="@string/search_events_hint" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -53,44 +43,44 @@
                         android:id="@+id/chipMusic"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginEnd="@dimen/spacing_medium"
                         android:text="@string/category_music"
-                        app:chipBackgroundColor="#FFFFFF"
+                        app:chipBackgroundColor="?attr/colorSurface"
                         app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="#EFEFF4"
+                        app:chipStrokeColor="?attr/colorOutlineVariant"
                         app:chipStrokeWidth="1dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipEducation"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginEnd="@dimen/spacing_medium"
                         android:text="@string/category_education"
-                        app:chipBackgroundColor="#FFFFFF"
+                        app:chipBackgroundColor="?attr/colorSurface"
                         app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="#EFEFF4"
+                        app:chipStrokeColor="?attr/colorOutlineVariant"
                         app:chipStrokeWidth="1dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipSports"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginEnd="@dimen/spacing_medium"
                         android:text="@string/category_sports"
-                        app:chipBackgroundColor="#FFFFFF"
+                        app:chipBackgroundColor="?attr/colorSurface"
                         app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="#EFEFF4"
+                        app:chipStrokeColor="?attr/colorOutlineVariant"
                         app:chipStrokeWidth="1dp" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chipBusiness"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
+                        android:layout_marginEnd="@dimen/spacing_medium"
                         android:text="@string/category_business"
-                        app:chipBackgroundColor="#FFFFFF"
+                        app:chipBackgroundColor="?attr/colorSurface"
                         app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="#EFEFF4"
+                        app:chipStrokeColor="?attr/colorOutlineVariant"
                         app:chipStrokeWidth="1dp" />
 
                 </LinearLayout>
@@ -103,8 +93,8 @@
                 android:layout_marginHorizontal="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_xlarge"
                 android:text="@string/featured_events"
-                android:textColor="#004D40"
-                android:textSize="18sp"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -113,8 +103,7 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/spacing_large"
                 android:clipToPadding="false"
-                android:orientation="horizontal"
-                />
+                android:orientation="horizontal" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -122,8 +111,8 @@
                 android:layout_marginHorizontal="@dimen/spacing_large"
                 android:layout_marginTop="@dimen/spacing_xlarge"
                 android:text="@string/upcoming_near_you"
-                android:textColor="#004D40"
-                android:textSize="18sp"
+                android:textColor="?attr/colorOnSurface"
+                android:textSize="@dimen/text_size_medium"
                 android:textStyle="bold" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -135,6 +124,14 @@
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
+
+    <com.google.android.material.search.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_anchor="@id/searchCard"
+        app:layout_anchorGravity="bottom"
+        app:queryHint="@string/search_events_hint" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnChat"

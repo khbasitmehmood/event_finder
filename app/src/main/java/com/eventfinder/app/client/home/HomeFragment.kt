@@ -32,6 +32,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun setupUI() {
+        // SearchBar <-> SearchView wiring (Material3)
+        binding.searchView.setupWithSearchBar(binding.searchCard)
+
+        // Optional: react to query submissions
+        binding.searchView.editText.setOnEditorActionListener { _, _, _ ->
+            val query = binding.searchView.text.toString().trim()
+            // TODO: filter lists / trigger search
+            binding.searchView.hide()
+            true
+        }
+
         // 1. Categories - Keep same
 
 
