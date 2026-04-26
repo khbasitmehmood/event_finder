@@ -1,35 +1,42 @@
-package com.eventfinder.app.admin.Location
+package com.eventfinder.app.admin.location
 
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
+import com.eventfinder.app.databinding.AdminFragmentLocationPickerBinding
 
-class LocationPickerFragment : Fragment() {
+class LocationPickerFragment : Fragment(R.layout.admin_fragment_location_picker) {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        return inflater.inflate(R.layout.admin_fragment_location_picker, container, false)
-    }
+    private var _binding: AdminFragmentLocationPickerBinding? = null
+    private val binding get() = _binding!!
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        _binding = AdminFragmentLocationPickerBinding.bind(view)
 
-        // TEMP BUTTON (mock location)
-        view.findViewById<Button>(R.id.btnSelectLocation).setOnClickListener {
+        // Mock getting current location
+        binding.btnMyLocation.setOnClickListener {
+            binding.etSearchLocation.setText("Lahore Expo Center")
+            binding.tvSelectedLocation.text = "Lahore Expo Center"
+        }
 
-            findNavController()
-                .previousBackStackEntry
-                ?.savedStateHandle
-                ?.set("selected_location", "Lahore Expo Center")
+        binding.btnBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
 
+        binding.btnConfirmLocation.setOnClickListener {
+            findNavController().previousBackStackEntry?.savedStateHandle?.set(
+                "selected_location",
+                binding.tvSelectedLocation.text.toString()
+            )
             findNavController().popBackStack()
         }
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

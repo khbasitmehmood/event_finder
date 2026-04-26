@@ -10,6 +10,7 @@
     <string name="save">Save</string>
     <string name="chat">Chat</string>
     <string name="typing">typing…</string>
+    <string name="done">Done</string>
 
     <!-- Content Descriptions -->
     <string name="cd_open_sidebar">Open Sidebar</string>
@@ -38,15 +39,28 @@
 
     <!-- Login Screen -->
     <string name="login_title">Welcome Back</string>
-    <string name="hint_email">Email</string>
+    <string name="hint_email">Email address</string>
     <string name="hint_password">Password</string>
-    <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_password">Forgot password?</string>
     <string name="btn_sign_in">Sign In</string>
     <string name="login_to_signup">New user? Create Account</string>
+    <string name="hint_enter_email">Enter email address</string>
+    <string name="hint_enter_password">Enter password</string>
+    <string name="or">OR</string>
+    <string name="dont_have_account">Don\'t have an account? </string>
+    <string name="already_have_account">Already have an account? </string>
 
     <!-- Signup Screen -->
-    <string name="signup_title">Join Us</string>
-    <string name="hint_full_name">Full Name</string>
+    <string name="signup_title">Create Account</string>
+    <string name="signup_subtitle">Join Event Finder today</string>
+    <string name="join_as_label">I want to join as</string>
+    <string name="user_type_user">User</string>
+    <string name="user_type_user_desc">Attend events</string>
+    <string name="user_type_organizer">Organizer</string>
+    <string name="user_type_organizer_desc">Create events</string>
+    <string name="hint_create_password">Create password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="hint_repeat_password">Repeat password</string>
     <string name="btn_create_account">Create Account</string>
     <string name="signup_to_login">Already have an account? Login</string>
 
@@ -55,6 +69,19 @@
     <string name="reset_password_subtitle">Enter your email to receive a reset link</string>
     <string name="btn_send_reset_link">Send Reset Link</string>
 
+    <!-- Fill Profile Screen -->
+    <string name="fill_profile_title">Complete Profile</string>
+    <string name="fill_profile_subtitle">Tell us more about yourself</string>
+    <string name="hint_full_name">Full Name</string>
+    <string name="hint_contact_number">Contact Number</string>
+    <string name="hint_org_name">Organization Name</string>
+    <string name="hint_contact_person">Contact Person Name</string>
+    <string name="hint_org_description">Organization Description</string>
+    <string name="label_add_interests">Add Interests</string>
+    <string name="label_events_we_offer">Events we offer</string>
+    <string name="btn_complete_setup">Complete Setup</string>
+    <string name="btn_save_changes">Save Changes</string>
+
     <!-- Auth Success Screen -->
     <string name="auth_success_title">You\'re All Set!</string>
     <string name="btn_go_to_dashboard">Go to Dashboard</string>
@@ -62,6 +89,17 @@
     <!-- ==================== CLIENT SCREENS ==================== -->
 
     <!-- Home Screen -->
+    <string name="welcome_back">Welcome back,</string>
+    <string name="this_week">This Week</string>
+    <string name="your_events">Your Events</string>
+    <string name="see_all">See All</string>
+    <string name="no_events_yet">No Events Yet</string>
+    <string name="create_your_first_event">Create your first event and start managing attendees</string>
+    <string name="create_event">Create Event</string>
+    <string name="explore_events">Explore Events</string>
+    <string name="previous_week">Previous week</string>
+    <string name="next_week">Next week</string>
+    <string name="ctd_event_image">Event image</string>
     <string name="search_events_hint">Search events…</string>
     <string name="featured_events">Featured Events</string>
     <string name="upcoming_near_you">Upcoming Near You</string>
@@ -74,14 +112,19 @@
     <string name="favourites_title">Favorites</string>
 
     <!-- Profile Screen -->
-    <string name="profile_default_name">Basit Mehmood</string>
-    <string name="profile_default_email">basit123@gmail.com</string>
+    <string name="profile_title">Profile</string>
+    <string name="profile_default_name">Guest User</string>
+    <string name="profile_default_email">guest@example.com</string>
     <string name="section_preferences">PREFERENCES</string>
     <string name="section_account">ACCOUNT</string>
+    <string name="option_edit_profile">Edit Profile</string>
     <string name="option_theme">Theme</string>
     <string name="option_watchlist">Watchlist</string>
     <string name="option_logout">Logout</string>
     <string name="option_switch_admin">Switch to Admin Mode</string>
+    <string name="label_organized_by">Organized by</string>
+    <string name="label_price">Price</string>
+    <string name="label_free">Free</string>
 
     <!-- Event Detail Screen -->
     <string name="label_location">LOCATION</string>
@@ -107,6 +150,10 @@
     <!-- Chatbot Screen -->
     <string name="chatbot_title">Chatbot</string>
     <string name="hint_type_message">Type a message</string>
+    <string name="bot_is_typing">Bot is typing…</string>
+    <string name="suggestion_near_me">Find events near me</string>
+    <string name="suggestion_music">Music festivals</string>
+    <string name="suggestion_today">What\'s happening today?</string>
 
     <!-- ==================== ADMIN SCREENS ==================== -->
 
@@ -125,18 +172,37 @@
 
     <!-- Create Event Screen -->
     <string name="create_event_heading">Create New Event</string>
-    <string name="hint_event_title">Event Title</string>
-    <string name="hint_event_description">Description</string>
-    <string name="hint_location_name">Location Name</string>
+    <string name="add_event_cover">Add Event Cover Image</string>
+    <string name="basic_info">Basic Info</string>
+    <string name="event_title">Event Title</string>
+    <string name="description">Description</string>
+    <string name="category">Category</string>
+    <string name="date_time">Date &amp; Time</string>
+    <string name="select_date">Select Date</string>
+    <string name="select_time">Select Time</string>
+    <string name="location">Location</string>
+    <string name="event_address">Event Location</string>
+    <string name="max_attendees">Maximum Attendees</string>
+    <string name="free_event">Free Event</string>
+    <string name="ticket_price">Ticket Price</string>
+    <string name="save_draft">Save Draft</string>
+    <string name="publish_event">Publish</string>
+    <string name="hint_event_title">Enter event title</string>
+    <string name="hint_event_description">Enter event description</string>
+    <string name="hint_location_name">Enter event location</string>
+    <string name="hint_max_attendees">Maximum attendees limit</string>
     <string name="btn_select_date">Select Date</string>
     <string name="btn_select_time">Select Time</string>
     <string name="btn_pin_on_map">Pin on Map</string>
     <string name="capacity_pricing">Capacity &amp; Pricing</string>
-    <string name="hint_category_name">Category Name</string>
+    <string name="hint_category_name">Select a category</string>
 
     <!-- Ticket Dialog -->
+    <string name="title_ticket_prices">Set Ticket Prices</string>
     <string name="hint_vip_price">VIP Price</string>
+    <string name="hint_enter_vip_price">Enter VIP price</string>
     <string name="hint_normal_price">Normal Price</string>
+    <string name="hint_enter_normal_price">Enter normal price</string>
 
     <!-- Location Picker -->
     <string name="hint_enter_location">Enter location name</string>
@@ -199,4 +265,8 @@
         molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
         bibendum, vel congue leo egestas.\n\n
     </string>
+    <string name="retry">Retry</string>
+    <string name="error_loading_events">Something went wrong while fetching the events</string>
+    <string name="no_events_found">No Events found</string>
+    <string name="no_events">No events</string>
 </resources>

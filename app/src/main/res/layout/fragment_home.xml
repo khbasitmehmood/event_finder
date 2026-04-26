@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/md_background">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/homeScrollView"
@@ -14,144 +16,207 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_xlarge">
 
-            <com.google.android.material.search.SearchBar
-                android:id="@+id/searchCard"
-                style="@style/Widget.Material3.SearchBar"
+            <!-- Welcome Section -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_large"
-                android:backgroundTint="?attr/colorSurfaceContainer"
-                android:hint="@string/search_events_hint" />
+                android:layout_marginBottom="@dimen/spacing_xlarge"
+                android:orientation="vertical">
 
-            <HorizontalScrollView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/spacing_large"
-                android:clipToPadding="false"
-                android:overScrollMode="never"
-                android:paddingHorizontal="@dimen/spacing_large"
-                android:scrollbars="none">
-
-                <LinearLayout
-                    android:id="@+id/chipContainer"
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:text="@string/welcome_back"
+                    android:textAppearance="@style/TextAppearance.App.BodyLarge" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipMusic"
+                <TextView
+                    android:id="@+id/tvUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
+                    tools:text="Muhammad Ansari" />
+
+            </LinearLayout>
+
+            <!-- Calendar Section -->
+            <LinearLayout
+                android:id="@+id/layoutCalendarHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvMonthYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/spacing_medium"
-                        android:text="@string/category_music"
-                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
-                        app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="?attr/colorOutlineVariant"
-                        app:chipStrokeWidth="1dp" />
+                        android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                        tools:text="April 2026" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipEducation"
+                    <TextView
+                        android:id="@+id/tvThisWeek"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/spacing_medium"
-                        android:text="@string/category_education"
-                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
-                        app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="?attr/colorOutlineVariant"
-                        app:chipStrokeWidth="1dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipSports"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/spacing_medium"
-                        android:text="@string/category_sports"
-                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
-                        app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="?attr/colorOutlineVariant"
-                        app:chipStrokeWidth="1dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipBusiness"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/spacing_medium"
-                        android:text="@string/category_business"
-                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
-                        app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="?attr/colorOutlineVariant"
-                        app:chipStrokeWidth="1dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipMovies"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/spacing_medium"
-                        android:text="@string/category_movies"
-                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
-                        app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="?attr/colorOutlineVariant"
-                        app:chipStrokeWidth="1dp" />
-
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chipPolitics"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/spacing_medium"
-                        android:text="@string/category_politics"
-                        app:chipBackgroundColor="?attr/colorSurfaceContainer"
-                        app:chipCornerRadius="20dp"
-                        app:chipStrokeColor="?attr/colorOutlineVariant"
-                        app:chipStrokeWidth="1dp" />
+                        android:text="@string/this_week"
+                        android:textAppearance="@style/TextAppearance.App.LabelMedium" />
 
                 </LinearLayout>
-            </HorizontalScrollView>
 
+                <ImageButton
+                    android:id="@+id/btnPreviousWeek"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="@dimen/spacing_medium"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/previous_week"
+                    android:src="@drawable/ic_chevron_left"
+                    app:tint="@color/md_primary" />
+
+                <ImageButton
+                    android:id="@+id/btnNextWeek"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/next_week"
+                    android:src="@drawable/ic_next"
+                    app:tint="@color/md_primary" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvCalendar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_xxlarge"
+                android:clipToPadding="false"
+                android:orientation="horizontal"
+                tools:listitem="@layout/item_calendar_day"
+                tools:visibility="gone" />
+
+            <!-- Your Events Section -->
+            <LinearLayout
+                android:id="@+id/layoutYourEventsHeader"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvYourEvents"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/your_events"
+                    android:textAppearance="@style/TextAppearance.App.TitleLarge" />
+
+                <ImageButton
+                    android:id="@+id/btnCreateEventIcon"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginEnd="@dimen/spacing_medium"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:contentDescription="@string/create_event"
+                    android:src="@drawable/ic_add"
+                    app:tint="@color/md_primary"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tvSeeAllEvents"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/see_all"
+                    android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                    android:textColor="@color/md_primary"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <!-- Your Events RecyclerView -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvYourEvents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:nestedScrollingEnabled="false"
+                android:visibility="gone"
+                tools:listitem="@layout/item_event_card"
+                tools:visibility="gone" />
+
+            <!-- Empty State - Create Event Button -->
+            <LinearLayout
+                android:id="@+id/layoutEmptyEvents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/spacing_xxlarge"
+                android:visibility="visible"
+                tools:visibility="visible">
+
+                <TextView
+                    android:id="@+id/tvEmptyStateTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_large"
+                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:text="@string/no_events_yet"
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium" />
+
+                <TextView
+                    android:id="@+id/tvEmptyStateDesc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_xlarge"
+                    android:gravity="center"
+                    android:text="@string/create_your_first_event"
+                    android:textAppearance="@style/TextAppearance.App.BodyMedium" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCreateEvent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/spacing_xxlarge"
+                    android:text="@string/create_event"
+                    android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                    app:cornerRadius="@dimen/corner_radius_large"
+                    app:icon="@drawable/ic_add" />
+
+            </LinearLayout>
+
+            <!-- Featured Events Section -->
             <TextView
                 android:id="@+id/tvFeaturedTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
-                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:layout_marginBottom="@dimen/spacing_medium"
                 android:text="@string/featured_events"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.TitleLarge" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvFeatured"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_large"
                 android:clipToPadding="false"
-                android:orientation="horizontal" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
-                android:text="@string/upcoming_near_you"
-                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
-                android:textStyle="bold" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvUpcoming"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/spacing_large"
-                android:nestedScrollingEnabled="false" />
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_event_card" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-
-    <com.google.android.material.search.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_anchor="@id/searchCard"
-        app:layout_anchorGravity="bottom"
-        app:queryHint="@string/search_events_hint" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnChat"
@@ -162,8 +227,9 @@
         android:layout_marginBottom="?actionBarSize"
         android:backgroundTint="@color/md_primary"
         android:text="@string/chat"
-        android:textColor="@android:color/white"
+        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+        android:textColor="@color/md_on_primary"
         app:icon="@drawable/chat_add_on_24px"
-        app:iconTint="@android:color/white" />
+        app:iconTint="@color/md_on_primary" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

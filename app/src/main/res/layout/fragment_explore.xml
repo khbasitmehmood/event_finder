@@ -1,101 +1,221 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8F9FD"
-    android:orientation="vertical"
-    android:padding="20dp">
+    android:background="@color/md_background">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/explore_title"
-        android:textColor="#000000"
-        android:textSize="34sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
-
-    <EditText
-        android:id="@+id/etSearchEvents"
+    <!-- Main Content Container -->
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="55dp"
-        android:hint="@string/search_events_places_hint"
-        android:padding="12dp"
-        android:background="@drawable/search_bg"
-        android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="12dp"
-        android:textSize="16sp"
-        android:textColorHint="#C7C7CC"
-        android:elevation="2dp"/>
-
-    <HorizontalScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:overScrollMode="never"
-        android:scrollbars="none">
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
-            android:id="@+id/chipContainer"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_xlarge">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipMusic"
+            <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/category_music"
-                app:chipBackgroundColor="#FFFFFF"
-                app:chipStrokeColor="#EFEFF4"
-                app:chipStrokeWidth="1dp"
-                app:chipCornerRadius="20dp"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:text="@string/explore_title"
+                android:textAppearance="@style/TextAppearance.App.HeadlineLarge" />
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipEducation"
-                android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilSearch"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/category_education"
-                app:chipBackgroundColor="#FFFFFF"
-                app:chipStrokeColor="#EFEFF4"
-                app:chipStrokeWidth="1dp"
-                app:chipCornerRadius="20dp"
-                android:layout_marginEnd="8dp" />
+                app:hintEnabled="false"
+                app:boxBackgroundMode="none"
+                app:startIconDrawable="@drawable/ic_search"
+                app:startIconTint="@color/text_secondary">
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipSports"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/category_sports"
-                app:chipBackgroundColor="#FFFFFF"
-                app:chipStrokeColor="#EFEFF4"
-                app:chipStrokeWidth="1dp"
-                app:chipCornerRadius="20dp"
-                android:layout_marginEnd="8dp" />
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etSearchEvents"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_pill"
+                    android:hint="@string/search_events_places_hint"
+                    android:inputType="text"
+                    android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                    android:textColor="@color/text_primary"
+                    android:textColorHint="@color/text_secondary" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipBusiness"
-                android:layout_width="wrap_content"
+            <HorizontalScrollView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/category_business"
-                app:chipBackgroundColor="#FFFFFF"
-                app:chipStrokeColor="#EFEFF4"
-                app:chipStrokeWidth="1dp"
-                app:chipCornerRadius="20dp"
-                android:layout_marginEnd="8dp" />
+                android:layout_marginTop="@dimen/spacing_xlarge"
+                android:overScrollMode="never"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:id="@+id/chipContainer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipMusic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/spacing_medium"
+                        android:text="@string/category_music"
+                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                        app:chipBackgroundColor="@color/md_surface"
+                        app:chipStrokeColor="@color/md_outline"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipEducation"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/spacing_medium"
+                        android:text="@string/category_education"
+                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                        app:chipBackgroundColor="@color/md_surface"
+                        app:chipStrokeColor="@color/md_outline"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipSports"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/spacing_medium"
+                        android:text="@string/category_sports"
+                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                        app:chipBackgroundColor="@color/md_surface"
+                        app:chipStrokeColor="@color/md_outline"
+                        app:chipStrokeWidth="1dp" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipBusiness"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/spacing_medium"
+                        android:text="@string/category_business"
+                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                        app:chipBackgroundColor="@color/md_surface"
+                        app:chipStrokeColor="@color/md_outline"
+                        app:chipStrokeWidth="1dp" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- SwipeRefreshLayout for pull-to-refresh -->
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefresh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xlarge">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerExploreEvents"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clipToPadding="false"
+                    android:paddingBottom="80dp"
+                    tools:listitem="@layout/item_event_card" />
+
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         </LinearLayout>
-    </HorizontalScrollView>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerExploreEvents"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="20dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:paddingBottom="80dp" />
+    </androidx.core.widget.NestedScrollView>
 
-</LinearLayout>
+    <!-- Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
+    <!-- Error State -->
+    <LinearLayout
+        android:id="@+id/errorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_xxlarge"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:alpha="0.5"
+            android:contentDescription="Error"
+            android:src="@drawable/ic_dislike" />
+
+        <TextView
+            android:id="@+id/errorMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:gravity="center"
+            android:text="@string/error_loading_events"
+            android:textAppearance="@style/TextAppearance.App.BodyLarge"
+            tools:text="Failed to load events" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRetry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            app:cornerRadius="@dimen/corner_radius_large"
+            app:backgroundTint="@color/md_primary"
+            android:text="@string/retry" />
+
+    </LinearLayout>
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/emptyView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_xxlarge"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="gone">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:alpha="0.5"
+            android:contentDescription="@string/no_events"
+            android:src="@drawable/ic_explore" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:gravity="center"
+            android:text="@string/no_events_found"
+            android:textAppearance="@style/TextAppearance.App.BodyLarge" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

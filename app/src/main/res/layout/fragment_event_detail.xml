@@ -2,10 +2,11 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000">
+    android:background="@color/md_background">
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
@@ -28,6 +29,7 @@
                     android:scaleType="centerCrop"
                     android:src="@drawable/event_img" />
 
+                <!-- A soft dark gradient allows text to be readable if it overlaps, though the new design pushes content down -->
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
@@ -35,6 +37,7 @@
                     android:background="@drawable/bottom_shadow_gradient" />
             </RelativeLayout>
 
+            <!-- White clean card lifting up over the image slightly -->
             <LinearLayout
                 android:id="@+id/contentLayout"
                 android:layout_width="match_parent"
@@ -42,20 +45,67 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="24dp"
                 android:paddingTop="32dp"
-                android:paddingBottom="100dp"
-                android:layout_marginTop="-60dp"
-                android:background="@drawable/detail_content_bg">
+                android:paddingBottom="120dp"
+                android:layout_marginTop="-40dp"
+                android:background="@drawable/bg_bottom_sheet">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Category"
+                    android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                    android:textColor="@color/md_primary"
+                    app:chipBackgroundColor="@color/md_primary_container"
+                    app:chipStrokeWidth="0dp"
+                    android:layout_marginBottom="12dp"
+                    android:visibility="gone"
+                    tools:visibility="visible"/>
 
                 <TextView
                     android:id="@+id/tvDetailTitle"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/event_title_placeholder"
-                    android:textColor="#FFFFFF"
-                    android:textSize="32sp"
-                    android:lineHeight="38sp"
-                    android:fontFamily="sans-serif-black"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.HeadlineLarge" />
+
+                <!-- Organizer Info Row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="20dp">
+
+                    <ImageView
+                        android:id="@+id/ivOrganizerLogo"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/ic_profile"
+                        android:scaleType="centerCrop"
+                        android:background="@drawable/profile_circle_bg"
+                        android:clipToOutline="true"/>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Organized by"
+                            android:textAppearance="@style/TextAppearance.App.LabelMedium" />
+
+                        <TextView
+                            android:id="@+id/tvOrganizerName"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Organizer Name"
+                            android:textAppearance="@style/TextAppearance.App.TitleSmall" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -69,13 +119,21 @@
                         android:gravity="center_vertical"
                         android:layout_marginBottom="16dp">
 
-                        <View
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_circle_translucent"
-                            android:foreground="@drawable/music_note_2_24px"
-                            android:foregroundGravity="center"
-                            android:foregroundTint="#FFFFFF"/>
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            app:cardCornerRadius="24dp"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="@color/md_primary_container">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="12dp"
+                                android:src="@android:drawable/ic_dialog_map"
+                                app:tint="@color/md_primary" />
+
+                        </com.google.android.material.card.MaterialCardView>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -87,18 +145,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/label_location"
-                                android:textColor="#8E8E93"
-                                android:textSize="11sp"
-                                android:letterSpacing="0.1"
-                                android:textStyle="bold" />
+                                android:textAppearance="@style/TextAppearance.App.LabelMedium" />
 
                             <TextView
                                 android:id="@+id/tvDetailLocation"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/event_location_placeholder"
-                                android:textColor="#FFFFFF"
-                                android:textSize="15sp" />
+                                android:textAppearance="@style/TextAppearance.App.TitleMedium" />
                         </LinearLayout>
                     </LinearLayout>
 
@@ -107,13 +161,21 @@
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical">
 
-                        <View
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_circle_translucent"
-                            android:foreground="@drawable/music_note_2_24px"
-                            android:foregroundGravity="center"
-                            android:foregroundTint="#FFFFFF"/>
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            app:cardCornerRadius="24dp"
+                            app:cardElevation="0dp"
+                            app:cardBackgroundColor="@color/md_primary_container">
+
+                            <ImageView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:padding="12dp"
+                                android:src="@android:drawable/ic_menu_my_calendar"
+                                app:tint="@color/md_primary" />
+
+                        </com.google.android.material.card.MaterialCardView>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
@@ -125,18 +187,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/label_date_time"
-                                android:textColor="#8E8E93"
-                                android:textSize="11sp"
-                                android:letterSpacing="0.1"
-                                android:textStyle="bold" />
+                                android:textAppearance="@style/TextAppearance.App.LabelMedium" />
 
                             <TextView
                                 android:id="@+id/tvDetailDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/event_date_placeholder"
-                                android:textColor="#FFFFFF"
-                                android:textSize="15sp" />
+                                android:textAppearance="@style/TextAppearance.App.TitleMedium" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -144,7 +202,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#33FFFFFF"
+                    android:background="@color/md_outline_variant"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="32dp"/>
 
@@ -152,10 +210,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/label_about_event"
-                    android:textColor="#8E8E93"
-                    android:textSize="12sp"
-                    android:letterSpacing="0.1"
-                    android:textStyle="bold" />
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium" />
 
                 <TextView
                     android:id="@+id/tvDetailDescription"
@@ -164,36 +219,81 @@
                     android:layout_marginTop="12dp"
                     android:lineSpacingMultiplier="1.4"
                     android:text="@string/event_description_placeholder"
-                    android:textColor="#E0E0E0"
-                    android:textSize="16sp" />
+                    android:textAppearance="@style/TextAppearance.App.BodyLarge" />
 
             </LinearLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnRegister"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="64dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="24dp"
-        android:text="@string/btn_rsvp_now"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:letterSpacing="0.05"
-        app:cornerRadius="20dp"
-        app:backgroundTint="#FFFFFF"
-        app:elevation="8dp" />
+        android:background="@android:color/white"
+        android:elevation="16dp"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:gravity="center_vertical">
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_margin="16dp"
-        android:background="@drawable/bg_circle_translucent"
-        android:src="@drawable/arrow_back_24px"
-        android:padding="12dp"
-        android:scaleType="centerInside"
-        app:tint="#FFFFFF" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:textAppearance="@style/TextAppearance.App.LabelMedium" />
+            <TextView
+                android:id="@+id/tvDetailPrice"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Free"
+                android:textColor="@color/md_primary"
+                android:textAppearance="@style/TextAppearance.App.TitleLarge" />
+        </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnRegister"
+            android:layout_width="0dp"
+            android:layout_weight="1.5"
+            android:layout_height="60dp"
+            android:text="@string/btn_rsvp_now"
+            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+            android:textColor="@color/md_on_primary"
+            app:cornerRadius="30dp"
+            app:backgroundTint="@color/md_primary" />
+    </LinearLayout>
+
+    <!-- Top Action Bar Overlay -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_circle_back"
+            android:src="@drawable/arrow_back_24px"
+            app:tint="@color/text_primary" />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btnFavorite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_circle_back"
+            android:src="@drawable/ic_favorite"
+            app:tint="@color/text_primary" />
+    </LinearLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

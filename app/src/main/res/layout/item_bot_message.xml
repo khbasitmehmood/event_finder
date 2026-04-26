@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="8dp"
-    android:gravity="start">
+    android:orientation="horizontal"
+    android:gravity="start"
+    android:padding="8dp">
 
-    <TextView
-        android:id="@+id/tvMessage"
+    <ImageView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:src="@drawable/logo"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="bottom"
+        app:tint="@color/md_primary" />
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="#B0B0B0"
-        android:textColor="@android:color/black"
-        android:padding="12dp"/>
+        android:layout_marginEnd="48dp"
+        app:cardBackgroundColor="@color/md_surface_variant"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp">
+
+        <TextView
+            android:id="@+id/tvMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="12dp"
+            android:text="Hello! How can I help you today?"
+            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+            android:textColor="@color/text_primary" />
+
+    </com.google.android.material.card.MaterialCardView>
+
 </LinearLayout>

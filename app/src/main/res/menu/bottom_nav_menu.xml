@@ -2,7 +2,7 @@
     <item
         android:id="@+id/homeFragment"
         android:icon="@drawable/ic_home"
-        android:title="Home" />
+        android:title="Admin" />
     <item
         android:id="@+id/exploreFragment"
         android:icon="@drawable/ic_explore"

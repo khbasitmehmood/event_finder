@@ -1,157 +1,318 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp"
-    android:background="@android:color/white">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/md_background">
 
-    <!-- ONLY ONE DIRECT CHILD -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:orientation="vertical">
 
-        <!-- PROFILE IMAGE -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="65dp"
-            app:cardElevation="4dp">
-            <ImageView
-                android:id="@+id/ivAdminProfile"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/ic_profile"
-                android:scaleType="centerCrop"
+        <!-- Header -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/spacing_xlarge">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_title"
+                android:textAppearance="@style/TextAppearance.App.HeadlineLarge"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/btnSaveProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                android:textColor="@color/md_primary"
+                android:padding="@dimen/spacing_medium"
                 android:clickable="true"
-                android:focusable="true"/>
+                android:focusable="true"
+                android:background="?attr/selectableItemBackground"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="@id/tvTitle" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.cardview.widget.CardView>
+        <!-- Profile Info -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:paddingBottom="@dimen/spacing_xlarge">
 
-        <!-- NAME -->
+            <FrameLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:id="@+id/ivAdminProfile"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ic_profile"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/profile_circle_bg"
+                    android:clipToOutline="true" />
+
+                <!-- Edit Badge -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="-12dp"
+                    app:cardCornerRadius="@dimen/corner_radius_medium"
+                    app:cardBackgroundColor="@color/md_surface"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/md_outline">
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="4dp"
+                        android:paddingBottom="4dp"
+                        android:gravity="center">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:contentDescription="@string/option_edit_profile"
+                            android:src="@android:drawable/ic_menu_edit"
+                            app:tint="@color/md_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/option_edit_profile"
+                            android:textColor="@color/md_primary"
+                            android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                            android:layout_marginStart="4dp"/>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/tvAdminName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/admin_name_placeholder"
+                android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:id="@+id/tvAdminEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/admin_email_placeholder"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:layout_marginTop="4dp" />
+
+            <!-- Role Badge -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/md_primary_container"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:contentDescription="@string/user_type_organizer"
+                        android:src="@android:drawable/ic_menu_manage"
+                        app:tint="@color/md_on_primary_container" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/user_type_organizer"
+                        android:textColor="@color/md_on_primary_container"
+                        android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                        android:layout_marginStart="4dp"/>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- Details Section -->
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/label_name"
-            android:textStyle="bold"
-            android:layout_marginTop="24dp"/>
+            android:paddingStart="@dimen/spacing_xlarge"
+            android:paddingEnd="@dimen/spacing_xlarge"
+            android:paddingTop="@dimen/spacing_large"
+            android:paddingBottom="@dimen/spacing_medium"
+            android:text="@string/section_account"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium" />
 
-        <TextView
-            android:id="@+id/tvAdminName"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/admin_name_placeholder"
-            android:background="@drawable/rounded_edittext"/>
+            android:layout_marginHorizontal="@dimen/spacing_xlarge"
+            android:layout_marginBottom="@dimen/spacing_xlarge"
+            app:cardCornerRadius="@dimen/corner_radius_medium"
+            app:cardBackgroundColor="@color/md_surface"
+            app:cardElevation="2dp"
+            app:strokeWidth="0dp">
 
-        <!-- EMAIL -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_email"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tvAdminEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/admin_email_placeholder"
-            android:background="@drawable/rounded_edittext"/>
+                <!-- Contact -->
+                <LinearLayout
+                    android:id="@+id/tvAdminContact"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
 
-        <!-- CONTACT -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_contact"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_contact"
+                        android:textAppearance="@style/TextAppearance.App.LabelSmall" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/admin_contact_placeholder"
+                        android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvAdminContact"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/admin_contact_placeholder"
-            android:background="@drawable/rounded_edittext"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/md_surface_variant" android:layout_marginStart="@dimen/spacing_large" android:layout_marginEnd="@dimen/spacing_large"/>
 
-        <!-- ORGANIZATION -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_organization"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+                <!-- Organization -->
+                <LinearLayout
+                    android:id="@+id/tvAdminOrganization"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
 
-        <TextView
-            android:id="@+id/tvAdminOrganization"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/admin_organization_placeholder"
-            android:background="@drawable/rounded_edittext"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_organization"
+                        android:textAppearance="@style/TextAppearance.App.LabelSmall" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/admin_organization_placeholder"
+                        android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
 
-        <!-- EVENTS -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_total_events"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/md_surface_variant" android:layout_marginStart="@dimen/spacing_large" android:layout_marginEnd="@dimen/spacing_large"/>
 
-        <TextView
-            android:id="@+id/tvTotalEvents"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/admin_events_placeholder"
-            android:background="@drawable/rounded_edittext"/>
+                <!-- Total Events -->
+                <LinearLayout
+                    android:id="@+id/tvTotalEvents"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
 
-        <!-- RATING -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_admin_rating"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_total_events"
+                        android:textAppearance="@style/TextAppearance.App.LabelSmall" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/admin_events_placeholder"
+                        android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
 
-        <TextView
-            android:id="@+id/tvAdminRating"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/admin_rating_placeholder"
-            android:background="@drawable/rounded_edittext"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/md_surface_variant" android:layout_marginStart="@dimen/spacing_large" android:layout_marginEnd="@dimen/spacing_large"/>
 
-        <!-- INTRO -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/label_introduction"
-            android:textStyle="bold"
-            android:layout_marginTop="16dp"/>
+                <!-- Rating (Read Only) -->
+                <LinearLayout
+                    android:id="@+id/tvAdminRating"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large">
 
-        <TextView
-            android:id="@+id/tvAdminIntro"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
-            android:text="@string/admin_intro_placeholder"
-            android:background="@drawable/rounded_edittext"
-            android:lines="3"/>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_admin_rating"
+                        android:textAppearance="@style/TextAppearance.App.LabelSmall" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/admin_rating_placeholder"
+                        android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
 
-        <!-- SAVE BUTTON -->
-        <Button
-            android:id="@+id/btnSaveProfile"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:text="@string/btn_save_profile"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="32dp"/>
+                <View android:layout_width="match_parent" android:layout_height="1dp" android:background="@color/md_surface_variant" android:layout_marginStart="@dimen/spacing_large" android:layout_marginEnd="@dimen/spacing_large"/>
+
+                <!-- Introduction -->
+                <LinearLayout
+                    android:id="@+id/tvAdminIntro"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/label_introduction"
+                        android:textAppearance="@style/TextAppearance.App.LabelSmall" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/admin_intro_placeholder"
+                        android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                        android:textColor="@color/text_primary"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
     </LinearLayout>
 </ScrollView>

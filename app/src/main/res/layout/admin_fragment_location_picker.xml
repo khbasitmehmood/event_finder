@@ -1,54 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp"
-    android:background="#121212">
+    android:background="@color/md_background">
 
-    <TextView
-        android:text="Pin Event Location"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    <!-- Header -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="@dimen/spacing_large"
+        android:gravity="center_vertical"
+        android:background="@android:color/white"
+        android:elevation="@dimen/spacing_small">
 
-    <!-- Fake Map Area -->
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/arrow_back_24px"
+            app:tint="@color/text_primary" />
+
+        <!-- Search Bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilSearch"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_medium"
+            app:hintEnabled="false"
+            app:boxBackgroundMode="none"
+            app:startIconDrawable="@drawable/ic_search"
+            app:startIconTint="@color/text_secondary">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etSearchLocation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_input_pill"
+                android:hint="@string/hint_enter_location"
+                android:inputType="textPostalAddress"
+                android:textAppearance="@style/TextAppearance.App.BodyLarge"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_secondary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:background="#2A2A2A">
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <!-- Fake Map View (Image placeholder) -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/event_img"
+            android:alpha="0.8" />
+
+        <ImageView
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="center"
+            android:src="@android:drawable/ic_dialog_map"
+            app:tint="@color/md_error" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnMyLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/spacing_xlarge"
+            android:layout_marginBottom="100dp"
+            android:src="@android:drawable/ic_menu_mylocation"
+            app:backgroundTint="@android:color/white"
+            app:tint="@color/md_primary" />
+    </FrameLayout>
+
+    <!-- Bottom Actions -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@android:color/white"
+        android:elevation="@dimen/spacing_medium"
+        android:orientation="vertical"
+        android:padding="@dimen/spacing_xlarge">
 
         <TextView
-            android:layout_gravity="center"
-            android:text="🗺 Map Preview (Mock)"
-            android:textColor="@android:color/white"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </FrameLayout>
-    <Button
-        android:id="@+id/btnSelectLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Select This Location" />
+            android:layout_height="wrap_content"
+            android:text="Selected Location"
+            android:textAppearance="@style/TextAppearance.App.LabelSmall" />
 
-    <EditText
-        android:id="@+id/etLocationName"
-        android:hint="Enter location name"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/darker_gray"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="@android:color/white"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:id="@+id/tvSelectedLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="Lahore Expo Center"
+            android:textAppearance="@style/TextAppearance.App.TitleLarge" />
 
-    <Button
-        android:id="@+id/btnConfirmLocation"
-        android:text="Confirm Location"
-        android:layout_marginTop="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnConfirmLocation"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:text="Confirm Location"
+            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+            android:textColor="@color/md_on_primary"
+            app:backgroundTint="@color/md_primary"
+            app:cornerRadius="@dimen/corner_radius_large" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

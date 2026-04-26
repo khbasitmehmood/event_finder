@@ -1,10 +1,11 @@
 package com.eventfinder.app.client.explore
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,13 +13,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.eventfinder.app.R
-import com.eventfinder.app.client.home.EventItem
 import com.eventfinder.app.databinding.FragmentExploreBinding
 import com.eventfinder.app.domain.model.Event
+import com.eventfinder.app.domain.model.EventCategory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
+/**
+ * Fragment for exploring and discovering events
+ */
 @AndroidEntryPoint
 class ExploreFragment : Fragment() {
 
@@ -39,6 +42,9 @@ class ExploreFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecycler()
+        setupSearchBar()
+        setupCategoryChips()
+        setupSwipeRefresh()
         observeViewModel()
     }
 
@@ -46,13 +52,58 @@ class ExploreFragment : Fragment() {
         exploreAdapter = ExploreUpcomingAdapter(
             emptyList(),
             onItemClick = { selectedEvent ->
-                // TODO: Open Detail Screen
-            },
-            activity = requireActivity() as AppCompatActivity
+                // TODO: Navigate to Event Detail Screen
+                // findNavController().navigate(
+                //     ExploreFragmentDirections.actionExploreToEventDetail(selectedEvent.id)
+                // )
+            }
         )
 
-        binding.recyclerExploreEvents.layoutManager = LinearLayoutManager(requireContext())
-        binding.recyclerExploreEvents.adapter = exploreAdapter
+        binding.recyclerExploreEvents.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = exploreAdapter
+            setHasFixedSize(true)
+        }
+    }
+
+    private fun setupSearchBar() {
+        binding.etSearchEvents.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
+            override fun afterTextChanged(s: Editable?) {
+                val query = s?.toString()?.trim() ?: ""
+                if (query.isNotEmpty()) {
+                    viewModel.searchEvents(query)
+                } else {
+                    viewModel.loadEvents()
+                }
+            }
+        })
+    }
+
+    private fun setupCategoryChips() {
+        binding.chipMusic.setOnClickListener {
+            // TODO: Implement category filtering
+        }
+
+        binding.chipEducation.setOnClickListener {
+            // TODO: Implement category filtering
+        }
+
+        binding.chipSports.setOnClickListener {
+            // TODO: Implement category filtering
+        }
+
+        binding.chipBusiness.setOnClickListener {
+            // TODO: Implement category filtering
+        }
+    }
+
+    private fun setupSwipeRefresh() {
+        binding.swipeRefresh.setOnRefreshListener {
+            viewModel.refresh()
+        }
     }
 
     private fun observeViewModel() {
@@ -66,59 +117,63 @@ class ExploreFragment : Fragment() {
     }
 
     private fun handleUiState(state: ExploreUiState) {
+        // Stop refresh animation
+        binding.swipeRefresh.isRefreshing = false
+
         when (state) {
             is ExploreUiState.Loading -> {
                 showLoading(true)
                 showError(false)
                 showEmpty(false)
+                showContent(false)
             }
             is ExploreUiState.Success -> {
                 showLoading(false)
                 showError(false)
                 showEmpty(false)
+                showContent(true)
                 updateEventsList(state.events)
             }
             is ExploreUiState.Error -> {
                 showLoading(false)
                 showError(true, state.message)
                 showEmpty(false)
+                showContent(false)
             }
             is ExploreUiState.Empty -> {
                 showLoading(false)
                 showError(false)
                 showEmpty(true)
+                showContent(false)
             }
         }
     }
 
     private fun updateEventsList(events: List<Event>) {
-        val eventItems = events.map { event ->
-            EventItem(
-                id = event.id,
-                title = event.title,
-                location = event.location,
-                date = event.date,
-                imageRes = R.drawable.ic_event_placeholder
-            )
-        }
-        exploreAdapter.updateEvents(eventItems)
+        exploreAdapter.updateEvents(events)
     }
 
     private fun showLoading(show: Boolean) {
-        // Add a ProgressBar to your layout and control visibility here
-        // binding.progressBar.isVisible = show
-        binding.recyclerExploreEvents.isVisible = !show
+        binding.progressBar.isVisible = show
     }
 
     private fun showError(show: Boolean, message: String? = null) {
-        // Add an error view to your layout and control visibility here
-        // binding.errorView.isVisible = show
-        // binding.errorMessage.text = message
+        binding.errorView.isVisible = show
+        if (show && message != null) {
+            binding.errorMessage.text = message
+        }
+
+        binding.btnRetry.setOnClickListener {
+            viewModel.loadEvents()
+        }
     }
 
     private fun showEmpty(show: Boolean) {
-        // Add an empty state view to your layout and control visibility here
-        // binding.emptyView.isVisible = show
+        binding.emptyView.isVisible = show
+    }
+
+    private fun showContent(show: Boolean) {
+        binding.swipeRefresh.isVisible = show
     }
 
     override fun onDestroyView() {

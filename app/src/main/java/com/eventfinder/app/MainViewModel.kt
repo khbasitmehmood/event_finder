@@ -1,12 +1,19 @@
 package com.eventfinder.app
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import com.eventfinder.app.utils.ModeManager
+import com.google.firebase.firestore.FirebaseFirestore
+import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+@HiltViewModel
+class MainViewModel @Inject constructor(
+    private val application: Application,
+    private val firestore: FirebaseFirestore
+) : ViewModel() {
 
     // UI State for navigation mode
     private val _isAdminMode = MutableLiveData<Boolean>()
@@ -38,7 +45,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * Check if app should start in admin mode (on fresh start)
      */
     fun shouldStartInAdminMode(): Boolean {
-        return ModeManager.isAdminMode(getApplication())
+        return ModeManager.isAdminMode(application)
     }
 
     /**
@@ -69,7 +76,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      */
     fun switchDashboard(toAdmin: Boolean) {
         // Save mode preference
-        ModeManager.setAdminMode(getApplication(), toAdmin)
+        ModeManager.setAdminMode(application, toAdmin)
         _isAdminMode.value = toAdmin
 
         // Trigger switch event
@@ -91,7 +98,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
      * Load admin header data from preferences
      */
     private fun loadAdminHeaderData() {
-        val pref = getApplication<Application>().getSharedPreferences("admin_profile", 0)
+        val pref = application.getSharedPreferences("admin_profile", 0)
         _adminHeaderData.value = AdminHeaderData(
             name = pref.getString("name", "Admin User") ?: "Admin User",
             email = pref.getString("email", "admin@epicevents.com") ?: "admin@epicevents.com"

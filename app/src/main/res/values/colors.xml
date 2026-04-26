@@ -1,10 +1,10 @@
 <resources>
 
     <!-- ================= BRAND COLORS ================= -->
-    <color name="md_primary">#1CAE81</color>
+    <color name="md_primary">#3B71F6</color>
     <color name="md_on_primary">#FFFFFF</color>
-    <color name="md_primary_container">#D6F4EA</color>
-    <color name="md_on_primary_container">#0B3D2E</color>
+    <color name="md_primary_container">#D6E4FF</color>
+    <color name="md_on_primary_container">#001D54</color>
 
     <color name="md_secondary">#FFA26B</color>
     <color name="md_on_secondary">#000000</color>
@@ -17,39 +17,40 @@
     <color name="md_on_tertiary_container">#001A41</color>
 
     <!-- ================= BACKGROUND & SURFACE ================= -->
-    <color name="md_background">#FFFFFF</color>
-    <color name="md_on_background">#1C1B1F</color>
+    <color name="md_background">#F8F9FA</color>
+    <color name="md_on_background">#1A1A1A</color>
 
     <color name="md_surface">#FFFFFF</color>
-    <color name="md_on_surface">#1C1B1F</color>
+    <color name="md_on_surface">#1A1A1A</color>
 
-    <color name="md_surface_variant">#F2F2F2</color>
-    <color name="md_on_surface_variant">#444444</color>
+    <color name="md_surface_variant">#F3F4F6</color>
+    <color name="md_on_surface_variant">#4B5563</color>
 
-    <color name="md_surface_container">#F2F2F2</color>
-    <color name="md_surface_container_low">#F7F7F7</color>
-    <color name="md_surface_container_high">#EAEAEA</color>
+    <color name="md_surface_container">#F3F4F6</color>
+    <color name="md_surface_container_low">#F9FAFB</color>
+    <color name="md_surface_container_high">#E5E7EB</color>
 
     <!-- ================= OUTLINES ================= -->
-    <color name="md_outline">#C4C4C4</color>
-    <color name="md_outline_variant">#E0E0E0</color>
+    <color name="md_outline">#D1D5DB</color>
+    <color name="md_outline_variant">#E5E7EB</color>
 
     <!-- ================= STATES ================= -->
-    <color name="md_error">#B3261E</color>
+    <color name="md_error">#FF4B4B</color>
     <color name="md_on_error">#FFFFFF</color>
-    <color name="md_error_container">#F9DEDC</color>
-    <color name="md_on_error_container">#410E0B</color>
+    <color name="md_error_container">#FEE2E2</color>
+    <color name="md_on_error_container">#991B1B</color>
 
     <!-- ================= MISC ================= -->
-    <color name="md_inverse_surface">#313033</color>
-    <color name="md_inverse_on_surface">#F4EFF4</color>
-    <color name="md_inverse_primary">#6FE3C1</color>
+    <color name="md_inverse_surface">#1F2937</color>
+    <color name="md_inverse_on_surface">#F9FAFB</color>
+    <color name="md_inverse_primary">#93C5FD</color>
 
     <color name="md_shadow">#000000</color>
     <color name="md_scrim">#000000</color>
 
+    <color name="text_primary">#1A1A1A</color>
+    <color name="text_secondary">#757575</color>
 
-    <!-- Other colors from your project -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 </resources>

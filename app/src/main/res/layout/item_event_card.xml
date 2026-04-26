@@ -1,88 +1,207 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    style="@style/Widget.Material3.CardView.Filled"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="220dp"
-    app:cardCornerRadius="24dp"
-    app:cardElevation="0dp">
+    android:layout_height="200dp"
+    android:layout_marginBottom="@dimen/spacing_large"
+    app:cardCornerRadius="@dimen/spacing_xlarge"
+    app:cardElevation="2dp"
+    app:strokeWidth="0dp">
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!-- Background Image -->
+        <ImageView
+            android:id="@+id/eventImage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:contentDescription="@string/ctd_event_image"
+            tools:src="@drawable/ic_event_placeholder" />
+
+        <!-- Gradient Overlay - Transition from transparent top to white bottom -->
+        <View
+            android:id="@+id/gradientOverlay"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/gradient_image_to_white" />
+
+        <!-- Date Badge -->
         <LinearLayout
-            android:layout_width="50dp"
-            android:layout_height="60dp"
-            android:layout_margin="16dp"
+            android:id="@+id/dateBadge"
+            android:layout_width="54dp"
+            android:layout_height="64dp"
+            android:layout_gravity="top|start"
+            android:layout_margin="@dimen/spacing_large"
             android:background="@drawable/bg_date_tag"
+            android:elevation="@dimen/spacing_small"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="6dp">
 
             <TextView
+                android:id="@+id/eventDay"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sample_day"
-                android:textColor="#000000"
-                android:textSize="16sp"
-                android:textStyle="bold" />
+                android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                tools:text="25" />
 
             <TextView
+                android:id="@+id/eventMonth"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/sample_month"
-                android:textColor="#007AFF"
-                android:textSize="10sp" />
+                android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                android:textColor="@color/md_primary"
+                tools:text="APR" />
         </LinearLayout>
 
+        <!-- Favorite Button -->
+        <ImageButton
+            android:id="@+id/btnAddToFavourites"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="top|end"
+            android:layout_margin="@dimen/spacing_large"
+            android:background="@drawable/bg_circle_translucent"
+            android:contentDescription="@string/cd_add_to_favourites"
+            android:elevation="@dimen/spacing_small"
+            android:padding="10dp"
+            android:src="@drawable/ic_like"
+            app:tint="@color/md_error" />
+
+        <!-- Content Container - Bottom aligned -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
+            android:layout_gravity="bottom"
             android:orientation="vertical"
-            android:padding="20dp">
+            android:padding="@dimen/spacing_large">
 
-            <com.google.android.material.chip.Chip
-                android:layout_width="wrap_content"
+            <!-- Category Chip and Price Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="0.7"
-                android:letterSpacing="0.1"
-                android:text="@string/sample_category"
-                android:textAppearance="@style/TextAppearance.Material3.LabelSmall"
-                android:textColor="@color/md_on_primary"
-                app:chipBackgroundColor="@color/md_primary"
-                app:chipCornerRadius="@dimen/spacing_medium"
-                app:chipStrokeWidth="0dp" />
+                android:layout_marginBottom="6dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/eventCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/spacing_medium"
+                    android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                    android:textColor="@color/md_on_primary"
+                    app:chipBackgroundColor="@color/md_primary"
+                    app:chipCornerRadius="10dp"
+                    app:chipMinHeight="24dp"
+                    app:chipStrokeWidth="0dp"
+                    tools:text="MUSIC" />
+
+                <TextView
+                    android:id="@+id/eventPrice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_price_tag"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                    android:textColor="@color/md_primary"
+                    android:visibility="gone"
+                    tools:text="PKR 5,000"
+                    tools:visibility="visible" />
+
+            </LinearLayout>
+
+            <!-- Event Title -->
             <TextView
                 android:id="@+id/eventTitle"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/sample_event_title"
+                android:layout_marginBottom="6dp"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textAppearance="@style/TextAppearance.App.TitleLarge"
                 android:textColor="@color/md_primary"
-                android:textSize="22sp"
-                android:textStyle="bold" />
+                tools:text="Tech Conference 2024" />
 
-            <TextView
-                android:id="@+id/eventLocation"
-                android:layout_width="wrap_content"
+            <!-- Location and Time Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="0.8"
-                android:text="@string/sample_event_location"
-                android:textColor="@color/black"
-                android:textSize="14sp" />
+                android:orientation="horizontal">
+
+                <!-- Location -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:contentDescription="@string/event_location"
+                        android:src="@android:drawable/ic_dialog_map"
+                        app:tint="@color/text_secondary" />
+
+                    <TextView
+                        android:id="@+id/eventLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_small"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                        tools:text="Lahore Expo" />
+
+                    <TextView
+                        android:id="@+id/eventDistance"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                        android:textColor="@color/md_primary"
+                        android:visibility="gone"
+                        tools:text="2.5km"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
+
+                <!-- Time -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="14dp"
+                        android:layout_height="14dp"
+                        android:contentDescription="@string/event_date"
+                        android:src="@android:drawable/ic_menu_recent_history"
+                        app:tint="@color/text_secondary" />
+
+                    <TextView
+                        android:id="@+id/eventDateTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_small"
+                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                        tools:text="2:00 PM" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btnAddToFavourites"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_margin="20dp"
-            android:background="@drawable/bg_circle_translucent"
-            android:elevation="@dimen/spacing_medium"
-            android:src="@drawable/ic_like"
-            app:tint="@color/red" />
+    </FrameLayout>
 
-    </RelativeLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

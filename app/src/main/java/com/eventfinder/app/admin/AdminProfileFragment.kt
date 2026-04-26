@@ -10,9 +10,17 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
+import com.eventfinder.app.client.profile.ProfileViewModel
+import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
+@AndroidEntryPoint
 class AdminProfileFragment : Fragment(R.layout.admin_fragment_profile) {
 
     private lateinit var ivAdminProfile: ImageView
@@ -24,6 +32,8 @@ class AdminProfileFragment : Fragment(R.layout.admin_fragment_profile) {
     private lateinit var tvAdminRating: TextView
     private lateinit var tvAdminIntro: TextView
     private lateinit var btnSave: Button
+
+    private val viewModel: ProfileViewModel by viewModels()
 
     private var selectedImageUri: Uri? = null
 
@@ -82,8 +92,30 @@ class AdminProfileFragment : Fragment(R.layout.admin_fragment_profile) {
         // Observe edited results
         observeEditResults()
 
-        // Load admin data
+        // Observe viewmodel
+        observeViewModel()
+        
+        // Load initial offline/cached data
         loadAdminData()
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.currentUser.collect { user ->
+                    user?.let {
+                        val name = it.organizerProfile?.organizationName 
+                            ?: it.profile?.fullName 
+                            ?: tvAdminName.text.toString()
+                        
+                        tvAdminName.text = name
+                        tvAdminEmail.text = it.email
+                        tvAdminOrganization.text = it.organizerProfile?.organizationName ?: "Independent Organizer"
+                        tvAdminContact.text = it.organizerProfile?.phoneNumber ?: it.profile?.phoneNumber ?: "Add Contact"
+                    }
+                }
+            }
+        }
     }
 
     private fun openEditScreen(field: String, value: String) {
@@ -146,6 +178,8 @@ class AdminProfileFragment : Fragment(R.layout.admin_fragment_profile) {
             putString("intro", tvAdminIntro.text.toString())
             apply()
         }
+        
+        // TODO: Map to UpdateProfileUseCase to sync with Firestore in the future
         Toast.makeText(requireContext(), "Profile saved successfully", Toast.LENGTH_SHORT).show()
     }
 }

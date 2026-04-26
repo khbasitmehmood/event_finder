@@ -1,26 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@drawable/bg_bottom_sheet"
     android:orientation="vertical"
-    android:padding="24dp"
-    android:background="#1A1A1A">
+    android:padding="@dimen/spacing_xlarge">
 
-    <EditText
-    android:id="@+id/etVipPrice"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:hint="VIP Price" />
-
-    <EditText
-        android:id="@+id/etNormalPrice"
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Normal Price" />
+        android:layout_marginBottom="@dimen/spacing_xlarge"
+        android:text="@string/title_ticket_prices"
+        android:textAppearance="@style/TextAppearance.App.TitleLarge" />
 
-    <Button
-        android:id="@+id/btnPriceOk"
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hint_normal_price"
+        android:textAppearance="@style/TextAppearance.App.TitleSmall"
+        android:layout_marginBottom="@dimen/spacing_medium"
+        android:layout_marginStart="@dimen/spacing_small" />
+
+    <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Save" />
+        android:layout_marginBottom="20dp"
+        app:hintEnabled="false"
+        app:boxBackgroundMode="none"
+        app:prefixText="PKR ">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etNormalPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input_pill"
+            android:hint="@string/hint_enter_normal_price"
+            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+            android:textColor="@color/text_primary"
+            android:inputType="numberDecimal" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hint_vip_price"
+        android:textAppearance="@style/TextAppearance.App.TitleSmall"
+        android:layout_marginBottom="@dimen/spacing_medium"
+        android:layout_marginStart="@dimen/spacing_small" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/spacing_xxlarge"
+        app:hintEnabled="false"
+        app:boxBackgroundMode="none"
+        app:prefixText="PKR ">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etVipPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_input_pill"
+            android:hint="@string/hint_enter_vip_price"
+            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+            android:textColor="@color/text_primary"
+            android:inputType="numberDecimal" />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancel"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginEnd="@dimen/spacing_medium"
+            android:layout_weight="1"
+            android:text="@string/cancel"
+            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+            android:textColor="@color/text_secondary"
+            app:cornerRadius="@dimen/corner_radius_large" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSave"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginStart="@dimen/spacing_medium"
+            android:layout_weight="1"
+            android:text="@string/save"
+            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+            android:textColor="@color/md_on_primary"
+            app:backgroundTint="@color/md_primary"
+            app:cornerRadius="@dimen/corner_radius_large" />
+    </LinearLayout>
+
 </LinearLayout>
