@@ -1,5 +1,8 @@
 package com.eventfinder.app.client.home
 
+import android.content.res.ColorStateList
+import android.graphics.Color
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
@@ -49,46 +52,28 @@ class CalendarAdapter(
         val context = holder.binding.root.context
         val isSelected = position == selectedPosition || day.isSelected
 
+        val greenColor = Color.parseColor("#00A96E")
+
         holder.binding.apply {
             tvDayName.text = day.dayName
             tvDayNumber.text = day.dayNumber
-            eventIndicator.isVisible = day.hasEvents
+            tvDayNumber.setTextColor(Color.parseColor("#1A1A1A")) // Black text for all days
+            
+            // In the mock, dots are green for all days
+            eventIndicator.isVisible = true
+            eventIndicator.backgroundTintList = ColorStateList.valueOf(greenColor)
 
-            // Update card appearance based on selection
-            if (isSelected) {
-                cardCalendarDay.strokeWidth = 0
-                cardCalendarDay.setCardBackgroundColor(
-                    ContextCompat.getColor(context, R.color.md_primary)
-                )
-                tvDayName.setTextColor(
-                    ContextCompat.getColor(context, R.color.md_on_primary)
-                )
-                tvDayNumber.setTextColor(
-                    ContextCompat.getColor(context, R.color.md_on_primary)
-                )
-            } else if (day.isToday) {
-                cardCalendarDay.strokeWidth = 2
-                cardCalendarDay.strokeColor =
-                    ContextCompat.getColor(context, R.color.md_primary)
-                cardCalendarDay.setCardBackgroundColor(
-                    ContextCompat.getColor(context, android.R.color.white)
-                )
-                tvDayName.setTextColor(
-                    ContextCompat.getColor(context, R.color.md_primary)
-                )
-                tvDayNumber.setTextColor(
-                    ContextCompat.getColor(context, R.color.md_primary)
-                )
+            if (isSelected || day.isToday) {
+                // Set stroke width (in pixels)
+                val strokePx = TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP, 
+                    1.5f, 
+                    context.resources.displayMetrics
+                ).toInt()
+                cardCalendarDay.strokeWidth = strokePx
+                cardCalendarDay.strokeColor = greenColor
             } else {
-                cardCalendarDay.strokeWidth = 1
-                cardCalendarDay.strokeColor = 0xFFE0E0E0.toInt()
-                cardCalendarDay.setCardBackgroundColor(
-                    ContextCompat.getColor(context, android.R.color.white)
-                )
-                tvDayName.setTextColor(0xFF999999.toInt())
-                tvDayNumber.setTextColor(
-                    ContextCompat.getColor(context, R.color.md_primary)
-                )
+                cardCalendarDay.strokeWidth = 0
             }
         }
     }
@@ -97,8 +82,10 @@ class CalendarAdapter(
 
     fun updateDays(newDays: List<CalendarDay>) {
         days = newDays
-        // Find today and auto-select it
-        selectedPosition = days.indexOfFirst { it.isToday }
+        // Find today and auto-select it if nothing is selected
+        if (selectedPosition == -1) {
+            selectedPosition = days.indexOfFirst { it.isToday }
+        }
         notifyDataSetChanged()
     }
 }

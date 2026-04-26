@@ -54,7 +54,12 @@ class SplashViewModel @Inject constructor(
                         }
 
                         if (isComplete) {
-                            _navigationState.value = SplashNavigationState.NavigateToHome
+                            // Navigate to appropriate home based on user type
+                            _navigationState.value = if (user.userType == UserType.ORGANIZER) {
+                                SplashNavigationState.NavigateToDashboard
+                            } else {
+                                SplashNavigationState.NavigateToHome
+                            }
                         } else {
                             _navigationState.value = SplashNavigationState.NavigateToFillProfile
                         }
@@ -75,6 +80,7 @@ class SplashViewModel @Inject constructor(
 sealed class SplashNavigationState {
     object Idle : SplashNavigationState()
     object NavigateToHome : SplashNavigationState()
+    object NavigateToDashboard : SplashNavigationState()
     object NavigateToLogin : SplashNavigationState()
     object NavigateToFillProfile : SplashNavigationState()
 }

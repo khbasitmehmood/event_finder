@@ -34,20 +34,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     @Inject
     lateinit var userPreferences: UserPreferences
 
-    private lateinit var calendarAdapter: CalendarAdapter
-    private lateinit var yourEventsAdapter: HomeEventAdapter
+    private lateinit var yourEventsAdapter: UpcomingEventAdapter
     private lateinit var featuredAdapter: HomeEventAdapter
-
-    private var currentWeekStart = Calendar.getInstance()
-    private val monthYearFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
+    private lateinit var eventsNearYouAdapter: UpcomingEventAdapter
+    private lateinit var categoriesAdapter: CategoryAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentHomeBinding.bind(view)
-
-        // Read cached user type to apply UI immediately and prevent flickering
-        val cachedIsOrganizer = userPreferences.getUserType() == com.eventfinder.app.domain.model.UserType.ORGANIZER.name
-        updateUIForUserType(cachedIsOrganizer)
 
         setupUI()
         observeViewModel()
@@ -60,20 +54,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 viewModel.uiState.collect { state ->
                     // 1. Update User Details
                     state.user?.let { user ->
-                        val name = user.profile?.fullName ?: user.organizerProfile?.organizationName
+                        val name = user.profile?.fullName
                         name?.let {
                             userPreferences.setUserName(it)
                             binding.tvUserName.text = it
                         }
-                        userPreferences.setUserType(user.userType.name)
-                        updateUIForUserType(state.isOrganizer)
                     }
 
                     // 2. Update Events Lists
                     yourEventsAdapter.submitList(state.userEvents)
-                    updateYourEventsVisibility(state.userEvents, state.isOrganizer)
-                    
+                    updateYourEventsVisibility(state.userEvents)
+
                     featuredAdapter.submitList(state.featuredEvents)
+                    eventsNearYouAdapter.submitList(state.featuredEvents)
 
                     // 3. Handle Errors
                     state.error?.let {
@@ -85,61 +78,48 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun updateUIForUserType(isOrganizer: Boolean) {
-        if (isOrganizer) {
-            binding.layoutCalendarHeader.isVisible = true
-            binding.rvCalendar.isVisible = true
-
-            binding.layoutYourEventsHeader.isVisible = true
-            binding.tvYourEvents.text = "Your Events"
-
-            binding.tvEmptyStateTitle.text = "No Events Yet"
-            binding.tvEmptyStateDesc.text = "Create your first event and start managing attendees"
-            binding.btnCreateEvent.text = "Create Event"
-            binding.btnCreateEvent.setIconResource(R.drawable.ic_add)
-
-            binding.btnCreateEvent.setOnClickListener {
-                findNavController().navigate(R.id.createEventFragment)
-            }
-            binding.btnCreateEventIcon.setOnClickListener {
-                findNavController().navigate(R.id.createEventFragment)
-            }
-        } else {
-            binding.layoutCalendarHeader.isVisible = false
-            binding.rvCalendar.isVisible = false
-
-            binding.layoutYourEventsHeader.isVisible = true
-            binding.tvYourEvents.text = "Upcoming Events"
-
-            binding.tvEmptyStateTitle.text = "No upcoming events"
-            binding.tvEmptyStateDesc.text = "Explore events to find something interesting to attend"
-            binding.btnCreateEvent.text = "Explore Events"
-            binding.btnCreateEvent.setIconResource(R.drawable.ic_explore)
-
-            binding.btnCreateEvent.setOnClickListener {
-                findNavController().navigate(R.id.exploreFragment)
-            }
-            binding.btnCreateEventIcon.isVisible = false
-        }
-    }
 
     private fun setupUI() {
-        binding.tvUserName.text = userPreferences.getUserName()
+        // Extract first name from full name
+        val fullName = userPreferences.getUserName()
+        val firstName = fullName.split(" ").firstOrNull() ?: fullName
+        binding.tvUserName.text = firstName
 
-        setupCalendar()
+        // Setup featured events adapter (horizontal)
+        featuredAdapter = HomeEventAdapter { event -> navigateToEventDetail(event) }
+        binding.rvFeatured.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = featuredAdapter
+            setHasFixedSize(true)
+        }
 
-        yourEventsAdapter = HomeEventAdapter { event -> navigateToEventDetail(event) }
-        binding.rvYourEvents.apply {
+        // Setup categories adapter (grid)
+        categoriesAdapter = CategoryAdapter(getCategories())
+        binding.rvCategories.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+            adapter = categoriesAdapter
+            setHasFixedSize(true)
+        }
+        
+        // Setup events near you adapter (vertical)
+        eventsNearYouAdapter = UpcomingEventAdapter { event -> navigateToEventDetail(event) }
+        binding.rvEventsNearYou.apply {
             layoutManager = LinearLayoutManager(context)
+            adapter = eventsNearYouAdapter
+            setHasFixedSize(false)
+        }
+
+        // Setup your events adapter
+        yourEventsAdapter = UpcomingEventAdapter { event -> navigateToEventDetail(event) }
+        binding.rvYourEvents.apply {
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = yourEventsAdapter
             setHasFixedSize(false)
         }
 
-        featuredAdapter = HomeEventAdapter { event -> navigateToEventDetail(event) }
-        binding.rvFeatured.apply {
-            layoutManager = LinearLayoutManager(context)
-            adapter = featuredAdapter
-            setHasFixedSize(false)
+        // Button handlers
+        binding.btnCreateEvent.setOnClickListener {
+            findNavController().navigate(R.id.exploreFragment)
         }
 
         binding.tvSeeAllEvents.setOnClickListener {
@@ -151,76 +131,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun setupCalendar() {
-        currentWeekStart = Calendar.getInstance().apply {
-            set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY)
-        }
-
-        updateMonthYearDisplay()
-
-        calendarAdapter = CalendarAdapter(generateWeek(currentWeekStart)) { day ->
-            Toast.makeText(context, "Selected: ${day.dayName} ${day.dayNumber}", Toast.LENGTH_SHORT).show()
-        }
-
-        binding.rvCalendar.apply {
-            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-            adapter = calendarAdapter
-            setHasFixedSize(true)
-        }
-
-        binding.btnPreviousWeek.setOnClickListener {
-            currentWeekStart.add(Calendar.WEEK_OF_YEAR, -1)
-            updateCalendar()
-        }
-
-        binding.btnNextWeek.setOnClickListener {
-            currentWeekStart.add(Calendar.WEEK_OF_YEAR, 1)
-            updateCalendar()
-        }
+    private fun getCategories(): List<Category> {
+        return listOf(
+            Category("Music", R.drawable.music_note_2_24px),
+            Category("Food", R.drawable.ic_event_placeholder),
+            Category("Sports", R.drawable.sports_cricket_24px),
+            Category("Business", R.drawable.ic_event_placeholder),
+            Category("Family", R.drawable.ic_event_placeholder),
+            Category("More", R.drawable.ic_next)
+        )
     }
 
-    private fun updateCalendar() {
-        calendarAdapter.updateDays(generateWeek(currentWeekStart))
-        updateMonthYearDisplay()
-    }
-
-    private fun updateMonthYearDisplay() {
-        binding.tvMonthYear.text = monthYearFormat.format(currentWeekStart.time)
-    }
-
-    private fun generateWeek(weekStart: Calendar): List<CalendarDay> {
-        val calendar = weekStart.clone() as Calendar
-        val today = Date()
-        val weekDays = mutableListOf<CalendarDay>()
-        val dayNameFormat = SimpleDateFormat("EEE", Locale.getDefault())
-        val dayNumberFormat = SimpleDateFormat("dd", Locale.getDefault())
-
-        repeat(7) {
-            val date = calendar.time
-            val isToday = isSameDay(date, today)
-
-            weekDays.add(
-                CalendarDay(
-                    date = date,
-                    dayName = dayNameFormat.format(date).uppercase(),
-                    dayNumber = dayNumberFormat.format(date),
-                    isToday = isToday,
-                    isSelected = false,
-                    hasEvents = false // TODO: Check if day has events
-                )
-            )
-            calendar.add(Calendar.DAY_OF_YEAR, 1)
-        }
-
-        return weekDays
-    }
-
-    private fun isSameDay(date1: Date, date2: Date): Boolean {
-        val cal1 = Calendar.getInstance().apply { time = date1 }
-        val cal2 = Calendar.getInstance().apply { time = date2 }
-        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-               cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR)
-    }
 
     private fun navigateToEventDetail(event: Event) {
         val bundle = Bundle().apply {
@@ -237,17 +158,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun updateYourEventsVisibility(events: List<Event>, isOrganizer: Boolean) {
+    private fun updateYourEventsVisibility(events: List<Event>) {
         if (events.isEmpty()) {
             binding.layoutEmptyEvents.isVisible = true
             binding.rvYourEvents.isVisible = false
             binding.tvSeeAllEvents.isVisible = false
-            binding.btnCreateEventIcon.isVisible = false
         } else {
             binding.layoutEmptyEvents.isVisible = false
             binding.rvYourEvents.isVisible = true
             binding.tvSeeAllEvents.isVisible = events.size > 2
-            if (isOrganizer) binding.btnCreateEventIcon.isVisible = true
         }
     }
 

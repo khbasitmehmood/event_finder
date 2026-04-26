@@ -4,42 +4,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cardCalendarDay"
     android:layout_width="56dp"
-    android:layout_height="80dp"
+    android:layout_height="72dp"
     android:layout_marginEnd="12dp"
-    app:cardCornerRadius="16dp"
+    app:cardCornerRadius="12dp"
     app:cardElevation="0dp"
-    app:strokeWidth="1dp"
-    app:strokeColor="@color/md_outline">
+    app:strokeWidth="0dp"
+    app:strokeColor="@color/md_primary"
+    app:cardBackgroundColor="@android:color/transparent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="8dp">
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
 
         <TextView
             android:id="@+id/tvDayName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.App.LabelSmall"
-            android:textColor="@color/text_secondary"
+            android:textColor="#757575"
+            android:textSize="11sp"
             tools:text="SUN" />
 
         <TextView
             android:id="@+id/tvDayNumber"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textAppearance="@style/TextAppearance.App.TitleLarge"
-            android:textColor="@color/md_primary"
+            android:layout_marginTop="2dp"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            android:textStyle="bold"
+            android:textColor="@color/md_on_surface"
             tools:text="25" />
 
         <!-- Event Indicator Dot -->
         <View
             android:id="@+id/eventIndicator"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
+            android:layout_width="4dp"
+            android:layout_height="4dp"
             android:layout_marginTop="4dp"
             android:background="@drawable/bg_circle_indicator"
             android:visibility="invisible"

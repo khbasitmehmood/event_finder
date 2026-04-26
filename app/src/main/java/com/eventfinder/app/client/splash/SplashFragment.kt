@@ -35,6 +35,9 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                         is SplashNavigationState.NavigateToHome -> {
                             findNavController().navigate(R.id.action_splash_to_home)
                         }
+                        is SplashNavigationState.NavigateToDashboard -> {
+                            findNavController().navigate(R.id.action_splash_to_dashboard)
+                        }
                         is SplashNavigationState.NavigateToLogin -> {
                             findNavController().navigate(R.id.action_splash_to_login)
                         }

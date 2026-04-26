@@ -25,12 +25,13 @@ class TransitionFragment : Fragment(R.layout.fragment_transition) {
 
         // 2. Set Dynamic Status Text based on your sequence
         binding.tvTransitionStatus.text = when (target) {
-            "ADMIN" -> "Switching to Admin Dashboard..."
-            "USER" -> "Welcome back! Preparing your events..." // The "Welcoming Note"
+            "ADMIN" -> "Switching to Admin Dashboard..." // Deprecated: For future admin use
+            "ORGANIZER" -> "Welcome back! Loading your dashboard..."
+            "USER" -> "Welcome back! Preparing your events..."
             else -> "Loading..."
         }
 
-        // 3. Save mode preference
+        // 3. Save mode preference (deprecated for organizers, kept for future admin features)
         ModeManager.setAdminMode(requireContext(), target == "ADMIN")
 
         // 4. Entrance Animation
@@ -59,10 +60,17 @@ class TransitionFragment : Fragment(R.layout.fragment_transition) {
                 .setExitAnim(android.R.anim.fade_out)
                 .build()
 
-            if (target == "ADMIN") {
-                navController.navigate(R.id.adminDashboardFragment, null, navOptions)
-            } else {
-                navController.navigate(R.id.homeFragment, null, navOptions)
+            when (target) {
+                "ADMIN" -> {
+                    // Deprecated: Admin dashboard for future admin features
+                    navController.navigate(R.id.adminDashboardFragment, null, navOptions)
+                }
+                "ORGANIZER" -> {
+                    navController.navigate(R.id.organizerDashboardFragment, null, navOptions)
+                }
+                else -> {
+                    navController.navigate(R.id.homeFragment, null, navOptions)
+                }
             }
         } catch (e: Exception) {
             // Log the error - this usually means nav_graph IDs don't match

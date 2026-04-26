@@ -82,7 +82,7 @@ class LoginFragment : Fragment() {
             }
             is AuthUiState.Success -> {
                 setLoadingState(false)
-                handleLoginSuccess(state.user.isProfileComplete)
+                handleLoginSuccess(state.user.isProfileComplete, state.user.userType)
             }
             is AuthUiState.Error -> {
                 setLoadingState(false)
@@ -98,11 +98,11 @@ class LoginFragment : Fragment() {
         binding.etPassword.isEnabled = !isLoading
     }
 
-    private fun handleLoginSuccess(isProfileComplete: Boolean) {
+    private fun handleLoginSuccess(isProfileComplete: Boolean, userType: com.eventfinder.app.domain.model.UserType) {
         if (isProfileComplete) {
-            // Navigate to home screen
+            // Navigate to appropriate home screen based on user type
             val bundle = Bundle().apply {
-                putString("TARGET", "USER")
+                putString("TARGET", if (userType == com.eventfinder.app.domain.model.UserType.ORGANIZER) "ORGANIZER" else "USER")
             }
             findNavController().navigate(R.id.transitionFragment, bundle)
         } else {

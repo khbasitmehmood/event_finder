@@ -269,4 +269,29 @@
     <string name="error_loading_events">Something went wrong while fetching the events</string>
     <string name="no_events_found">No Events found</string>
     <string name="no_events">No events</string>
+
+    <!-- Organizer Dashboard -->
+    <string name="home">Home</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="total_events">Total Events</string>
+    <string name="total_earnings">Total Earnings</string>
+    <string name="your_events_organizer">Your Events</string>
+    <string name="no_events_organizer">No events yet</string>
+    <string name="create_first_event_organizer">Create your first event and start managing attendees</string>
+    <string name="stat_icon">Statistics Icon</string>
+    <string name="upcoming_events">Upcoming Events</string>
+    <string name="organizer_home_title">ORGANIZER HOME</string>
+    <string name="manage_events">Manage events,</string>
+    <string name="overview">Overview</string>
+    <string name="start_event">Start Event</string>
+
+    <!-- Attendee Home -->
+    <string name="attendee_home_title">ATTENDEE HOME</string>
+    <string name="discover">Discover</string>
+    <string name="search">Search</string>
+    <string name="filter">Filter</string>
+    <string name="browse_by_category">Browse by Category</string>
+    <string name="your_upcoming_tickets">Your Upcoming Tickets</string>
+    <string name="no_upcoming_tickets">No upcoming tickets</string>
+    <string name="explore_events_to_find">Explore events to find something to attend</string>
 </resources>

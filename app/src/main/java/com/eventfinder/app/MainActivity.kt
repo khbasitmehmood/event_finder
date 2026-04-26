@@ -29,36 +29,124 @@ class MainActivity : AppCompatActivity() {
         navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
         setupNavigation()
-        setupAdminDrawer()
         observeViewModel()
+        updateBottomNavForUserType() // Setup dynamic bottom nav based on user type
 
-        // Check saved mode and apply it on fresh start
-        if (savedInstanceState == null && viewModel.shouldStartInAdminMode()) {
-            switchToAdminMode()
-        }
+        // Note: Admin mode switching removed - organizers now use user type-based routing
+        // Old admin system is preserved in commented code for future actual admin features
     }
 
     private fun observeViewModel() {
-        // Observe admin header data changes
+        // Admin mode observation - COMMENTED OUT (preserved for future admin features)
+        /*
         viewModel.adminHeaderData.observe(this) { headerData ->
             updateAdminHeader(headerData)
         }
 
-        // Observe switch mode events
         viewModel.switchModeEvent.observe(this) { event ->
             event?.let {
                 handleSwitchModeEvent(it)
                 viewModel.onSwitchModeEventHandled()
             }
         }
+        */
     }
 
     private fun setupNavigation() {
-        binding.bottomNavigation.setupWithNavController(navController)
+        // Setup navigation with custom handling for organizers
+        val userType = viewModel.getUserType()
+        var isUpdatingSelection = false
+
+        binding.bottomNavigation.setOnItemSelectedListener { item ->
+            if (isUpdatingSelection) return@setOnItemSelectedListener true
+
+            when (item.itemId) {
+                R.id.homeFragment -> {
+                    // Navigate to appropriate home based on user type
+                    val destinationId = if (viewModel.getUserType() == com.eventfinder.app.domain.model.UserType.ORGANIZER) {
+                        R.id.organizerDashboardFragment
+                    } else {
+                        R.id.homeFragment
+                    }
+                    try {
+                        navController.navigate(destinationId)
+                        true
+                    } catch (e: Exception) {
+                        false
+                    }
+                }
+                else -> {
+                    // Let NavController handle other items normally
+                    try {
+                        navController.navigate(item.itemId)
+                        true
+                    } catch (e: Exception) {
+                        false
+                    }
+                }
+            }
+        }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val uiState = viewModel.onDestinationChanged(destination.id)
             applyNavigationUIState(uiState, destination.label?.toString())
+
+            // Update bottom nav labels dynamically based on current destination
+            val homeItem = binding.bottomNavigation.menu.findItem(R.id.homeFragment)
+            if (destination.id == R.id.organizerDashboardFragment) {
+                homeItem?.title = getString(R.string.dashboard)
+                homeItem?.setIcon(R.drawable.ic_dashboard)
+            } else if (destination.id == R.id.homeFragment) {
+                homeItem?.title = getString(R.string.home)
+                homeItem?.setIcon(R.drawable.ic_home)
+            }
+
+            // Update selected item based on current destination (prevent loops)
+            isUpdatingSelection = true
+            when (destination.id) {
+                R.id.homeFragment, R.id.organizerDashboardFragment -> {
+                    binding.bottomNavigation.selectedItemId = R.id.homeFragment
+                }
+                R.id.exploreFragment -> {
+                    binding.bottomNavigation.selectedItemId = R.id.exploreFragment
+                }
+                R.id.favouritesFragment -> {
+                    binding.bottomNavigation.selectedItemId = R.id.favouritesFragment
+                }
+                R.id.profileFragment -> {
+                    binding.bottomNavigation.selectedItemId = R.id.profileFragment
+                }
+            }
+            isUpdatingSelection = false
+        }
+    }
+
+    /**
+     * Updates the first item in bottom navigation based on user type.
+     * If ORGANIZER: shows "Dashboard" with dashboard icon, points to organizerDashboardFragment
+     * If USER: shows "Home" with home icon, points to homeFragment
+     */
+    private fun updateBottomNavForUserType() {
+        val userType = viewModel.getUserType()
+        val menu = binding.bottomNavigation.menu
+        val firstItem = menu.findItem(R.id.homeFragment)
+
+        // Clear any old admin mode preference to prevent confusion
+        @Suppress("DEPRECATION")
+        com.eventfinder.app.utils.ModeManager.setAdminMode(this, false)
+
+        if (userType == com.eventfinder.app.domain.model.UserType.ORGANIZER) {
+            // Change to Dashboard for organizers
+            firstItem?.let {
+                it.title = getString(R.string.dashboard)
+                it.setIcon(R.drawable.ic_dashboard)
+            }
+        } else {
+            // Keep as Home for regular users
+            firstItem?.let {
+                it.title = getString(R.string.home)
+                it.setIcon(R.drawable.ic_home)
+            }
         }
     }
 
@@ -80,25 +168,32 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    /*
+     * Admin drawer setup - COMMENTED OUT
+     * Preserved for future actual admin features. Not used by organizers.
+     *
+    @Deprecated("Preserved for future admin features. Organizers use bottom navigation.")
     private fun setupAdminDrawer() {
         with(binding) {
-            // Menu button opens drawer
             ivMenuDrawer.setOnClickListener {
                 drawerLayout.openDrawer(adminNavView)
             }
 
-            // Switch to user button
             ivSwitchToUser.setOnClickListener {
                 showSwitchToUserConfirmation()
             }
 
-            // Navigation drawer item clicks
             adminNavView.setNavigationItemSelectedListener { menuItem ->
                 handleAdminDrawerNavigation(menuItem.itemId)
             }
         }
     }
+    */
 
+    /*
+     * Admin navigation methods - COMMENTED OUT
+     * Preserved for future actual admin features.
+     *
     private fun handleAdminDrawerNavigation(menuItemId: Int): Boolean {
         val destinationId = when (menuItemId) {
             R.id.nav_admin_dashboard -> R.id.adminDashboardFragment
@@ -129,7 +224,12 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun switchDashboard(toAdmin: Boolean) = viewModel.switchDashboard(toAdmin)
+    */
 
+    /*
+     * Admin mode switching - COMMENTED OUT
+     * Preserved for future actual admin features.
+     *
     private fun handleSwitchModeEvent(event: MainViewModel.SwitchModeEvent) {
         try {
             binding.bottomNavigation.apply {
@@ -147,21 +247,15 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @Deprecated("Preserved for future admin features")
     private fun switchToAdminMode() {
         with(binding) {
-            // Hide client navigation
             bottomNavigation.visibility = View.GONE
-
-            // Show admin navigation
             adminTopBar.visibility = View.VISIBLE
             adminNavView.visibility = View.VISIBLE
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
         }
-
-        // Switch to admin navigation graph
         navController.setGraph(R.navigation.admin_nav_graph)
-
-        // Navigate to admin dashboard
         navController.navigate(
             R.id.adminDashboardFragment,
             null,
@@ -171,22 +265,16 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    @Deprecated("Preserved for future admin features")
     private fun switchToClientMode() {
         with(binding) {
-            // Hide admin navigation
             adminTopBar.visibility = View.GONE
             adminNavView.visibility = View.GONE
             drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
-
-            // Show client navigation
             bottomNavigation.visibility = View.VISIBLE
             bottomNavigation.inflateMenu(R.menu.bottom_nav_menu)
         }
-
-        // Switch to client navigation graph
         navController.setGraph(R.navigation.nav_graph)
-
-        // Navigate to home
         navController.navigate(
             R.id.homeFragment,
             null,
@@ -194,10 +282,9 @@ class MainActivity : AppCompatActivity() {
                 .setPopUpTo(navController.graph.startDestinationId, true)
                 .build()
         )
-
-        // Setup bottom navigation
         binding.bottomNavigation.setupWithNavController(navController)
     }
+    */
 
     @Deprecated("Deprecated in Java")
     override fun onBackPressed() {

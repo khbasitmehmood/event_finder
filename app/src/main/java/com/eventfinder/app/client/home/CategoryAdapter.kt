@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.eventfinder.app.databinding.ItemCategoryBinding
 
-// Changed: Constructor now takes a List of Category objects
 class CategoryAdapter(private val categories: List<Category>) :
     RecyclerView.Adapter<CategoryAdapter.CategoryViewHolder>() {
 
@@ -19,11 +18,8 @@ class CategoryAdapter(private val categories: List<Category>) :
 
     override fun onBindViewHolder(holder: CategoryViewHolder, position: Int) {
         val category = categories[position]
-        // Set the text from the Category name
         holder.binding.tvCategoryLabel.text = category.name
-
-        // If your layout has an ImageView for the icon, set it here:
-        // holder.binding.ivCategoryIcon.setImageResource(category.iconResId)
+        holder.binding.ivCategoryIcon.setImageResource(category.iconResId)
     }
 
     override fun getItemCount() = categories.size

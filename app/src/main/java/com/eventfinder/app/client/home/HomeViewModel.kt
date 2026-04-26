@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eventfinder.app.domain.model.Event
 import com.eventfinder.app.domain.model.User
-import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.usecase.GetExploreEventsUseCase
 import com.eventfinder.app.domain.usecase.GetUserEventsUseCase
 import com.eventfinder.app.domain.usecase.auth.GetCurrentUserUseCase
@@ -26,10 +25,7 @@ data class HomeUiState(
     val isLoadingUserEvents: Boolean = false,
     val isLoadingFeatured: Boolean = false,
     val error: String? = null
-) {
-    val isOrganizer: Boolean
-        get() = user?.userType == UserType.ORGANIZER
-}
+)
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(

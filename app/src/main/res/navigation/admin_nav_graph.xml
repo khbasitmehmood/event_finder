@@ -1,3 +1,8 @@
+<!--
+    Deprecated: Admin navigation graph preserved for future actual admin features.
+    Organizers now use the main nav_graph with organizerDashboardFragment.
+    TODO: Admin mode system preserved for future actual admin panel features
+-->
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"

@@ -7,6 +7,12 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
 
+/**
+ * @deprecated This AdminDashboardFragment is obsolete and preserved for future actual admin features.
+ * Organizers now use OrganizerDashboardFragment instead.
+ * TODO: Admin mode system preserved for future actual admin panel features
+ */
+@Deprecated("Obsolete - Use OrganizerDashboardFragment for organizers. Preserved for future admin features.")
 class AdminDashboardFragment : Fragment(R.layout.fragment_admin_dashboard) {
 
     private lateinit var btnCreateEvent: Button

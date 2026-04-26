@@ -60,10 +60,13 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             showLogoutConfirmation()
         }
 
-        // Switch to Admin
+        // Switch to Admin - COMMENTED OUT (no longer needed)
+        // Organizers now use user type-based routing automatically
+        /*
         binding.btnSwitchAdmin.setOnClickListener {
             showSwitchToAdminConfirmation()
         }
+        */
     }
 
     private fun observeViewModel() {
@@ -167,6 +170,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         findNavController().navigate(R.id.action_profile_to_login)
     }
 
+    /*
+     * Admin mode switching - COMMENTED OUT
+     * This functionality is no longer needed. Organizers use user type-based routing.
+     * Preserved for future actual admin features.
+     *
     private fun showSwitchToAdminConfirmation() {
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Switch to Admin Mode?")
@@ -186,6 +194,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         Toast.makeText(requireContext(), "Switching to Admin Mode...", Toast.LENGTH_SHORT).show()
         (requireActivity() as? MainActivity)?.switchDashboard(toAdmin = true)
     }
+    */
 
     override fun onDestroyView() {
         super.onDestroyView()

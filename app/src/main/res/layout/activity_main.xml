@@ -80,6 +80,7 @@
                 app:backgroundTint="?attr/colorSurfaceContainer"
                 app:itemIconTint="@color/nav_item_colors"
                 app:itemTextColor="@color/nav_item_colors"
+                app:itemActiveIndicatorStyle="@style/TransparentActiveIndicator"
                 app:labelVisibilityMode="labeled"
                 app:menu="@menu/bottom_nav_menu" />
 

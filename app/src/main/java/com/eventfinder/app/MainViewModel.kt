@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.utils.ModeManager
+import com.eventfinder.app.utils.UserPreferences
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -12,7 +14,8 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val application: Application,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val userPreferences: UserPreferences
 ) : ViewModel() {
 
     // UI State for navigation mode
@@ -30,6 +33,7 @@ class MainViewModel @Inject constructor(
     // Client main screen IDs for bottom nav visibility
     val clientMainScreenIds = setOf(
         R.id.homeFragment,
+        R.id.organizerDashboardFragment, // Added for organizer dashboard
         R.id.exploreFragment,
         R.id.favouritesFragment,
         R.id.profileFragment
@@ -42,8 +46,22 @@ class MainViewModel @Inject constructor(
     }
 
     /**
-     * Check if app should start in admin mode (on fresh start)
+     * Get the current user type from preferences
      */
+    fun getUserType(): UserType {
+        val userTypeString = userPreferences.getUserType()
+        return try {
+            UserType.valueOf(userTypeString)
+        } catch (e: Exception) {
+            UserType.USER // Default to USER if invalid
+        }
+    }
+
+    /**
+     * Check if app should start in admin mode (on fresh start)
+     * @deprecated Admin mode system preserved for future actual admin features
+     */
+    @Deprecated("Admin mode system preserved for future actual admin features")
     fun shouldStartInAdminMode(): Boolean {
         return ModeManager.isAdminMode(application)
     }
@@ -73,7 +91,9 @@ class MainViewModel @Inject constructor(
 
     /**
      * Switch between admin and client mode
+     * @deprecated Admin mode system preserved for future actual admin features
      */
+    @Deprecated("Admin mode system preserved for future actual admin features")
     fun switchDashboard(toAdmin: Boolean) {
         // Save mode preference
         ModeManager.setAdminMode(application, toAdmin)
