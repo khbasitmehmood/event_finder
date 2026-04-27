@@ -2,7 +2,9 @@ package com.eventfinder.app.client.profile
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eventfinder.app.domain.model.EventCategory
 import com.eventfinder.app.domain.model.User
+import com.eventfinder.app.domain.usecase.GetEventCategoriesUseCase
 import com.eventfinder.app.domain.usecase.auth.GetCurrentUserUseCase
 import com.eventfinder.app.domain.usecase.auth.LogoutUseCase
 import com.eventfinder.app.utils.UserPreferences
@@ -20,6 +22,7 @@ import javax.inject.Inject
 class ProfileViewModel @Inject constructor(
     private val logoutUseCase: LogoutUseCase,
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val getEventCategoriesUseCase: GetEventCategoriesUseCase,
     private val userPreferences: UserPreferences
 ) : ViewModel() {
 
@@ -28,9 +31,26 @@ class ProfileViewModel @Inject constructor(
 
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
+    
+    private val _categories = MutableStateFlow<List<EventCategory>>(emptyList())
+    val categories: StateFlow<List<EventCategory>> = _categories.asStateFlow()
 
     init {
+        loadCategories()
         loadCurrentUser()
+    }
+    
+    private fun loadCategories() {
+        viewModelScope.launch {
+            getEventCategoriesUseCase().fold(
+                onSuccess = { list ->
+                    _categories.value = list
+                },
+                onFailure = {
+                    _categories.value = emptyList()
+                }
+            )
+        }
     }
 
     private fun loadCurrentUser() {

@@ -3,10 +3,12 @@ package com.eventfinder.app.client.auth
 import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eventfinder.app.domain.model.EventCategory
 import com.eventfinder.app.domain.model.OrganizerProfile
 import com.eventfinder.app.domain.model.User
 import com.eventfinder.app.domain.model.UserProfile
 import com.eventfinder.app.domain.model.UserType
+import com.eventfinder.app.domain.usecase.GetEventCategoriesUseCase
 import com.eventfinder.app.domain.usecase.auth.GetCurrentUserUseCase
 import com.eventfinder.app.domain.usecase.auth.UpdateProfileUseCase
 import com.eventfinder.app.domain.usecase.auth.UploadImageUseCase
@@ -23,6 +25,7 @@ class FillProfileViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
     private val updateProfileUseCase: UpdateProfileUseCase,
     private val uploadImageUseCase: UploadImageUseCase,
+    private val getEventCategoriesUseCase: GetEventCategoriesUseCase,
     private val userPreferences: UserPreferences
 ) : ViewModel() {
 
@@ -31,9 +34,13 @@ class FillProfileViewModel @Inject constructor(
 
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser.asStateFlow()
+    
+    private val _categories = MutableStateFlow<List<EventCategory>>(emptyList())
+    val categories: StateFlow<List<EventCategory>> = _categories.asStateFlow()
 
     init {
         loadCurrentUser()
+        loadCategories()
     }
 
     private fun loadCurrentUser() {
@@ -44,6 +51,20 @@ class FillProfileViewModel @Inject constructor(
                 },
                 onFailure = {
                     _currentUser.value = null
+                }
+            )
+        }
+    }
+    
+    private fun loadCategories() {
+        viewModelScope.launch {
+            getEventCategoriesUseCase().fold(
+                onSuccess = { list ->
+                    _categories.value = list
+                },
+                onFailure = {
+                    // Non-fatal, just will show empty chips or fallback
+                    _categories.value = emptyList()
                 }
             )
         }
@@ -84,7 +105,7 @@ class FillProfileViewModel @Inject constructor(
                             phoneNumber = contactNumber,
                             contactPerson = contactPerson,
                             description = description,
-                            offeredEvents = interests,
+                            offeredEvents = interests, // Saving category IDs to Firestore
                             logoUrl = photoUrl
                         )
                     )
@@ -93,7 +114,7 @@ class FillProfileViewModel @Inject constructor(
                         profile = UserProfile(
                             fullName = name,
                             phoneNumber = contactNumber,
-                            interests = interests,
+                            interests = interests, // Saving category IDs to Firestore
                             photoUrl = photoUrl
                         )
                     )

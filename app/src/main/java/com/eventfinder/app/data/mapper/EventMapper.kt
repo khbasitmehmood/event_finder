@@ -24,7 +24,7 @@ object EventMapper {
             eventId = dto.eventId,
             title = dto.title,
             description = dto.description,
-            category = dto.category?.let { safeValueOf<EventCategory>(it) },
+            category = dto.category?.let { EventCategory(id = "", name = it) },
 
             organizerId = dto.organizerId,
             organizerName = dto.organizerName,
@@ -128,17 +128,6 @@ object EventMapper {
             val dto = snapshot.toObject(EventDto::class.java) ?: return null
             toDomain(dto)
         } catch (e: Exception) {
-            null
-        }
-    }
-
-    /**
-     * Safe enum valueOf for EventCategory
-     */
-    private inline fun <reified T : Enum<T>> safeValueOf(value: String?): T? {
-        return try {
-            value?.let { enumValueOf<T>(it) }
-        } catch (e: IllegalArgumentException) {
             null
         }
     }

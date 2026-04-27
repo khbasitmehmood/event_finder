@@ -17,10 +17,6 @@ import com.eventfinder.app.domain.model.Event
 import com.eventfinder.app.utils.UserPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Date
-import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -36,7 +32,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var yourEventsAdapter: UpcomingEventAdapter
     private lateinit var featuredAdapter: HomeEventAdapter
-    private lateinit var eventsNearYouAdapter: UpcomingEventAdapter
+    private lateinit var eventsNearYouAdapter: HomeEventAdapter
     private lateinit var categoriesAdapter: CategoryAdapter
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,19 +50,30 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 viewModel.uiState.collect { state ->
                     // 1. Update User Details
                     state.user?.let { user ->
-                        val name = user.profile?.fullName
+                        val name = user.profile?.fullName ?: user.organizerProfile?.organizationName
                         name?.let {
                             userPreferences.setUserName(it)
                             binding.tvUserName.text = it
                         }
                     }
 
-                    // 2. Update Events Lists
+                    // 2. Update Events & Categories Lists
+                    categoriesAdapter.submitList(state.userCategories)
+                    
                     yourEventsAdapter.submitList(state.userEvents)
                     updateYourEventsVisibility(state.userEvents)
 
                     featuredAdapter.submitList(state.featuredEvents)
                     eventsNearYouAdapter.submitList(state.featuredEvents)
+                    
+                    // Update Loading states
+                    val isAnyLoading = state.isLoadingFeatured || state.isLoadingUserEvents
+                    binding.swipeRefreshLayout.isRefreshing = isAnyLoading
+                    
+                    // Show placeholders if empty and loading
+                    binding.progressBarFeatured.isVisible = state.isLoadingFeatured && state.featuredEvents.isEmpty()
+                    binding.progressBarNearYou.isVisible = state.isLoadingFeatured && state.featuredEvents.isEmpty()
+                    binding.progressBarYourEvents.isVisible = state.isLoadingUserEvents && state.userEvents.isEmpty()
 
                     // 3. Handle Errors
                     state.error?.let {
@@ -84,17 +91,22 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val fullName = userPreferences.getUserName()
         val firstName = fullName.split(" ").firstOrNull() ?: fullName
         binding.tvUserName.text = firstName
+        
+        // Setup SwipeRefreshLayout
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.loadData()
+        }
 
         // Setup featured events adapter (horizontal)
-        featuredAdapter = HomeEventAdapter { event -> navigateToEventDetail(event) }
+        featuredAdapter = HomeEventAdapter(isHorizontal = true) { event -> navigateToEventDetail(event) }
         binding.rvFeatured.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = featuredAdapter
             setHasFixedSize(true)
         }
 
-        // Setup categories adapter (grid)
-        categoriesAdapter = CategoryAdapter(getCategories())
+        // Setup categories adapter (horizontal)
+        categoriesAdapter = CategoryAdapter()
         binding.rvCategories.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = categoriesAdapter
@@ -102,14 +114,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
         
         // Setup events near you adapter (vertical)
-        eventsNearYouAdapter = UpcomingEventAdapter { event -> navigateToEventDetail(event) }
+        eventsNearYouAdapter = HomeEventAdapter(isHorizontal = false) { event -> navigateToEventDetail(event) }
         binding.rvEventsNearYou.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = eventsNearYouAdapter
             setHasFixedSize(false)
         }
 
-        // Setup your events adapter
+        // Setup your events adapter (horizontal, using Upcoming items)
         yourEventsAdapter = UpcomingEventAdapter { event -> navigateToEventDetail(event) }
         binding.rvYourEvents.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -118,7 +130,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
 
         // Button handlers
-        binding.btnCreateEvent.setOnClickListener {
+        binding.btnExploreEvents.setOnClickListener {
             findNavController().navigate(R.id.exploreFragment)
         }
 
@@ -130,18 +142,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(R.id.chatbotFragment)
         }
     }
-
-    private fun getCategories(): List<Category> {
-        return listOf(
-            Category("Music", R.drawable.music_note_2_24px),
-            Category("Food", R.drawable.ic_event_placeholder),
-            Category("Sports", R.drawable.sports_cricket_24px),
-            Category("Business", R.drawable.ic_event_placeholder),
-            Category("Family", R.drawable.ic_event_placeholder),
-            Category("More", R.drawable.ic_next)
-        )
-    }
-
 
     private fun navigateToEventDetail(event: Event) {
         val bundle = Bundle().apply {
@@ -162,11 +162,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         if (events.isEmpty()) {
             binding.layoutEmptyEvents.isVisible = true
             binding.rvYourEvents.isVisible = false
-            binding.tvSeeAllEvents.isVisible = false
         } else {
             binding.layoutEmptyEvents.isVisible = false
             binding.rvYourEvents.isVisible = true
-            binding.tvSeeAllEvents.isVisible = events.size > 2
         }
     }
 

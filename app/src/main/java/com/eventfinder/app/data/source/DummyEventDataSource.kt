@@ -26,7 +26,7 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             eventId = "event_1",
             title = "Tech Conference 2024",
             description = "Annual technology conference featuring the latest innovations in AI, blockchain, and cloud computing.",
-            category = EventCategory.BUSINESS,
+            category = EventCategory("cat_business", "Business & Expos"),
             organizerId = "org_1",
             organizerName = "Tech Events PK",
             startTime = System.currentTimeMillis() + (7 * 24 * 60 * 60 * 1000L), // 7 days from now
@@ -46,7 +46,7 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             eventId = "event_2",
             title = "Music Festival 2024",
             description = "A spectacular night featuring Pakistan's top musicians and bands.",
-            category = EventCategory.MUSIC,
+            category = EventCategory("cat_music", "Music & Concerts"),
             organizerId = "org_2",
             organizerName = "Sound Events",
             startTime = System.currentTimeMillis() + (14 * 24 * 60 * 60 * 1000L),
@@ -66,7 +66,7 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             eventId = "event_3",
             title = "Food Festival",
             description = "Celebrate culinary diversity with food from around the world.",
-            category = EventCategory.FOOD,
+            category = EventCategory("cat_food", "Food Festivals & Galas"),
             organizerId = "org_3",
             organizerName = "Foodie Events",
             startTime = System.currentTimeMillis() + (21 * 24 * 60 * 60 * 1000L),
@@ -84,7 +84,7 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             eventId = "event_4",
             title = "Cricket Tournament",
             description = "Inter-city cricket championship featuring top teams.",
-            category = EventCategory.SPORTS,
+            category = EventCategory("cat_sports", "Sports & Cricket Screenings"),
             organizerId = "org_4",
             organizerName = "Sports League PK",
             startTime = System.currentTimeMillis() + (30 * 24 * 60 * 60 * 1000L),
@@ -106,7 +106,7 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             eventId = "event_5",
             title = "Digital Marketing Workshop",
             description = "Learn the latest digital marketing strategies from industry experts.",
-            category = EventCategory.WORKSHOP,
+            category = EventCategory("cat_workshops", "Workshops & Training"),
             organizerId = "org_5",
             organizerName = "Learn & Grow Academy",
             startTime = System.currentTimeMillis() + (10 * 24 * 60 * 60 * 1000L),
@@ -148,7 +148,7 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
 
     override suspend fun getEventsByCategory(category: EventCategory): List<Event> {
         delay(300)
-        return dummyEvents.filter { it.category == category }
+        return dummyEvents.filter { it.category?.id == category.id }
     }
 
     override suspend fun getNearbyEvents(

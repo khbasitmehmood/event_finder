@@ -3,7 +3,10 @@ package com.eventfinder.app.client.home
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eventfinder.app.domain.model.Event
+import com.eventfinder.app.domain.model.EventCategory
 import com.eventfinder.app.domain.model.User
+import com.eventfinder.app.domain.model.UserType
+import com.eventfinder.app.domain.usecase.GetEventCategoriesUseCase
 import com.eventfinder.app.domain.usecase.GetExploreEventsUseCase
 import com.eventfinder.app.domain.usecase.GetUserEventsUseCase
 import com.eventfinder.app.domain.usecase.auth.GetCurrentUserUseCase
@@ -22,6 +25,7 @@ data class HomeUiState(
     val user: User? = null,
     val userEvents: List<Event> = emptyList(),
     val featuredEvents: List<Event> = emptyList(),
+    val userCategories: List<EventCategory> = emptyList(),
     val isLoadingUserEvents: Boolean = false,
     val isLoadingFeatured: Boolean = false,
     val error: String? = null
@@ -31,7 +35,8 @@ data class HomeUiState(
 class HomeViewModel @Inject constructor(
     private val getUserEventsUseCase: GetUserEventsUseCase,
     private val getExploreEventsUseCase: GetExploreEventsUseCase,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val getEventCategoriesUseCase: GetEventCategoriesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState())
@@ -42,7 +47,7 @@ class HomeViewModel @Inject constructor(
     }
 
     /**
-     * Loads the user and subsequently their events and featured events
+     * Loads the user and subsequently their events, featured events, and categories
      */
     fun loadData() {
         viewModelScope.launch {
@@ -52,6 +57,9 @@ class HomeViewModel @Inject constructor(
                     _uiState.update { it.copy(user = user) }
                     // Load events requiring user context
                     user?.uid?.let { fetchUserEvents(it) }
+                    
+                    // Fetch categories to filter by user's interests
+                    fetchUserCategories(user)
                 },
                 onFailure = {
                     _uiState.update { it.copy(user = null, error = "Failed to load user session.") }
@@ -61,6 +69,27 @@ class HomeViewModel @Inject constructor(
             // Fetch Featured Events in parallel
             fetchFeaturedEvents()
         }
+    }
+
+    private suspend fun fetchUserCategories(user: User?) {
+        if (user == null) return
+        
+        getEventCategoriesUseCase().fold(
+            onSuccess = { allCategories ->
+                val userInterestIds = if (user.userType == UserType.ORGANIZER) {
+                    user.organizerProfile?.offeredEvents ?: emptyList()
+                } else {
+                    user.profile?.interests ?: emptyList()
+                }
+                
+                val filteredCategories = allCategories.filter { it.id in userInterestIds }
+                
+                _uiState.update { it.copy(userCategories = filteredCategories) }
+            },
+            onFailure = {
+                // Ignore failure for categories for now
+            }
+        )
     }
 
     private suspend fun fetchUserEvents(userId: String) {

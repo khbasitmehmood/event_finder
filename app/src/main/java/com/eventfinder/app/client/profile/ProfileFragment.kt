@@ -11,14 +11,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.transform.CircleCropTransformation
-import com.eventfinder.app.MainActivity
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentProfileBinding
 import com.eventfinder.app.domain.model.UserType
-import com.eventfinder.app.utils.ModeManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -59,14 +58,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         binding.btnLogout.setOnClickListener {
             showLogoutConfirmation()
         }
-
-        // Switch to Admin - COMMENTED OUT (no longer needed)
-        // Organizers now use user type-based routing automatically
-        /*
-        binding.btnSwitchAdmin.setOnClickListener {
-            showSwitchToAdminConfirmation()
-        }
-        */
     }
 
     private fun observeViewModel() {
@@ -79,27 +70,37 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 }
                 
                 launch {
-                    viewModel.currentUser.collect { user ->
-                        user?.let {
-                            val displayName = it.profile?.fullName 
-                                ?: it.organizerProfile?.organizationName 
+                    // Combine flow so we setup chips only when both user and categories are ready
+                    combine(
+                        viewModel.currentUser,
+                        viewModel.categories
+                    ) { user, categories ->
+                        Pair(user, categories)
+                    }.collect { (user, categories) ->
+                        if (user != null && categories.isNotEmpty()) {
+                            val displayName = user.profile?.fullName 
+                                ?: user.organizerProfile?.organizationName 
                                 ?: "Guest User"
                             
                             binding.profileName.text = displayName
-                            binding.profileEmail.text = it.email
+                            binding.profileEmail.text = user.email
 
-                            val photoUrl = if (it.userType == UserType.ORGANIZER) {
+                            val photoUrl = if (user.userType == UserType.ORGANIZER) {
                                 binding.tvInterestsTitle.text = "Events We Offer"
-                                val offered = it.organizerProfile?.offeredEvents ?: emptyList()
-                                setupChips(offered)
+                                val offeredIds = user.organizerProfile?.offeredEvents ?: emptyList()
+                                // Map IDs back to names
+                                val names = offeredIds.mapNotNull { id -> categories.find { it.id == id }?.name }
+                                setupChips(names)
                                 
-                                it.organizerProfile?.logoUrl
+                                user.organizerProfile?.logoUrl
                             } else {
                                 binding.tvInterestsTitle.text = "Add Interests"
-                                val interests = it.profile?.interests ?: emptyList()
-                                setupChips(interests)
+                                val interestIds = user.profile?.interests ?: emptyList()
+                                // Map IDs back to names
+                                val names = interestIds.mapNotNull { id -> categories.find { it.id == id }?.name }
+                                setupChips(names)
                                 
-                                it.profile?.photoUrl
+                                user.profile?.photoUrl
                             }
 
                             if (!photoUrl.isNullOrBlank()) {
@@ -135,7 +136,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 // Do nothing
             }
             is LogoutState.Loading -> {
-                // Show loading (optional - logout is usually fast)
                 binding.btnLogout.isEnabled = false
             }
             is LogoutState.Success -> {
@@ -169,32 +169,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         // Clear back stack and navigate to login
         findNavController().navigate(R.id.action_profile_to_login)
     }
-
-    /*
-     * Admin mode switching - COMMENTED OUT
-     * This functionality is no longer needed. Organizers use user type-based routing.
-     * Preserved for future actual admin features.
-     *
-    private fun showSwitchToAdminConfirmation() {
-        MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Switch to Admin Mode?")
-            .setMessage("Are you sure you want to switch to the Admin Dashboard?")
-            .setCancelable(true)
-            .setNegativeButton("Cancel") { dialog, _ ->
-                dialog.dismiss()
-            }
-            .setPositiveButton("Switch Now") { _, _ ->
-                performAdminSwitch()
-            }
-            .show()
-    }
-
-    private fun performAdminSwitch() {
-        ModeManager.setAdminMode(requireContext(), true)
-        Toast.makeText(requireContext(), "Switching to Admin Mode...", Toast.LENGTH_SHORT).show()
-        (requireActivity() as? MainActivity)?.switchDashboard(toAdmin = true)
-    }
-    */
 
     override fun onDestroyView() {
         super.onDestroyView()

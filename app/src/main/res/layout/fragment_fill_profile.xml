@@ -224,15 +224,24 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/llOrganizerFields" />
 
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupCategories"
-            android:layout_width="match_parent"
+        <!-- Changed from GridLayout to LinearLayout holding multiple rows -->
+        <HorizontalScrollView
+            android:id="@+id/hsvCategories"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:chipSpacing="@dimen/spacing_medium"
+            android:scrollbars="none"
+            android:clipToPadding="false"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCategoriesLabel" />
+            app:layout_constraintTop_toBottomOf="@id/tvCategoriesLabel">
+
+            <LinearLayout
+                android:id="@+id/llChipRowsContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical" />
+        </HorizontalScrollView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveProfile"
@@ -248,7 +257,7 @@
             app:backgroundTint="@color/md_primary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/chipGroupCategories"
+            app:layout_constraintTop_toBottomOf="@id/hsvCategories"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ProgressBar

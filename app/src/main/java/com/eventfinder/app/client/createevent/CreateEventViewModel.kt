@@ -7,6 +7,7 @@ import com.eventfinder.app.domain.model.EventCategory
 import com.eventfinder.app.domain.model.EventLocation
 import com.eventfinder.app.domain.model.EventVisibility
 import com.eventfinder.app.domain.usecase.CreateEventUseCase
+import com.eventfinder.app.domain.usecase.GetEventCategoriesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -20,7 +21,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class CreateEventViewModel @Inject constructor(
-    private val createEventUseCase: CreateEventUseCase
+    private val createEventUseCase: CreateEventUseCase,
+    private val getEventCategoriesUseCase: GetEventCategoriesUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<CreateEventUiState>(CreateEventUiState.Idle)
@@ -28,6 +30,26 @@ class CreateEventViewModel @Inject constructor(
 
     private val _draftState = MutableStateFlow<DraftState>(DraftState.Idle)
     val draftState: StateFlow<DraftState> = _draftState.asStateFlow()
+    
+    private val _categories = MutableStateFlow<List<EventCategory>>(emptyList())
+    val categories: StateFlow<List<EventCategory>> = _categories.asStateFlow()
+    
+    init {
+        loadCategories()
+    }
+    
+    private fun loadCategories() {
+        viewModelScope.launch {
+            getEventCategoriesUseCase().fold(
+                onSuccess = { list ->
+                    _categories.value = list
+                },
+                onFailure = {
+                    _categories.value = emptyList()
+                }
+            )
+        }
+    }
 
     /**
      * Create a new event and publish it
@@ -139,40 +161,40 @@ class CreateEventViewModel @Inject constructor(
      * Generate dummy image URLs based on event category
      */
     private fun generateDummyImageUrls(category: EventCategory): List<String> {
-        return when (category) {
-            EventCategory.SPORTS -> listOf(
+        return when (category.id) {
+            "cat_sports", "cat_fitness" -> listOf(
                 "https://images.unsplash.com/photo-1461896836934-ffe607ba8211",
                 "https://images.unsplash.com/photo-1517649763962-0c623066013b"
             )
-            EventCategory.MUSIC, EventCategory.CONCERT -> listOf(
+            "cat_music", "cat_qawwali" -> listOf(
                 "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3",
                 "https://images.unsplash.com/photo-1459749411175-04bf5292ceea"
             )
-            EventCategory.FOOD, EventCategory.FESTIVAL -> listOf(
+            "cat_food" -> listOf(
                 "https://images.unsplash.com/photo-1555939594-58d7cb561ad1",
                 "https://images.unsplash.com/photo-1504674900247-0877df9cc836"
             )
-            EventCategory.BUSINESS -> listOf(
+            "cat_business", "cat_networking", "cat_real_estate" -> listOf(
                 "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
                 "https://images.unsplash.com/photo-1559136555-9303baea8ebd"
             )
-            EventCategory.WORKSHOP -> listOf(
+            "cat_workshops", "cat_tech" -> listOf(
                 "https://images.unsplash.com/photo-1552664730-d307ca884978",
                 "https://images.unsplash.com/photo-1531482615713-2afd69097998"
             )
-            EventCategory.EDUCATION -> listOf(
+            "cat_education", "cat_books" -> listOf(
                 "https://images.unsplash.com/photo-1523240795612-9a054b0db644",
                 "https://images.unsplash.com/photo-1427504494785-3a9ca7044f45"
             )
-            EventCategory.PARTY, EventCategory.CULTURAL -> listOf(
+            "cat_arts_theatre", "cat_culture", "cat_mushaira", "cat_comedy" -> listOf(
                 "https://images.unsplash.com/photo-1492684223066-81342ee5ff30",
                 "https://images.unsplash.com/photo-1514525253161-7a46d19cd819"
             )
-            EventCategory.CHARITY -> listOf(
+            "cat_charity", "cat_religion" -> listOf(
                 "https://images.unsplash.com/photo-1511795409834-ef04bbd61622",
                 "https://images.unsplash.com/photo-1528605248644-14dd04022da1"
             )
-            EventCategory.OTHER -> listOf(
+            else -> listOf(
                 "https://images.unsplash.com/photo-1492684223066-81342ee5ff30"
             )
         }

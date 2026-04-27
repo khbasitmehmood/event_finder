@@ -50,7 +50,6 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         _binding = FragmentCreateEventNewBinding.bind(view)
 
         setupToolbar()
-        setupCategoryDropdown()
         setupDateTimePickers()
         setupPricingToggle()
         setupImageUpload()
@@ -70,6 +69,12 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
                 launch {
                     viewModel.draftState.collect { state ->
                         handleDraftState(state)
+                    }
+                }
+                
+                launch {
+                    viewModel.categories.collect { categories ->
+                        setupCategoryDropdown(categories)
                     }
                 }
             }
@@ -150,12 +155,12 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         }
     }
 
-    private fun setupCategoryDropdown() {
-        val categories = EventCategory.values().map { it.name.capitalize() }
+    private fun setupCategoryDropdown(categories: List<EventCategory>) {
+        val categoryNames = categories.map { it.name }
         val adapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_dropdown_item_1line,
-            categories
+            categoryNames
         )
         binding.actvCategory.setAdapter(adapter)
     }
@@ -261,7 +266,7 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
     private fun validateAllFields(): Boolean {
         val title = binding.etEventTitle.text?.toString()?.trim()
         val description = binding.etDescription.text?.toString()?.trim()
-        val category = binding.actvCategory.text?.toString()?.trim()
+        val categoryName = binding.actvCategory.text?.toString()?.trim()
         val location = binding.etLocation.text?.toString()?.trim()
 
         when {
@@ -275,7 +280,7 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
                 binding.etDescription.requestFocus()
                 return false
             }
-            category.isNullOrEmpty() -> {
+            categoryName.isNullOrEmpty() -> {
                 binding.actvCategory.error = "Category is required"
                 binding.actvCategory.requestFocus()
                 return false
@@ -312,12 +317,11 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         // Get all form data
         val title = binding.etEventTitle.text.toString().trim()
         val description = binding.etDescription.text.toString().trim()
-        val categoryString = binding.actvCategory.text.toString().trim().uppercase()
-        val category = try {
-            EventCategory.valueOf(categoryString)
-        } catch (e: Exception) {
-            EventCategory.OTHER
-        }
+        val categoryName = binding.actvCategory.text.toString().trim()
+        
+        // Find matching category object or fallback
+        val category = viewModel.categories.value.find { it.name == categoryName } 
+            ?: EventCategory(id = "cat_other", name = categoryName)
 
         val locationName = binding.etLocation.text.toString().trim()
         val address = locationName // Use location name as address for now
@@ -360,10 +364,5 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    private fun String.capitalize(): String {
-        return this.lowercase()
-            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
     }
 }

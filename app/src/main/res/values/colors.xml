@@ -17,7 +17,7 @@
     <color name="md_on_tertiary_container">#001A41</color>
 
     <!-- ================= BACKGROUND & SURFACE ================= -->
-    <color name="md_background">#F8F9FA</color>
+    <color name="md_background">#FFFFFF</color> <!--F8F9FA-->
     <color name="md_on_background">#1A1A1A</color>
 
     <color name="md_surface">#FFFFFF</color>

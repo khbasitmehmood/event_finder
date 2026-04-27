@@ -17,6 +17,7 @@ import com.eventfinder.app.utils.LocationUtils
  * Works with Event domain model
  */
 class HomeEventAdapter(
+    private val isHorizontal: Boolean = false,
     private val onClick: (Event) -> Unit
 ) : ListAdapter<Event, HomeEventAdapter.EventViewHolder>(EventDiffCallback()) {
 
@@ -26,6 +27,17 @@ class HomeEventAdapter(
             parent,
             false
         )
+        
+        if (isHorizontal) {
+            val layoutParams = binding.root.layoutParams
+            layoutParams.width = (parent.context.resources.displayMetrics.widthPixels * 0.85).toInt()
+            binding.root.layoutParams = layoutParams
+        } else {
+            val layoutParams = binding.root.layoutParams
+            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT
+            binding.root.layoutParams = layoutParams
+        }
+        
         return EventViewHolder(binding, onClick)
     }
 

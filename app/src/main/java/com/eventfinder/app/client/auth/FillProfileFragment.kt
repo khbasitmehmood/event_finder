@@ -6,6 +6,8 @@ import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +23,7 @@ import coil.load
 import coil.transform.CircleCropTransformation
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentFillProfileBinding
+import com.eventfinder.app.domain.model.EventCategory
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.utils.UserPreferences
 import com.google.android.material.chip.Chip
@@ -45,7 +48,9 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
     private var cameraImageUri: Uri? = null
     private var isEditMode = false
 
-    private val allCategories = listOf("Music", "Education", "Sports", "Business", "Movies", "Politics")
+    // Maintain a map of dynamically inflated chips back to their Category IDs
+    private val chipToCategoryIdMap = mutableMapOf<Int, String>()
+    private val allChips = mutableListOf<Chip>()
 
     // For picking image from gallery
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -103,17 +108,63 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
             binding.llOrganizerFields.isVisible = false
             binding.tvCategoriesLabel.text = "Add Interests"
         }
-
-        setupChips(emptyList())
     }
 
-    private fun setupChips(selectedInterests: List<String>) {
-        binding.chipGroupCategories.removeAllViews()
-        for (category in allCategories) {
-            val chip = layoutInflater.inflate(R.layout.item_chip_choice, binding.chipGroupCategories, false) as Chip
-            chip.text = category
-            chip.isChecked = selectedInterests.contains(category)
-            binding.chipGroupCategories.addView(chip)
+    private fun setupChips(categories: List<EventCategory>, selectedInterests: List<String>) {
+        // Prevent re-drawing identical chips
+        if (allChips.isNotEmpty() && categories.size == allChips.size) {
+            // Just update the checked state
+            for (chip in allChips) {
+                val catId = chipToCategoryIdMap[chip.id]
+                chip.isChecked = selectedInterests.contains(catId)
+            }
+            return
+        }
+        
+        binding.llChipRowsContainer.removeAllViews()
+        chipToCategoryIdMap.clear()
+        allChips.clear()
+
+        // Create 4 horizontal linear layouts to act as rows
+        val rows = Array(4) {
+            LinearLayout(requireContext()).apply {
+                orientation = LinearLayout.HORIZONTAL
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                )
+                // Add vertical margin between rows
+                (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin = resources.getDimensionPixelSize(R.dimen.spacing_small)
+            }
+        }
+
+        for ((index, category) in categories.withIndex()) {
+            val chip = layoutInflater.inflate(R.layout.item_chip_choice, null, false) as Chip
+            
+            // Apply parameters via code, NOT XML (prevents Android wrap/squish bugs)
+            val chipParams = LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+            chipParams.marginEnd = resources.getDimensionPixelSize(R.dimen.spacing_small)
+            chip.layoutParams = chipParams
+
+            val chipId = View.generateViewId()
+            chip.id = chipId
+            chip.text = category.name
+            chip.isChecked = selectedInterests.contains(category.id)
+            
+            chipToCategoryIdMap[chipId] = category.id
+            allChips.add(chip)
+
+            // Distribute evenly among the 4 rows (e.g. 0, 1, 2, 3, 0, 1...)
+            val rowIndex = index % 4
+            rows[rowIndex].addView(chip)
+        }
+
+        // Add the 4 populated rows to the main container
+        for (row in rows) {
+            binding.llChipRowsContainer.addView(row)
         }
     }
 
@@ -132,12 +183,13 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
             val contactPerson = binding.etContactPerson.text.toString().trim()
             val description = binding.etDescription.text.toString().trim()
 
-            // Gather selected interests/categories
+            // Gather selected interests/categories from our cached list of Chips
             val selectedInterests = mutableListOf<String>()
-            for (i in 0 until binding.chipGroupCategories.childCount) {
-                val chip = binding.chipGroupCategories.getChildAt(i) as Chip
+            for (chip in allChips) {
                 if (chip.isChecked) {
-                    selectedInterests.add(chip.text.toString())
+                    chipToCategoryIdMap[chip.id]?.let { catId ->
+                        selectedInterests.add(catId)
+                    }
                 }
             }
 
@@ -214,6 +266,20 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 
+                // Observe Categories first to render chips
+                launch {
+                    viewModel.categories.collect { categories ->
+                        val user = viewModel.currentUser.value
+                        val userInterests = if (user?.userType == UserType.ORGANIZER) {
+                            user.organizerProfile?.offeredEvents ?: emptyList()
+                        } else {
+                            user?.profile?.interests ?: emptyList()
+                        }
+                        
+                        setupChips(categories, userInterests)
+                    }
+                }
+                
                 launch {
                     viewModel.currentUser.collect { user ->
                         user?.let {
@@ -223,7 +289,8 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
                                 binding.etContactPerson.setText(it.organizerProfile?.contactPerson)
                                 binding.etDescription.setText(it.organizerProfile?.description)
                                 
-                                setupChips(it.organizerProfile?.offeredEvents ?: emptyList())
+                                // Setup chips safely since categories might already be loaded
+                                setupChips(viewModel.categories.value, it.organizerProfile?.offeredEvents ?: emptyList())
                                 
                                 it.organizerProfile?.logoUrl?.let { url ->
                                     if (url.isNotBlank() && selectedImageUri == null) {
@@ -237,7 +304,8 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
                                 binding.etName.setText(it.profile?.fullName)
                                 binding.etContact.setText(it.profile?.phoneNumber)
                                 
-                                setupChips(it.profile?.interests ?: emptyList())
+                                // Setup chips safely since categories might already be loaded
+                                setupChips(viewModel.categories.value, it.profile?.interests ?: emptyList())
                                 
                                 it.profile?.photoUrl?.let { url ->
                                     if (url.isNotBlank() && selectedImageUri == null) {
@@ -290,7 +358,7 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         binding.etContactPerson.isEnabled = !isLoading
         binding.etDescription.isEnabled = !isLoading
         binding.flProfileImage.isEnabled = !isLoading
-        binding.chipGroupCategories.isEnabled = !isLoading
+        binding.hsvCategories.isEnabled = !isLoading
     }
 
     override fun onDestroyView() {

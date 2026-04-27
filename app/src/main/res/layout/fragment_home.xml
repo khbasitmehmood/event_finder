@@ -6,328 +6,364 @@
     android:layout_height="match_parent"
     android:background="@color/md_background">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/homeScrollView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingBottom="100dp">
+        android:layout_height="match_parent">
 
-        <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/homeScrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:paddingBottom="100dp">
 
-            <!-- Header Section -->
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:padding="@dimen/spacing_large">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_alignParentStart="true">
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Good evening, "
-                            android:textAppearance="@style/TextAppearance.App.TitleLarge"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:id="@+id/tvUserName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.App.TitleLarge"
-                            android:textStyle="bold"
-                            tools:text="Ali" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" 👋"
-                            android:textAppearance="@style/TextAppearance.App.TitleLarge"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Discover amazing events around you"
-                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                        android:textColor="@color/md_on_surface_variant" />
-                </LinearLayout>
-
-            </RelativeLayout>
-
-            <!-- Search Bar -->
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
-                android:layout_marginBottom="@dimen/spacing_large"
-                app:cardBackgroundColor="@color/md_surface"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/md_outline"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="@dimen/spacing_large">
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_search"
-                        app:tint="@color/md_on_surface_variant"
-                        android:contentDescription="@string/search" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginStart="@dimen/spacing_medium"
-                        android:text="Search events, artists, venues..."
-                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                        android:textColor="@color/md_on_surface_variant" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:src="@drawable/ic_filter"
-                        app:tint="@color/md_on_surface_variant"
-                        android:contentDescription="@string/filter" />
-
-                </LinearLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Featured Events Section -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginBottom="@dimen/spacing_large">
+                android:orientation="vertical">
 
-                <LinearLayout
+                <!-- Header Section -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/spacing_large">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_alignParentStart="true">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Good evening, "
+                                android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvUserName"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                                android:textStyle="bold"
+                                tools:text="Ali" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text=" 👋"
+                                android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Discover amazing events around you"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/md_on_surface_variant" />
+                    </LinearLayout>
+
+                </RelativeLayout>
+
+                <!-- Search Bar -->
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/spacing_large"
-                    android:layout_marginBottom="@dimen/spacing_medium"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Featured Events"
-                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See all"
-                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                        android:textColor="@color/md_primary" />
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvFeatured"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:clipToPadding="false"
-                    android:paddingHorizontal="@dimen/spacing_large"
-                    android:orientation="horizontal"
-                    tools:listitem="@layout/item_event_card" />
-
-            </LinearLayout>
-
-            <!-- Browse by Category Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/spacing_large"
-                android:layout_marginBottom="@dimen/spacing_large">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_medium"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Browse by Category"
-                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See all"
-                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                        android:textColor="@color/md_primary" />
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvCategories"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    tools:listitem="@layout/item_category" />
-
-            </LinearLayout>
-
-            <!-- Events Near You Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/spacing_large"
-                android:layout_marginBottom="@dimen/spacing_large">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_medium"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Events Near You"
-                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See all"
-                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                        android:textColor="@color/md_primary" />
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvEventsNearYou"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:nestedScrollingEnabled="false"
-                    tools:listitem="@layout/item_event_upcoming" />
-
-            </LinearLayout>
-
-            <!-- Your Upcoming Tickets Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/spacing_large">
-
-                <LinearLayout
-                    android:id="@+id/layoutYourEventsHeader"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_medium"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvYourEvents"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Your Upcoming Tickets"
-                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvSeeAllEvents"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See all"
-                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                        android:textColor="@color/md_primary" />
-
-                </LinearLayout>
-
-                <!-- Your Events RecyclerView -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvYourEvents"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/spacing_large"
-                    android:nestedScrollingEnabled="false"
-                    android:visibility="gone"
-                    android:orientation="horizontal"
-                    tools:listitem="@layout/item_event_upcoming"
-                    tools:visibility="visible" />
+                    app:cardBackgroundColor="@color/md_surface"
+                    app:cardCornerRadius="12dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/md_outline"
+                    app:strokeWidth="1dp">
 
-                <!-- Empty State -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/spacing_large">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_search"
+                            app:tint="@color/md_on_surface_variant"
+                            android:contentDescription="@string/search" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginStart="@dimen/spacing_medium"
+                            android:text="Search events, artists, venues..."
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/md_on_surface_variant" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_filter"
+                            app:tint="@color/md_on_surface_variant"
+                            android:contentDescription="@string/filter" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Featured Events Section -->
                 <LinearLayout
-                    android:id="@+id/layoutEmptyEvents"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_large"
-                    android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="@dimen/spacing_xlarge"
-                    android:visibility="visible"
-                    tools:visibility="gone">
+                    android:layout_marginBottom="@dimen/spacing_large">
 
-                    <TextView
-                        android:id="@+id/tvEmptyStateTitle"
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/spacing_large"
+                        android:layout_marginBottom="@dimen/spacing_medium"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Featured Events"
+                            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="See all"
+                            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                            android:textColor="@color/md_primary" />
+                    </LinearLayout>
+
+                    <!-- Loading Indicator for Featured -->
+                    <ProgressBar
+                        android:id="@+id/progressBarFeatured"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/spacing_small"
-                        android:text="No upcoming tickets"
-                        android:textAppearance="@style/TextAppearance.App.TitleMedium" />
+                        android:layout_gravity="center"
+                        android:layout_margin="24dp"
+                        android:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/tvEmptyStateDesc"
-                        android:layout_width="wrap_content"
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvFeatured"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:paddingHorizontal="@dimen/spacing_large"
+                        android:orientation="horizontal"
+                        tools:listitem="@layout/item_event_card" />
+
+                </LinearLayout>
+
+                <!-- Browse by Category Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/spacing_large"
+                    android:layout_marginBottom="@dimen/spacing_large">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/spacing_medium"
-                        android:gravity="center"
-                        android:text="Explore events to find"
-                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                        android:textColor="@color/md_on_surface_variant" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnCreateEvent"
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Browse by Category"
+                            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="See all"
+                            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                            android:textColor="@color/md_primary" />
+                    </LinearLayout>
+
+                    <!-- We use horizontal scrolling layout manager dynamically in code, so orientation="horizontal" is proper for the item preview -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvCategories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        tools:listitem="@layout/item_category" />
+
+                </LinearLayout>
+
+                <!-- Events Near You Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/spacing_large"
+                    android:layout_marginBottom="@dimen/spacing_large">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_medium"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Events Near You"
+                            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="See all"
+                            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                            android:textColor="@color/md_primary" />
+                    </LinearLayout>
+
+                    <!-- Loading Indicator for Events Near You -->
+                    <ProgressBar
+                        android:id="@+id/progressBarNearYou"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingHorizontal="@dimen/spacing_xlarge"
-                        android:text="Explore events"
-                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                        app:cornerRadius="@dimen/corner_radius_large" />
+                        android:layout_gravity="center"
+                        android:layout_margin="24dp"
+                        android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvEventsNearYou"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        tools:listitem="@layout/item_event_upcoming" />
+
+                </LinearLayout>
+
+                <!-- Your Upcoming Tickets Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/spacing_large">
+
+                    <LinearLayout
+                        android:id="@+id/layoutYourEventsHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_medium"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvYourEvents"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Your Upcoming Tickets"
+                            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvSeeAllEvents"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="See all"
+                            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                            android:textColor="@color/md_primary" />
+
+                    </LinearLayout>
+
+                    <!-- Loading Indicator for User Events -->
+                    <ProgressBar
+                        android:id="@+id/progressBarYourEvents"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="24dp"
+                        android:visibility="gone" />
+
+                    <!-- Your Events RecyclerView -->
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvYourEvents"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_large"
+                        android:nestedScrollingEnabled="false"
+                        android:visibility="gone"
+                        android:orientation="horizontal"
+                        tools:listitem="@layout/item_event_upcoming"
+                        tools:visibility="visible" />
+
+                    <!-- Empty State -->
+                    <LinearLayout
+                        android:id="@+id/layoutEmptyEvents"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_large"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="@dimen/spacing_xlarge"
+                        android:visibility="visible"
+                        tools:visibility="gone">
+
+                        <TextView
+                            android:id="@+id/tvEmptyStateTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/spacing_small"
+                            android:text="No upcoming tickets"
+                            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvEmptyStateDesc"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/spacing_medium"
+                            android:gravity="center"
+                            android:text="Explore events to find"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_secondary" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnExploreEvents"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="@dimen/spacing_xlarge"
+                            android:text="Explore events"
+                            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                            app:cornerRadius="24dp" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
             </LinearLayout>
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/btnChat"
