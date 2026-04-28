@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="@color/md_background">
+    android:background="@color/md_background"
+    android:fillViewport="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -14,23 +13,24 @@
 
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/back_button_height"
+            android:layout_height="@dimen/back_button_height"
+            android:background="@drawable/bg_circle_back"
+            android:foreground="?attr/actionBarItemBackground"
             android:padding="12dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
-            app:tint="@color/text_primary"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/text_primary" />
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Let's set up your profile"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:text="@string/fill_profile_user_title"
             android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
             android:textStyle="bold"
-            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnBack" />
@@ -39,20 +39,20 @@
             android:id="@+id/tvSubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="This helps us personalize events for you."
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:text="@string/fill_profile_user_subtitle"
             android:textAppearance="@style/TextAppearance.App.BodyLarge"
             android:textColor="@color/text_secondary"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvTitle"
-            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+            app:layout_constraintTop_toBottomOf="@id/tvTitle"
+            app:layout_constraintWidth_percent="0.7" />
 
         <!-- Profile Image -->
         <FrameLayout
             android:id="@+id/flProfileImage"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:layout_marginTop="32dp"
+            android:layout_width="@dimen/fill_profile_photo_size"
+            android:layout_height="@dimen/fill_profile_photo_size"
+            android:layout_marginTop="@dimen/spacing_xxlarge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
@@ -61,24 +61,25 @@
                 android:id="@+id/ivProfileImage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:src="@drawable/ic_profile"
-                android:scaleType="centerCrop"
                 android:background="@drawable/profile_circle_bg"
-                android:clipToOutline="true" />
+                android:clipToOutline="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_profile" />
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="28dp"
-                android:layout_height="28dp"
+                android:layout_width="@dimen/fill_profile_photo_badge_size"
+                android:layout_height="@dimen/fill_profile_photo_badge_size"
                 android:layout_gravity="bottom|end"
-                app:cardCornerRadius="14dp"
                 app:cardBackgroundColor="@color/md_primary"
-                app:cardElevation="2dp"
-                app:strokeWidth="2dp"
-                app:strokeColor="@color/md_surface">
+                app:cardCornerRadius="@dimen/fill_profile_photo_badge_corner_radius"
+                app:cardElevation="@dimen/fill_profile_photo_badge_elevation"
+                app:strokeColor="@color/md_surface"
+                app:strokeWidth="@dimen/fill_profile_photo_badge_stroke_width">
+
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:padding="6dp"
+                    android:padding="@dimen/fill_profile_photo_badge_icon_padding"
                     android:src="@android:drawable/ic_menu_camera"
                     app:tint="@color/md_on_primary" />
             </com.google.android.material.card.MaterialCardView>
@@ -89,86 +90,128 @@
             android:id="@+id/llCommonFields"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_xxlarge"
             android:orientation="vertical"
-            android:layout_marginTop="40dp"
             app:layout_constraintTop_toBottomOf="@id/flProfileImage">
+
+            <TextView
+                android:id="@+id/tvNameLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:text="@string/hint_full_name"
+                android:textAppearance="@style/TextAppearance.App.TitleSmall" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hintEnabled="false"
                 app:boxBackgroundMode="none"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:hintEnabled="false">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
-                    android:hint="Full Name"
                     android:background="@drawable/bg_input_pill"
+                    android:hint="@string/hint_full_name"
+                    android:inputType="textPersonName"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
 
 
             <!-- Organizer Phone (Hidden for normal user) -->
+            <TextView
+                android:id="@+id/tvContactLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:text="@string/hint_contact_number"
+                android:textAppearance="@style/TextAppearance.App.TitleSmall"
+                android:visibility="gone" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:hintEnabled="false"
                 app:boxBackgroundMode="none"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:hintEnabled="false">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etContact"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:hint="Phone Number (optional)"
                     android:background="@drawable/bg_input_pill"
+                    android:hint="@string/fill_profile_hint_phone_optional"
+                    android:inputType="phone"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/tvCityLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:text="@string/fill_profile_hint_city"
+                android:textAppearance="@style/TextAppearance.App.TitleSmall" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilCity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:hintEnabled="false"
                 app:boxBackgroundMode="none"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:hintEnabled="false">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="text"
-                    android:hint="City"
                     android:background="@drawable/bg_input_pill"
+                    android:hint="@string/fill_profile_hint_city"
+                    android:inputType="text"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Organizer Bio (Hidden for normal user) -->
+            <TextView
+                android:id="@+id/tvDescriptionLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:text="@string/hint_org_description"
+                android:textAppearance="@style/TextAppearance.App.TitleSmall"
+                android:visibility="gone" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:hintEnabled="false"
                 app:boxBackgroundMode="none"
-                app:errorEnabled="true">
+                app:errorEnabled="true"
+                app:hintEnabled="false">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDescription"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/bg_input_pill"
+                    android:gravity="top|start"
+                    android:hint="@string/fill_profile_hint_org_bio"
                     android:inputType="textMultiLine"
                     android:lines="3"
                     android:maxLength="120"
-                    android:hint="Short Bio (Tell us about your organization)"
-                    android:gravity="top|start"
-                    android:background="@drawable/bg_input_pill"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -179,44 +222,44 @@
             android:id="@+id/cardUseLocation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            app:cardCornerRadius="16dp"
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            app:cardCornerRadius="@dimen/corner_radius_medium"
             app:cardElevation="0dp"
+            app:layout_constraintTop_toBottomOf="@id/llCommonFields"
             app:strokeColor="@color/md_outline"
-            app:strokeWidth="1dp"
-            app:layout_constraintTop_toBottomOf="@id/llCommonFields">
+            app:strokeWidth="@dimen/fill_profile_card_stroke_width">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="16dp">
+                android:padding="@dimen/spacing_large">
 
                 <TextView
                     android:id="@+id/tvUseLocationTitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Use my location"
-                    android:textStyle="bold"
+                    android:text="@string/fill_profile_use_location"
                     android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Show events near you."
+                    android:text="@string/fill_profile_use_location_subtitle"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_secondary"
-                    app:layout_constraintTop_toBottomOf="@id/tvUseLocationTitle"
-                    app:layout_constraintStart_toStartOf="parent"/>
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvUseLocationTitle" />
 
-                <com.google.android.material.switchmaterial.SwitchMaterial
+                <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switchLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"/>
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
@@ -224,37 +267,38 @@
             android:id="@+id/btnSaveProfile"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:text="Continue"
+            android:layout_marginTop="@dimen/spacing_xxlarge"
+            android:text="@string/btn_continue"
+            android:textAllCaps="false"
             android:textAppearance="@style/TextAppearance.App.TitleMedium"
             android:textColor="@color/md_on_primary"
-            android:textAllCaps="false"
-            android:layout_marginTop="32dp"
-            app:cornerRadius="@dimen/corner_radius_large"
             app:backgroundTint="@color/md_primary"
+            app:cornerRadius="@dimen/corner_radius_large"
             app:layout_constraintTop_toBottomOf="@id/cardUseLocation" />
 
-        <TextView
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/tvManualLocation"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="I'll choose location manually"
-            android:textColor="@color/md_primary"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginBottom="@dimen/spacing_xxlarge"
+            android:text="@string/fill_profile_manual_location"
             android:textAppearance="@style/TextAppearance.App.TitleSmall"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="32dp"
-            app:layout_constraintTop_toBottomOf="@id/btnSaveProfile"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="@color/md_primary"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnSaveProfile" />
 
         <ProgressBar
             android:id="@+id/progressBar"
             style="@style/Widget.AppCompat.ProgressBar"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:visibility="gone"
-            android:indeterminateTint="#FFFFFF"
             android:elevation="@dimen/spacing_small"
+            android:indeterminateTint="#FFFFFF"
+            android:visibility="gone"
             app:layout_constraintBottom_toBottomOf="@id/btnSaveProfile"
             app:layout_constraintEnd_toEndOf="@id/btnSaveProfile"
             app:layout_constraintStart_toStartOf="@id/btnSaveProfile"

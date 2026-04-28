@@ -80,6 +80,24 @@
     <string name="label_events_we_offer">Events we offer</string>
     <string name="btn_complete_setup">Complete Setup</string>
     <string name="btn_save_changes">Save Changes</string>
+    <string name="fill_profile_user_title">Let\'s set up your profile</string>
+    <string name="fill_profile_user_subtitle">This helps us personalize events for you.</string>
+    <string name="fill_profile_organizer_title">Set up your organizer profile</string>
+    <string name="fill_profile_organizer_subtitle">Tell people who is hosting the events.</string>
+    <string name="fill_profile_edit_title">Edit your profile</string>
+    <string name="fill_profile_edit_subtitle">Update your details.</string>
+    <string name="fill_profile_hint_organizer_name">Organizer Name</string>
+    <string name="fill_profile_hint_phone_optional">Phone Number (optional)</string>
+    <string name="fill_profile_hint_city">City</string>
+    <string name="fill_profile_hint_org_bio">Short Bio (Tell us about your organization)</string>
+    <string name="fill_profile_use_location">Use my location</string>
+    <string name="fill_profile_use_location_subtitle">Show events near you.</string>
+    <string name="fill_profile_manual_location">I\'ll choose location manually</string>
+    <string name="fill_profile_photo_title">Profile Photo</string>
+    <string name="fill_profile_photo_capture">Capture Photo</string>
+    <string name="fill_profile_photo_gallery">Choose from Gallery</string>
+    <string name="fill_profile_error_name_required">Name is required</string>
+    <string name="fill_profile_manual_location_soon">Manual location selection coming soon</string>
 
     <!-- Auth Success Screen -->
     <string name="auth_success_title">You\'re All Set!</string>

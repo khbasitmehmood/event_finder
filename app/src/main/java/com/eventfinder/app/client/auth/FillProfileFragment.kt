@@ -93,31 +93,37 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
 
     private fun setupUI() {
         if (userType == UserType.ORGANIZER) {
-            binding.tvTitle.text = "Set up your organizer profile"
-            binding.tvSubtitle.text = "Tell people who is hosting the events."
-            binding.tilName.hint = "Organizer Name"
+            binding.tvTitle.text = getString(R.string.fill_profile_organizer_title)
+            binding.tvSubtitle.text = getString(R.string.fill_profile_organizer_subtitle)
+            binding.tvNameLabel.text = getString(R.string.fill_profile_hint_organizer_name)
+            binding.tilName.hint = getString(R.string.fill_profile_hint_organizer_name)
 
+            binding.tvContactLabel.isVisible = true
             binding.tilContact.isVisible = true
+            binding.tvDescriptionLabel.isVisible = true
             binding.tilDescription.isVisible = true
             binding.cardUseLocation.isVisible = false
             binding.tvManualLocation.isVisible = false
         } else {
-            binding.tvTitle.text = "Let's set up your profile"
-            binding.tvSubtitle.text = "This helps us personalize events for you."
-            binding.tilName.hint = "Full Name"
+            binding.tvTitle.text = getString(R.string.fill_profile_user_title)
+            binding.tvSubtitle.text = getString(R.string.fill_profile_user_subtitle)
+            binding.tvNameLabel.text = getString(R.string.hint_full_name)
+            binding.tilName.hint = getString(R.string.hint_full_name)
 
+            binding.tvContactLabel.isVisible = false
             binding.tilContact.isVisible = false
+            binding.tvDescriptionLabel.isVisible = false
             binding.tilDescription.isVisible = false
             binding.cardUseLocation.isVisible = true
             binding.tvManualLocation.isVisible = true
         }
 
         if (isEditMode) {
-            binding.tvTitle.text = "Edit your profile"
-            binding.tvSubtitle.text = "Update your details."
-            binding.btnSaveProfile.text = "Save"
+            binding.tvTitle.text = getString(R.string.fill_profile_edit_title)
+            binding.tvSubtitle.text = getString(R.string.fill_profile_edit_subtitle)
+            binding.btnSaveProfile.text = getString(R.string.save)
         } else {
-            binding.btnSaveProfile.text = "Continue"
+            binding.btnSaveProfile.text = getString(R.string.btn_continue)
         }
     }
 
@@ -132,7 +138,7 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         
         binding.tvManualLocation.setOnClickListener {
             // Future location picker integration
-            Toast.makeText(requireContext(), "Manual location selection coming soon", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.fill_profile_manual_location_soon), Toast.LENGTH_SHORT).show()
         }
 
         binding.btnSaveProfile.setOnClickListener {
@@ -143,7 +149,7 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
             
             // Validate required fields
             if (name.isEmpty()) {
-                binding.tilName.error = "Name is required"
+                binding.tilName.error = getString(R.string.fill_profile_error_name_required)
                 return@setOnClickListener
             }
             binding.tilName.error = null
@@ -163,9 +169,12 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
     }
 
     private fun showImagePickerDialog() {
-        val options = arrayOf("Capture Photo", "Choose from Gallery")
+        val options = arrayOf(
+            getString(R.string.fill_profile_photo_capture),
+            getString(R.string.fill_profile_photo_gallery)
+        )
         MaterialAlertDialogBuilder(requireContext())
-            .setTitle("Profile Photo")
+            .setTitle(getString(R.string.fill_profile_photo_title))
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> openCamera()

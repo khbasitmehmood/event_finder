@@ -74,17 +74,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/chooseInterestsFragment"
-        android:name="com.eventfinder.app.client.auth.ChooseInterestsFragment"
-        android:label="Interests"
-        tools:layout="@layout/fragment_choose_interests">
-
-        <action
-            android:id="@+id/action_chooseInterests_to_success"
-            app:destination="@id/successFragment" />
-    </fragment>
-
-    <fragment
         android:id="@+id/transitionFragment"
         android:name="com.eventfinder.app.client.auth.TransitionFragment"
         tools:layout="@layout/fragment_transition">
@@ -125,32 +114,5 @@
             app:destination="@id/accountTypeFragment" />
     </fragment>
 
-    <fragment
-        android:id="@+id/fillProfileFragment"
-        android:name="com.eventfinder.app.client.auth.FillProfileFragment"
-        tools:layout="@layout/fragment_fill_profile">
-
-        <action
-            android:id="@+id/action_fillProfile_to_chooseInterests"
-            app:destination="@id/chooseInterestsFragment" />
-    </fragment>
-
-    <fragment
-        android:id="@+id/successFragment"
-        android:name="com.eventfinder.app.client.auth.SuccessFragment"
-        tools:layout="@layout/fragment_auth_success">
-
-        <action
-            android:id="@+id/action_success_to_home"
-            app:destination="@id/homeFragment"
-            app:popUpTo="@id/main_nav_graph"
-            app:popUpToInclusive="true" />
-
-        <action
-            android:id="@+id/action_success_to_dashboard"
-            app:destination="@id/organizerDashboardFragment"
-            app:popUpTo="@id/main_nav_graph"
-            app:popUpToInclusive="true" />
-    </fragment>
 </navigation>
 

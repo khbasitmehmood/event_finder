@@ -26,4 +26,13 @@
     <dimen name="text_size_body">16sp</dimen>
     <dimen name="account_type_icon_size">64dp</dimen>
 
+    <!-- Fill Profile -->
+    <dimen name="fill_profile_photo_size">100dp</dimen>
+    <dimen name="fill_profile_photo_badge_size">28dp</dimen>
+    <dimen name="fill_profile_photo_badge_corner_radius">14dp</dimen>
+    <dimen name="fill_profile_photo_badge_stroke_width">2dp</dimen>
+    <dimen name="fill_profile_photo_badge_icon_padding">6dp</dimen>
+    <dimen name="fill_profile_photo_badge_elevation">2dp</dimen>
+    <dimen name="fill_profile_card_stroke_width">1dp</dimen>
+
 </resources>
