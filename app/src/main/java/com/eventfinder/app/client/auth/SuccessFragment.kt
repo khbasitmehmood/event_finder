@@ -59,15 +59,17 @@ class SuccessFragment : Fragment(R.layout.fragment_auth_success) {
         }
 
         binding.btnContinue.setOnClickListener {
-            val bundle = Bundle().apply {
-                putString(AuthNavArgs.TARGET, userType.name)
+            val destination = if (userType == UserType.ORGANIZER) {
+                R.id.organizer_main_graph
+            } else {
+                R.id.user_main_graph
             }
+
             val navOptions = NavOptions.Builder()
                 .setLaunchSingleTop(true)
-                .setPopUpTo(R.id.successFragment, true)
+                .setPopUpTo(R.id.main_nav_graph, true)
                 .build()
-            // Uses TransitionFragment which handles routing properly based on TARGET
-            findNavController().navigate(R.id.transitionFragment, bundle, navOptions)
+            findNavController().navigate(destination, null, navOptions)
         }
     }
 

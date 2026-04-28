@@ -74,17 +74,6 @@
     </fragment>
 
     <fragment
-        android:id="@+id/transitionFragment"
-        android:name="com.eventfinder.app.client.auth.TransitionFragment"
-        tools:layout="@layout/fragment_transition">
-        <action
-            android:id="@+id/action_welcome_to_home"
-            app:destination="@id/user_main_graph"
-            app:popUpTo="@id/transitionFragment"
-            app:popUpToInclusive="true" />
-    </fragment>
-
-    <fragment
         android:id="@+id/loginFragment"
         android:name="com.eventfinder.app.client.auth.LoginFragment"
         android:label="Login"
@@ -92,10 +81,10 @@
 
         <action
             android:id="@+id/action_login_to_welcome"
-            app:destination="@id/transitionFragment"
+            app:destination="@id/welcomeFragment"
             app:enterAnim="@anim/slide_in_right"
             app:exitAnim="@anim/slide_out_left"
-            app:popUpTo="@id/main_nav_graph"
+            app:popUpTo="@id/loginFragment"
             app:popUpToInclusive="true" />
     </fragment>
 

@@ -58,11 +58,6 @@
             android:id="@+id/action_adminSettingsFragment_to_editAdminProfileFragment"
             app:destination="@id/editAdminProfileFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/transitionFragment"
-        android:name="com.eventfinder.app.client.auth.TransitionFragment"
-        android:label="Switching..."
-        tools:layout="@layout/fragment_transition" />
 
     <fragment
         android:id="@+id/homeFragment"

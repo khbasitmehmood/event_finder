@@ -25,7 +25,6 @@ import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.utils.AuthNavArgs
 import com.eventfinder.app.utils.AuthFlowSource
 import com.eventfinder.app.utils.AuthPendingStep
-import com.eventfinder.app.utils.AuthNavTargets
 import com.eventfinder.app.utils.UserPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -227,17 +226,18 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
                                 } else {
                                     if (flowSource == AuthFlowSource.LOGIN) {
                                         userPreferences.clearPendingAuthStep()
-                                        val bundle = Bundle().apply {
-                                            putString(
-                                                AuthNavArgs.TARGET,
-                                                if (userType == UserType.ORGANIZER) AuthNavTargets.ORGANIZER else AuthNavTargets.USER
-                                            )
+
+                                        val destination = if (userType == UserType.ORGANIZER) {
+                                            R.id.organizer_main_graph
+                                        } else {
+                                            R.id.user_main_graph
                                         }
+
                                         val navOptions = NavOptions.Builder()
                                             .setLaunchSingleTop(true)
-                                            .setPopUpTo(R.id.fillProfileFragment, true)
+                                            .setPopUpTo(R.id.main_nav_graph, true)
                                             .build()
-                                        findNavController().navigate(R.id.transitionFragment, bundle, navOptions)
+                                        findNavController().navigate(destination, null, navOptions)
                                     } else {
                                         userPreferences.setPendingAuthStep(AuthPendingStep.CHOOSE_INTERESTS)
                                         // Register onboarding continues to interests selection.
