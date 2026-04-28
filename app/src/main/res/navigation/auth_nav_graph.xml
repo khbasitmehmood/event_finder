@@ -1,0 +1,156 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/auth_nav_graph"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.eventfinder.app.client.splash.SplashFragment"
+        android:label="Splash"
+        tools:layout="@layout/fragment_splash">
+
+        <action
+            android:id="@+id/action_splash_to_home"
+            app:destination="@id/user_main_graph"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splash_to_dashboard"
+            app:destination="@id/organizer_main_graph"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splash_to_welcome"
+            app:destination="@id/welcomeFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splash_to_login"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splash_to_fillProfile"
+            app:destination="@id/fillProfileFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_splash_to_chooseInterests"
+            app:destination="@id/chooseInterestsFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/welcomeFragment"
+        android:name="com.eventfinder.app.client.auth.WelcomeFragment"
+        android:label="Welcome"
+        tools:layout="@layout/fragment_welcome">
+
+        <action
+            android:id="@+id/action_welcome_to_login"
+            app:destination="@id/loginFragment" />
+
+        <action
+            android:id="@+id/action_welcome_to_signup"
+            app:destination="@id/signupFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/accountTypeFragment"
+        android:name="com.eventfinder.app.client.auth.AccountTypeFragment"
+        android:label="Account Type"
+        tools:layout="@layout/fragment_account_type">
+
+        <action
+            android:id="@+id/action_accountType_to_fillProfile"
+            app:destination="@id/fillProfileFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/chooseInterestsFragment"
+        android:name="com.eventfinder.app.client.auth.ChooseInterestsFragment"
+        android:label="Interests"
+        tools:layout="@layout/fragment_choose_interests">
+
+        <action
+            android:id="@+id/action_chooseInterests_to_success"
+            app:destination="@id/successFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/transitionFragment"
+        android:name="com.eventfinder.app.client.auth.TransitionFragment"
+        tools:layout="@layout/fragment_transition">
+        <action
+            android:id="@+id/action_welcome_to_home"
+            app:destination="@id/user_main_graph"
+            app:popUpTo="@id/transitionFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.eventfinder.app.client.auth.LoginFragment"
+        android:label="Login"
+        tools:layout="@layout/fragment_login_new">
+
+        <action
+            android:id="@+id/action_login_to_welcome"
+            app:destination="@id/transitionFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popUpTo="@id/main_nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.eventfinder.app.client.auth.ForgotPasswordFragment"
+        tools:layout="@layout/fragment_forgot_password" />
+
+    <fragment
+        android:id="@+id/signupFragment"
+        android:name="com.eventfinder.app.client.auth.SignupFragment"
+        tools:layout="@layout/fragment_signup_new">
+
+        <action
+            android:id="@+id/action_signup_to_accountType"
+            app:destination="@id/accountTypeFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/fillProfileFragment"
+        android:name="com.eventfinder.app.client.auth.FillProfileFragment"
+        tools:layout="@layout/fragment_fill_profile">
+
+        <action
+            android:id="@+id/action_fillProfile_to_chooseInterests"
+            app:destination="@id/chooseInterestsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/successFragment"
+        android:name="com.eventfinder.app.client.auth.SuccessFragment"
+        tools:layout="@layout/fragment_auth_success">
+
+        <action
+            android:id="@+id/action_success_to_home"
+            app:destination="@id/homeFragment"
+            app:popUpTo="@id/main_nav_graph"
+            app:popUpToInclusive="true" />
+
+        <action
+            android:id="@+id/action_success_to_dashboard"
+            app:destination="@id/organizerDashboardFragment"
+            app:popUpTo="@id/main_nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>
+

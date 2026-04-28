@@ -2,7 +2,6 @@ package com.eventfinder.app
 
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -11,10 +10,9 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.ui.setupWithNavController
 import com.eventfinder.app.databinding.ActivityMainBinding
+import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.usecase.SeedCategoriesUseCase
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -42,9 +40,9 @@ class MainActivity : AppCompatActivity() {
 
         navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
+        updateBottomNavForUserType() // Setup dynamic bottom nav based on user type
         setupNavigation()
         observeViewModel()
-        updateBottomNavForUserType() // Setup dynamic bottom nav based on user type
     }
 
     private fun observeViewModel() {
@@ -64,7 +62,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setupNavigation() {
-        // Setup navigation with custom handling for organizers
+        // Setup role-based bottom navigation handling
         var isUpdatingSelection = false
 
         binding.bottomNavigation.setOnItemReselectedListener {
@@ -74,49 +72,17 @@ class MainActivity : AppCompatActivity() {
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             if (isUpdatingSelection) return@setOnItemSelectedListener true
 
-            val destinationId = when (item.itemId) {
-                R.id.homeFragment -> {
-                    if (viewModel.getUserType() == com.eventfinder.app.domain.model.UserType.ORGANIZER) {
-                        R.id.organizerDashboardFragment
-                    } else {
-                        R.id.homeFragment
-                    }
-                }
-                else -> item.itemId
-            }
-
-            navigateToTopLevelDestination(destinationId)
+            navigateToTopLevelDestination(item.itemId)
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             val uiState = viewModel.onDestinationChanged(destination.id)
             applyNavigationUIState(uiState, destination.label?.toString())
 
-            // Update bottom nav labels dynamically based on current destination
-            val homeItem = binding.bottomNavigation.menu.findItem(R.id.homeFragment)
-            if (destination.id == R.id.organizerDashboardFragment) {
-                homeItem?.title = getString(R.string.dashboard)
-                homeItem?.setIcon(R.drawable.ic_dashboard)
-            } else if (destination.id == R.id.homeFragment) {
-                homeItem?.title = getString(R.string.home)
-                homeItem?.setIcon(R.drawable.ic_home)
-            }
-
             // Update selected item based on current destination (prevent loops)
             isUpdatingSelection = true
-            when (destination.id) {
-                R.id.homeFragment, R.id.organizerDashboardFragment -> {
-                    binding.bottomNavigation.selectedItemId = R.id.homeFragment
-                }
-                R.id.exploreFragment -> {
-                    binding.bottomNavigation.selectedItemId = R.id.exploreFragment
-                }
-                R.id.favouritesFragment -> {
-                    binding.bottomNavigation.selectedItemId = R.id.favouritesFragment
-                }
-                R.id.profileFragment -> {
-                    binding.bottomNavigation.selectedItemId = R.id.profileFragment
-                }
+            if (binding.bottomNavigation.menu.findItem(destination.id) != null) {
+                binding.bottomNavigation.selectedItemId = destination.id
             }
             isUpdatingSelection = false
         }
@@ -141,32 +107,19 @@ class MainActivity : AppCompatActivity() {
     }
 
     /**
-     * Updates the first item in bottom navigation based on user type.
-     * If ORGANIZER: shows "Dashboard" with dashboard icon, points to organizerDashboardFragment
-     * If USER: shows "Home" with home icon, points to homeFragment
+     * Loads role-specific bottom navigation tabs.
      */
     private fun updateBottomNavForUserType() {
         val userType = viewModel.getUserType()
-        val menu = binding.bottomNavigation.menu
-        val firstItem = menu.findItem(R.id.homeFragment)
 
         // Clear any old admin mode preference to prevent confusion
         @Suppress("DEPRECATION")
         com.eventfinder.app.utils.ModeManager.setAdminMode(this, false)
 
-        if (userType == com.eventfinder.app.domain.model.UserType.ORGANIZER) {
-            // Change to Dashboard for organizers
-            firstItem?.let {
-                it.title = getString(R.string.dashboard)
-                it.setIcon(R.drawable.ic_dashboard)
-            }
-        } else {
-            // Keep as Home for regular users
-            firstItem?.let {
-                it.title = getString(R.string.home)
-                it.setIcon(R.drawable.ic_home)
-            }
-        }
+        binding.bottomNavigation.menu.clear()
+        binding.bottomNavigation.inflateMenu(
+            if (userType == UserType.ORGANIZER) R.menu.bottom_nav_organizer else R.menu.bottom_nav_user
+        )
     }
 
     private fun applyNavigationUIState(uiState: MainViewModel.NavigationUIState, destinationLabel: String?) {

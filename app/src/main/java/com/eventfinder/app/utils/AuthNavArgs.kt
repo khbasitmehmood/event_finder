@@ -21,4 +21,10 @@ object AuthFlowSource {
     const val REGISTER = "REGISTER"
 }
 
+object AuthPendingStep {
+    const val FILL_PROFILE_LOGIN = "FILL_PROFILE_LOGIN"
+    const val FILL_PROFILE_REGISTER = "FILL_PROFILE_REGISTER"
+    const val CHOOSE_INTERESTS = "CHOOSE_INTERESTS"
+}
+
 

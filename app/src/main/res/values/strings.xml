@@ -272,6 +272,10 @@
     <!-- Organizer Dashboard -->
     <string name="home">Home</string>
     <string name="dashboard">Dashboard</string>
+    <string name="events_tab">Events</string>
+    <string name="bookings_tab">Bookings</string>
+    <string name="tickets_tab">Tickets</string>
+    <string name="saved_tab">Saved</string>
     <string name="total_events">Total Events</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="your_events_organizer">Your Events</string>

@@ -6,9 +6,13 @@ import com.eventfinder.app.domain.model.User
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.repository.AuthRepository
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -23,16 +27,26 @@ class AuthRepositoryImpl @Inject constructor(
 
     companion object {
         private const val USERS_COLLECTION = "users"
+        private const val AUTH_TIMEOUT_MS = 15_000L
+        private const val FIRESTORE_TIMEOUT_MS = 15_000L
     }
 
     override suspend fun login(email: String, password: String): Result<User> {
         return try {
-            val authResult = firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            val authResult = withTimeout(AUTH_TIMEOUT_MS) {
+                firebaseAuth.signInWithEmailAndPassword(email, password).await()
+            }
             val uid = authResult.user?.uid ?: throw Exception("User ID not found")
 
             val user = getUserById(uid).getOrThrow() ?: throw Exception("User data not found")
 
             Result.success(user)
+        } catch (e: TimeoutCancellationException) {
+            Result.failure(Exception("Login timed out. Please check your internet and try again.", e))
+        } catch (e: FirebaseAuthInvalidUserException) {
+            Result.failure(Exception("No account found for this email.", e))
+        } catch (e: FirebaseAuthInvalidCredentialsException) {
+            Result.failure(Exception("Incorrect email or password.", e))
         } catch (e: Exception) {
             Result.failure(Exception("Login failed: ${e.message}", e))
         }
@@ -112,16 +126,20 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun getUserById(uid: String): Result<User?> {
         return try {
-            val snapshot = firestore.collection(USERS_COLLECTION)
-                .document(uid)
-                .get()
-                .await()
+            val snapshot = withTimeout(FIRESTORE_TIMEOUT_MS) {
+                firestore.collection(USERS_COLLECTION)
+                    .document(uid)
+                    .get()
+                    .await()
+            }
 
             val user = snapshot.toObject(UserDto::class.java)?.let { dto ->
                 UserMapper.toDomain(dto)
             }
 
             Result.success(user)
+        } catch (e: TimeoutCancellationException) {
+            Result.failure(Exception("User data request timed out. Please try again.", e))
         } catch (e: Exception) {
             Result.failure(Exception("Failed to get user: ${e.message}", e))
         }

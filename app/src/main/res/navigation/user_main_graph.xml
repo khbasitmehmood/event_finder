@@ -1,0 +1,31 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_main_graph"
+    app:startDestination="@id/homeFragment"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.eventfinder.app.client.home.HomeFragment"
+        android:label="Home"
+        tools:layout="@layout/fragment_home" />
+
+    <fragment
+        android:id="@+id/exploreFragment"
+        android:name="com.eventfinder.app.client.explore.ExploreFragment"
+        android:label="Explore"
+        tools:layout="@layout/fragment_explore" />
+
+    <fragment
+        android:id="@+id/ticketsFragment"
+        android:name="com.eventfinder.app.client.tickets.TicketsFragment"
+        android:label="Tickets"
+        tools:layout="@layout/fragment_tickets" />
+
+    <fragment
+        android:id="@+id/favouritesFragment"
+        android:name="com.eventfinder.app.client.favourites.FavouritesFragment"
+        android:label="Saved"
+        tools:layout="@layout/fragment_favourites" />
+</navigation>
+

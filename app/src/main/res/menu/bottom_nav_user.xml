@@ -1,0 +1,23 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/homeFragment"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home" />
+    <item
+        android:id="@+id/exploreFragment"
+        android:icon="@drawable/ic_explore"
+        android:title="@string/explore_title" />
+    <item
+        android:id="@+id/ticketsFragment"
+        android:icon="@drawable/ic_check_circle"
+        android:title="@string/tickets_tab" />
+    <item
+        android:id="@+id/favouritesFragment"
+        android:icon="@drawable/ic_favorite"
+        android:title="@string/saved_tab" />
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profile_title" />
+</menu>
+

@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.usecase.auth.GetCurrentUserUseCase
+import com.eventfinder.app.utils.AuthFlowSource
+import com.eventfinder.app.utils.AuthPendingStep
 import com.eventfinder.app.utils.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
@@ -40,6 +42,21 @@ class SplashViewModel @Inject constructor(
                             userPreferences.setUserName(it)
                         }
 
+                        when (userPreferences.getPendingAuthStep()) {
+                            AuthPendingStep.CHOOSE_INTERESTS -> {
+                                _navigationState.value = SplashNavigationState.NavigateToChooseInterests(user.userType)
+                                return@fold
+                            }
+                            AuthPendingStep.FILL_PROFILE_REGISTER -> {
+                                _navigationState.value = SplashNavigationState.NavigateToFillProfile(user.userType, AuthFlowSource.REGISTER)
+                                return@fold
+                            }
+                            AuthPendingStep.FILL_PROFILE_LOGIN -> {
+                                _navigationState.value = SplashNavigationState.NavigateToFillProfile(user.userType, AuthFlowSource.LOGIN)
+                                return@fold
+                            }
+                        }
+
                         // Verify profile completeness
                         val isComplete = if (user.userType == UserType.USER) {
                             user.profile != null &&
@@ -54,6 +71,7 @@ class SplashViewModel @Inject constructor(
                         }
 
                         if (isComplete) {
+                            userPreferences.clearPendingAuthStep()
                             // Navigate to appropriate home based on user type
                             _navigationState.value = if (user.userType == UserType.ORGANIZER) {
                                 SplashNavigationState.NavigateToDashboard
@@ -61,7 +79,7 @@ class SplashViewModel @Inject constructor(
                                 SplashNavigationState.NavigateToHome
                             }
                         } else {
-                            _navigationState.value = SplashNavigationState.NavigateToFillProfile(user.userType)
+                            _navigationState.value = SplashNavigationState.NavigateToFillProfile(user.userType, AuthFlowSource.LOGIN)
                         }
                     } else {
                         // No user logged in, go to login
@@ -82,5 +100,6 @@ sealed class SplashNavigationState {
     object NavigateToHome : SplashNavigationState()
     object NavigateToDashboard : SplashNavigationState()
     object NavigateToLogin : SplashNavigationState()
-    data class NavigateToFillProfile(val userType: UserType) : SplashNavigationState()
+    data class NavigateToFillProfile(val userType: UserType, val flowSource: String) : SplashNavigationState()
+    data class NavigateToChooseInterests(val userType: UserType) : SplashNavigationState()
 }

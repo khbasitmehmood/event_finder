@@ -68,10 +68,10 @@ class TransitionFragment : Fragment(R.layout.fragment_transition) {
                     navController.navigate(R.id.adminDashboardFragment, null, navOptions)
                 }
                 AuthNavTargets.ORGANIZER -> {
-                    navController.navigate(R.id.organizerDashboardFragment, null, navOptions)
+                    navController.navigate(R.id.organizer_main_graph, null, navOptions)
                 }
                 else -> {
-                    navController.navigate(R.id.homeFragment, null, navOptions)
+                    navController.navigate(R.id.user_main_graph, null, navOptions)
                 }
             }
         } catch (e: Exception) {

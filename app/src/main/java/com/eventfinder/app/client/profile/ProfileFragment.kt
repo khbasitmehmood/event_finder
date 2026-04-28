@@ -8,6 +8,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.transform.CircleCropTransformation
@@ -144,6 +145,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             is LogoutState.Success -> {
                 binding.btnLogout.isEnabled = true
                 Toast.makeText(requireContext(), "Logged out successfully", Toast.LENGTH_SHORT).show()
+                viewModel.resetLogoutState()
                 navigateToLogin()
             }
             is LogoutState.Error -> {
@@ -169,8 +171,19 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     }
 
     private fun navigateToLogin() {
-        // Clear back stack and navigate to login
-        findNavController().navigate(R.id.action_profile_to_login)
+        val navController = findNavController()
+        val navOptions = NavOptions.Builder()
+            .setLaunchSingleTop(true)
+            .setPopUpTo(R.id.main_nav_graph, true)
+            .build()
+
+        try {
+            // Route to auth root graph to avoid cross-graph destination issues.
+            navController.navigate(R.id.auth_nav_graph, null, navOptions)
+        } catch (e: Exception) {
+            // Fallback: welcome screen if graph route fails for any reason.
+            navController.navigate(R.id.welcomeFragment, null, navOptions)
+        }
     }
 
     override fun onDestroyView() {

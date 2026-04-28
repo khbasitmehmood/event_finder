@@ -24,6 +24,7 @@ class UserPreferences @Inject constructor(
         private const val KEY_USER_ID = "user_id"
         private const val KEY_USER_NAME = "user_name"
         private const val KEY_USER_TYPE = "user_type"
+        private const val KEY_PENDING_AUTH_STEP = "pending_auth_step"
     }
 
     /**
@@ -73,6 +74,27 @@ class UserPreferences @Inject constructor(
      */
     fun setUserType(type: String) {
         prefs.edit().putString(KEY_USER_TYPE, type).apply()
+    }
+
+    /**
+     * Get pending auth/onboarding step, if any.
+     */
+    fun getPendingAuthStep(): String? {
+        return prefs.getString(KEY_PENDING_AUTH_STEP, null)
+    }
+
+    /**
+     * Set pending auth/onboarding step.
+     */
+    fun setPendingAuthStep(step: String) {
+        prefs.edit().putString(KEY_PENDING_AUTH_STEP, step).apply()
+    }
+
+    /**
+     * Clear pending auth/onboarding step.
+     */
+    fun clearPendingAuthStep() {
+        prefs.edit().remove(KEY_PENDING_AUTH_STEP).apply()
     }
 
     /**

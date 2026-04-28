@@ -33,8 +33,11 @@ class MainViewModel @Inject constructor(
     // Client main screen IDs for bottom nav visibility
     val clientMainScreenIds = setOf(
         R.id.homeFragment,
-        R.id.organizerDashboardFragment, // Added for organizer dashboard
+        R.id.organizerDashboardFragment,
+        R.id.organizerEventsFragment,
+        R.id.organizerBookingsFragment,
         R.id.exploreFragment,
+        R.id.ticketsFragment,
         R.id.favouritesFragment,
         R.id.profileFragment
     )

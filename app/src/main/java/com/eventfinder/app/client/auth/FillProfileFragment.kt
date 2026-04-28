@@ -24,6 +24,7 @@ import com.eventfinder.app.databinding.FragmentFillProfileBinding
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.utils.AuthNavArgs
 import com.eventfinder.app.utils.AuthFlowSource
+import com.eventfinder.app.utils.AuthPendingStep
 import com.eventfinder.app.utils.AuthNavTargets
 import com.eventfinder.app.utils.UserPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -75,6 +76,15 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         hasUserTypeArg = arguments?.containsKey(AuthNavArgs.USER_TYPE) == true
         userType = UserType.valueOf(arguments?.getString(AuthNavArgs.USER_TYPE) ?: UserType.USER.name)
         flowSource = arguments?.getString(AuthNavArgs.FLOW_SOURCE) ?: AuthFlowSource.REGISTER
+
+        if (!isEditMode) {
+            val pending = if (flowSource == AuthFlowSource.LOGIN) {
+                AuthPendingStep.FILL_PROFILE_LOGIN
+            } else {
+                AuthPendingStep.FILL_PROFILE_REGISTER
+            }
+            userPreferences.setPendingAuthStep(pending)
+        }
 
         setupUI()
         setupClickListeners()
@@ -207,6 +217,7 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
                                     findNavController().navigateUp()
                                 } else {
                                     if (flowSource == AuthFlowSource.LOGIN) {
+                                        userPreferences.clearPendingAuthStep()
                                         val bundle = Bundle().apply {
                                             putString(
                                                 AuthNavArgs.TARGET,
@@ -219,6 +230,7 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
                                             .build()
                                         findNavController().navigate(R.id.transitionFragment, bundle, navOptions)
                                     } else {
+                                        userPreferences.setPendingAuthStep(AuthPendingStep.CHOOSE_INTERESTS)
                                         // Register onboarding continues to interests selection.
                                         val bundle = Bundle().apply {
                                             putString(AuthNavArgs.USER_TYPE, userType.name)

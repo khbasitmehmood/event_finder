@@ -10,7 +10,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
 import com.eventfinder.app.utils.AuthNavArgs
-import com.eventfinder.app.utils.AuthFlowSource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -33,25 +32,33 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 viewModel.navigationState.collect { state ->
+                    val navController = findNavController()
+                    if (navController.currentDestination?.id != R.id.splashFragment) {
+                        return@collect
+                    }
+
                     when (state) {
                         is SplashNavigationState.NavigateToHome -> {
-                            findNavController().navigate(R.id.action_splash_to_home)
+                            navController.navigate(R.id.action_splash_to_home)
                         }
                         is SplashNavigationState.NavigateToDashboard -> {
-                            findNavController().navigate(R.id.action_splash_to_dashboard)
+                            navController.navigate(R.id.action_splash_to_dashboard)
                         }
                         is SplashNavigationState.NavigateToLogin -> {
-                            findNavController().navigate(R.id.action_splash_to_welcome)
+                            navController.navigate(R.id.action_splash_to_welcome)
                         }
                         is SplashNavigationState.NavigateToFillProfile -> {
                             val bundle = Bundle().apply {
                                 putString(AuthNavArgs.USER_TYPE, state.userType.name)
-                                putString(AuthNavArgs.FLOW_SOURCE, AuthFlowSource.LOGIN)
+                                putString(AuthNavArgs.FLOW_SOURCE, state.flowSource)
                             }
-                            val navOptions = androidx.navigation.NavOptions.Builder()
-                                .setPopUpTo(R.id.splashFragment, true)
-                                .build()
-                            findNavController().navigate(R.id.fillProfileFragment, bundle, navOptions)
+                            navController.navigate(R.id.action_splash_to_fillProfile, bundle)
+                        }
+                        is SplashNavigationState.NavigateToChooseInterests -> {
+                            val bundle = Bundle().apply {
+                                putString(AuthNavArgs.USER_TYPE, state.userType.name)
+                            }
+                            navController.navigate(R.id.action_splash_to_chooseInterests, bundle)
                         }
                         is SplashNavigationState.Idle -> {
                             // Stay on splash

@@ -19,8 +19,11 @@ import com.eventfinder.app.databinding.ItemInterestBinding
 import com.eventfinder.app.domain.model.EventCategory
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.utils.AuthNavArgs
+import com.eventfinder.app.utils.AuthPendingStep
+import com.eventfinder.app.utils.UserPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ChooseInterestsFragment : Fragment() {
@@ -29,6 +32,9 @@ class ChooseInterestsFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: FillProfileViewModel by viewModels()
+
+    @Inject
+    lateinit var userPreferences: UserPreferences
 
     private var allCategories: List<EventCategory> = emptyList()
     private val selectedInterestIds = mutableSetOf<String>()
@@ -47,6 +53,7 @@ class ChooseInterestsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userType = UserType.valueOf(arguments?.getString(AuthNavArgs.USER_TYPE) ?: UserType.USER.name)
+        userPreferences.setPendingAuthStep(AuthPendingStep.CHOOSE_INTERESTS)
 
         if (userType == UserType.ORGANIZER) {
             binding.tvTitle.text = "Events you will offer"
@@ -62,6 +69,7 @@ class ChooseInterestsFragment : Fragment() {
         }
 
         binding.tvSkip.setOnClickListener {
+            userPreferences.clearPendingAuthStep()
             navigateToSuccess()
         }
 
@@ -108,6 +116,7 @@ class ChooseInterestsFragment : Fragment() {
                                 binding.btnContinue.text = "Saving..."
                             }
                             is FillProfileUiState.Success -> {
+                                userPreferences.clearPendingAuthStep()
                                 navigateToSuccess()
                                 viewModel.resetState()
                             }
@@ -178,7 +187,7 @@ class ChooseInterestsFragment : Fragment() {
         val navOptions = NavOptions.Builder()
             .setLaunchSingleTop(true)
             .build()
-        findNavController().navigate(R.id.action_chooseInterests_to_success, bundle, navOptions)
+        findNavController().navigate(R.id.successFragment, bundle, navOptions)
     }
 
     override fun onDestroyView() {
