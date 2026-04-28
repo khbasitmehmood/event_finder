@@ -61,7 +61,7 @@ class SplashViewModel @Inject constructor(
                                 SplashNavigationState.NavigateToHome
                             }
                         } else {
-                            _navigationState.value = SplashNavigationState.NavigateToFillProfile
+                            _navigationState.value = SplashNavigationState.NavigateToFillProfile(user.userType)
                         }
                     } else {
                         // No user logged in, go to login
@@ -82,5 +82,5 @@ sealed class SplashNavigationState {
     object NavigateToHome : SplashNavigationState()
     object NavigateToDashboard : SplashNavigationState()
     object NavigateToLogin : SplashNavigationState()
-    object NavigateToFillProfile : SplashNavigationState()
+    data class NavigateToFillProfile(val userType: UserType) : SplashNavigationState()
 }

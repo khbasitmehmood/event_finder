@@ -14,6 +14,7 @@ import coil.transform.CircleCropTransformation
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentProfileBinding
 import com.eventfinder.app.domain.model.UserType
+import com.eventfinder.app.utils.AuthNavArgs
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -39,8 +40,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun setupClickListeners() {
         // Edit Profile
         binding.btnEditProfile.setOnClickListener {
+            val currentType = viewModel.currentUser.value?.userType ?: UserType.USER
             val bundle = Bundle().apply {
-                putBoolean("IS_EDIT_MODE", true)
+                putBoolean(AuthNavArgs.IS_EDIT_MODE, true)
+                putString(AuthNavArgs.USER_TYPE, currentType.name)
             }
             findNavController().navigate(R.id.fillProfileFragment, bundle)
         }

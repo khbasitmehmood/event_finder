@@ -71,7 +71,9 @@ class FillProfileViewModel @Inject constructor(
     }
 
     fun updateProfile(
+        userType: UserType,
         name: String,
+        city: String,
         contactNumber: String,
         contactPerson: String,
         description: String,
@@ -84,9 +86,10 @@ class FillProfileViewModel @Inject constructor(
             try {
                 val userResult = getCurrentUserUseCase()
                 val user = userResult.getOrNull() ?: throw Exception("User not found")
+                val effectiveUserType = userType
 
                 // Start with existing URLs if present
-                var photoUrl: String? = if (user.userType == UserType.ORGANIZER) {
+                var photoUrl: String? = if (effectiveUserType == UserType.ORGANIZER) {
                     user.organizerProfile?.logoUrl
                 } else {
                     user.profile?.photoUrl
@@ -98,15 +101,17 @@ class FillProfileViewModel @Inject constructor(
                     photoUrl = uploadResult.getOrThrow()
                 }
 
-                val updatedUser = if (user.userType == UserType.ORGANIZER) {
+                val updatedUser = if (effectiveUserType == UserType.ORGANIZER) {
                     val prevInterests = user.organizerProfile?.offeredEvents ?: emptyList()
                     val newInterests = if (interests.isNotEmpty()) interests else prevInterests
 
                     user.copy(
+                        userType = UserType.ORGANIZER,
                         organizerProfile = OrganizerProfile(
                             organizationName = name,
                             phoneNumber = contactNumber,
                             contactPerson = contactPerson,
+                            city = city.ifBlank { null },
                             description = description,
                             offeredEvents = newInterests, // Keep existing if not provided here
                             logoUrl = photoUrl
@@ -117,9 +122,12 @@ class FillProfileViewModel @Inject constructor(
                     val newInterests = if (interests.isNotEmpty()) interests else prevInterests
 
                     user.copy(
+                        userType = UserType.USER,
                         profile = UserProfile(
                             fullName = name,
                             phoneNumber = contactNumber,
+                            city = city.ifBlank { null },
+                            bio = description.ifBlank { null },
                             interests = newInterests, // Keep existing if not provided here
                             photoUrl = photoUrl
                         )
@@ -129,7 +137,7 @@ class FillProfileViewModel @Inject constructor(
                 updateProfileUseCase(updatedUser).fold(
                     onSuccess = {
                         userPreferences.setUserName(name)
-                        userPreferences.setUserType(user.userType.name)
+                        userPreferences.setUserType(effectiveUserType.name)
                         _uiState.value = FillProfileUiState.Success
                     },
                     onFailure = {

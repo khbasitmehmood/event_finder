@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentWelcomeBinding
@@ -25,12 +26,16 @@ class WelcomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val singleTopNavOptions = NavOptions.Builder()
+            .setLaunchSingleTop(true)
+            .build()
+
         binding.btnCreateAccount.setOnClickListener {
-            findNavController().navigate(R.id.action_welcome_to_signup)
+            findNavController().navigate(R.id.action_welcome_to_signup, null, singleTopNavOptions)
         }
 
         binding.btnLogin.setOnClickListener {
-            findNavController().navigate(R.id.action_welcome_to_login)
+            findNavController().navigate(R.id.action_welcome_to_login, null, singleTopNavOptions)
         }
     }
 

@@ -11,9 +11,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentLoginNewBinding
+import com.eventfinder.app.utils.AuthNavArgs
+import com.eventfinder.app.utils.AuthFlowSource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -58,11 +61,18 @@ class LoginFragment : Fragment() {
         }
 
         binding.tvToSignup.setOnClickListener {
-            findNavController().navigate(R.id.signupFragment)
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setPopUpTo(R.id.welcomeFragment, false)
+                .build()
+            findNavController().navigate(R.id.signupFragment, null, navOptions)
         }
 
         binding.tvForgotPassword.setOnClickListener {
-            findNavController().navigate(R.id.forgotPasswordFragment)
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .build()
+            findNavController().navigate(R.id.forgotPasswordFragment, null, navOptions)
         }
     }
 
@@ -82,7 +92,7 @@ class LoginFragment : Fragment() {
             is AuthUiState.Loading -> setLoadingState(true)
             is AuthUiState.Success -> {
                 setLoadingState(false)
-                handleLoginSuccess(state.user.isProfileComplete, state.user.userType)
+                handleLoginSuccess(state.user.userType)
             }
             is AuthUiState.Error -> {
                 setLoadingState(false)
@@ -98,16 +108,17 @@ class LoginFragment : Fragment() {
         binding.etPassword.isEnabled = !isLoading
     }
 
-    private fun handleLoginSuccess(isProfileComplete: Boolean, userType: com.eventfinder.app.domain.model.UserType) {
-        if (isProfileComplete) {
-            val bundle = Bundle().apply {
-                putString("TARGET", if (userType == com.eventfinder.app.domain.model.UserType.ORGANIZER) "ORGANIZER" else "USER")
-            }
-            findNavController().navigate(R.id.transitionFragment, bundle)
-        } else {
-            Toast.makeText(context, "Please complete your profile to continue", Toast.LENGTH_LONG).show()
-            findNavController().navigate(R.id.fillProfileFragment)
+    private fun handleLoginSuccess(userType: com.eventfinder.app.domain.model.UserType) {
+        Toast.makeText(context, "Please confirm your profile to continue", Toast.LENGTH_SHORT).show()
+        val bundle = Bundle().apply {
+            putString(AuthNavArgs.USER_TYPE, userType.name)
+            putString(AuthNavArgs.FLOW_SOURCE, AuthFlowSource.LOGIN)
         }
+        val navOptions = NavOptions.Builder()
+            .setLaunchSingleTop(true)
+            .setPopUpTo(R.id.loginFragment, true)
+            .build()
+        findNavController().navigate(R.id.fillProfileFragment, bundle, navOptions)
     }
 
     private fun handleError(message: String) {

@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.eventfinder.app.databinding.ActivityMainBinding
@@ -65,34 +67,25 @@ class MainActivity : AppCompatActivity() {
         // Setup navigation with custom handling for organizers
         var isUpdatingSelection = false
 
+        binding.bottomNavigation.setOnItemReselectedListener {
+            // Keep current tab state; do not push duplicate destinations.
+        }
+
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             if (isUpdatingSelection) return@setOnItemSelectedListener true
 
-            when (item.itemId) {
+            val destinationId = when (item.itemId) {
                 R.id.homeFragment -> {
-                    // Navigate to appropriate home based on user type
-                    val destinationId = if (viewModel.getUserType() == com.eventfinder.app.domain.model.UserType.ORGANIZER) {
+                    if (viewModel.getUserType() == com.eventfinder.app.domain.model.UserType.ORGANIZER) {
                         R.id.organizerDashboardFragment
                     } else {
                         R.id.homeFragment
                     }
-                    try {
-                        navController.navigate(destinationId)
-                        true
-                    } catch (e: Exception) {
-                        false
-                    }
                 }
-                else -> {
-                    // Let NavController handle other items normally
-                    try {
-                        navController.navigate(item.itemId)
-                        true
-                    } catch (e: Exception) {
-                        false
-                    }
-                }
+                else -> item.itemId
             }
+
+            navigateToTopLevelDestination(destinationId)
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -126,6 +119,24 @@ class MainActivity : AppCompatActivity() {
                 }
             }
             isUpdatingSelection = false
+        }
+    }
+
+    private fun navigateToTopLevelDestination(destinationId: Int): Boolean {
+        val currentDestinationId = navController.currentDestination?.id
+        if (currentDestinationId == destinationId) return true
+
+        return try {
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setRestoreState(true)
+                .setPopUpTo(navController.graph.findStartDestination().id, false, true)
+                .build()
+
+            navController.navigate(destinationId, null, navOptions)
+            true
+        } catch (e: Exception) {
+            false
         }
     }
 

@@ -6,10 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentAccountTypeBinding
 import com.eventfinder.app.domain.model.UserType
+import com.eventfinder.app.utils.AuthNavArgs
+import com.eventfinder.app.utils.AuthFlowSource
 
 class AccountTypeFragment : Fragment() {
 
@@ -47,9 +50,13 @@ class AccountTypeFragment : Fragment() {
 
         binding.btnContinue.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("USER_TYPE", selectedType.name)
+                putString(AuthNavArgs.USER_TYPE, selectedType.name)
+                putString(AuthNavArgs.FLOW_SOURCE, AuthFlowSource.REGISTER)
             }
-            findNavController().navigate(R.id.action_accountType_to_fillProfile, bundle)
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .build()
+            findNavController().navigate(R.id.action_accountType_to_fillProfile, bundle, navOptions)
         }
     }
 

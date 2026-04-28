@@ -3,10 +3,12 @@ package com.eventfinder.app.client.auth
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentAuthSuccessBinding
 import com.eventfinder.app.domain.model.UserType
+import com.eventfinder.app.utils.AuthNavArgs
 
 class SuccessFragment : Fragment(R.layout.fragment_auth_success) {
 
@@ -17,7 +19,7 @@ class SuccessFragment : Fragment(R.layout.fragment_auth_success) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentAuthSuccessBinding.bind(view)
 
-        val userTypeString = arguments?.getString("USER_TYPE") ?: UserType.USER.name
+        val userTypeString = arguments?.getString(AuthNavArgs.USER_TYPE) ?: UserType.USER.name
         val userType = UserType.valueOf(userTypeString)
 
         if (userType == UserType.ORGANIZER) {
@@ -58,10 +60,14 @@ class SuccessFragment : Fragment(R.layout.fragment_auth_success) {
 
         binding.btnContinue.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("TARGET", userType.name)
+                putString(AuthNavArgs.TARGET, userType.name)
             }
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setPopUpTo(R.id.successFragment, true)
+                .build()
             // Uses TransitionFragment which handles routing properly based on TARGET
-            findNavController().navigate(R.id.transitionFragment, bundle)
+            findNavController().navigate(R.id.transitionFragment, bundle, navOptions)
         }
     }
 

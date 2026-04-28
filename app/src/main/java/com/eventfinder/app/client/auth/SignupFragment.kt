@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentSignupNewBinding
@@ -52,20 +53,31 @@ class SignupFragment : Fragment() {
         }
 
         binding.btnSignup.setOnClickListener {
+            val fullName = binding.etFullName.text.toString().trim()
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString()
             val confirmPassword = binding.etConfirmPassword.text.toString()
 
             // Clear previous errors
+            binding.tilFullName.error = null
             binding.tilEmail.error = null
             binding.tilPassword.error = null
             binding.tilConfirmPassword.error = null
 
-            viewModel.signup(email, password, confirmPassword)
+            if (fullName.isBlank()) {
+                binding.tilFullName.error = "Full name is required"
+                return@setOnClickListener
+            }
+
+            viewModel.signup(fullName, email, password, confirmPassword)
         }
 
         binding.tvBackToLogin.setOnClickListener {
-            findNavController().navigate(R.id.loginFragment)
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setPopUpTo(R.id.welcomeFragment, false)
+                .build()
+            findNavController().navigate(R.id.loginFragment, null, navOptions)
         }
     }
 
@@ -104,11 +116,15 @@ class SignupFragment : Fragment() {
     }
 
     private fun handleSignupSuccess() {
-        findNavController().navigate(R.id.action_signup_to_accountType)
+        val navOptions = NavOptions.Builder()
+            .setLaunchSingleTop(true)
+            .build()
+        findNavController().navigate(R.id.action_signup_to_accountType, null, navOptions)
     }
 
     private fun handleError(message: String) {
         when {
+            message.contains("name", ignoreCase = true) -> binding.tilFullName.error = message
             message.contains("email", ignoreCase = true) -> binding.tilEmail.error = message
             message.contains("password", ignoreCase = true) -> {
                 if (message.contains("match", ignoreCase = true)) {
@@ -119,6 +135,16 @@ class SignupFragment : Fragment() {
             }
             else -> Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
+
+        if (message.contains("already", ignoreCase = true) || message.contains("exists", ignoreCase = true)) {
+            Toast.makeText(requireContext(), "Account already exists. Please log in.", Toast.LENGTH_LONG).show()
+            val navOptions = NavOptions.Builder()
+                .setLaunchSingleTop(true)
+                .setPopUpTo(R.id.welcomeFragment, false)
+                .build()
+            findNavController().navigate(R.id.loginFragment, null, navOptions)
+        }
+
         viewModel.resetState()
     }
 

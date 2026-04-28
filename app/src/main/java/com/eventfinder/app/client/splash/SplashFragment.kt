@@ -9,6 +9,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
+import com.eventfinder.app.utils.AuthNavArgs
+import com.eventfinder.app.utils.AuthFlowSource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
@@ -42,10 +44,14 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                             findNavController().navigate(R.id.action_splash_to_welcome)
                         }
                         is SplashNavigationState.NavigateToFillProfile -> {
+                            val bundle = Bundle().apply {
+                                putString(AuthNavArgs.USER_TYPE, state.userType.name)
+                                putString(AuthNavArgs.FLOW_SOURCE, AuthFlowSource.LOGIN)
+                            }
                             val navOptions = androidx.navigation.NavOptions.Builder()
                                 .setPopUpTo(R.id.splashFragment, true)
                                 .build()
-                            findNavController().navigate(R.id.fillProfileFragment, null, navOptions)
+                            findNavController().navigate(R.id.fillProfileFragment, bundle, navOptions)
                         }
                         is SplashNavigationState.Idle -> {
                             // Stay on splash

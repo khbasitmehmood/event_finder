@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
-import androidx.activity.addCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
@@ -16,12 +15,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import coil.load
 import coil.transform.CircleCropTransformation
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentFillProfileBinding
 import com.eventfinder.app.domain.model.UserType
+import com.eventfinder.app.utils.AuthNavArgs
+import com.eventfinder.app.utils.AuthFlowSource
+import com.eventfinder.app.utils.AuthNavTargets
 import com.eventfinder.app.utils.UserPreferences
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
@@ -43,6 +46,10 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
     private var selectedImageUri: Uri? = null
     private var cameraImageUri: Uri? = null
     private var userType: UserType = UserType.USER
+    private var hasUserTypeArg: Boolean = false
+    private var flowSource: String = AuthFlowSource.REGISTER
+    private var isEditMode: Boolean = false
+    private var hasPrefilledData: Boolean = false
 
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -64,7 +71,10 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentFillProfileBinding.bind(view)
 
-        userType = UserType.valueOf(arguments?.getString("USER_TYPE") ?: UserType.USER.name)
+        isEditMode = arguments?.getBoolean(AuthNavArgs.IS_EDIT_MODE, false) == true
+        hasUserTypeArg = arguments?.containsKey(AuthNavArgs.USER_TYPE) == true
+        userType = UserType.valueOf(arguments?.getString(AuthNavArgs.USER_TYPE) ?: UserType.USER.name)
+        flowSource = arguments?.getString(AuthNavArgs.FLOW_SOURCE) ?: AuthFlowSource.REGISTER
 
         setupUI()
         setupClickListeners()
@@ -76,20 +86,28 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
             binding.tvTitle.text = "Set up your organizer profile"
             binding.tvSubtitle.text = "Tell people who is hosting the events."
             binding.tilName.hint = "Organizer Name"
-            
-            binding.tilEmail.isVisible = true
+
             binding.tilContact.isVisible = true
             binding.tilDescription.isVisible = true
             binding.cardUseLocation.isVisible = false
+            binding.tvManualLocation.isVisible = false
         } else {
             binding.tvTitle.text = "Let's set up your profile"
             binding.tvSubtitle.text = "This helps us personalize events for you."
             binding.tilName.hint = "Full Name"
-            
-            binding.tilEmail.isVisible = false
+
             binding.tilContact.isVisible = false
             binding.tilDescription.isVisible = false
             binding.cardUseLocation.isVisible = true
+            binding.tvManualLocation.isVisible = true
+        }
+
+        if (isEditMode) {
+            binding.tvTitle.text = "Edit your profile"
+            binding.tvSubtitle.text = "Update your details."
+            binding.btnSaveProfile.text = "Save"
+        } else {
+            binding.btnSaveProfile.text = "Continue"
         }
     }
 
@@ -110,7 +128,6 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         binding.btnSaveProfile.setOnClickListener {
             val name = binding.etName.text.toString().trim()
             val city = binding.etCity.text.toString().trim()
-            val email = binding.etEmail.text.toString().trim()
             val phone = binding.etContact.text.toString().trim()
             val description = binding.etDescription.text.toString().trim()
             
@@ -122,10 +139,10 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
             binding.tilName.error = null
 
             // Update profile with viewModel
-            // For now, updating what FillProfileViewModel supports
-            // In a complete implementation, FillProfileViewModel should be updated to take these fields.
             viewModel.updateProfile(
+                userType = userType,
                 name = name,
+                city = city,
                 contactNumber = phone,
                 contactPerson = name, // Use as fallback
                 description = description,
@@ -168,17 +185,50 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 
                 launch {
+                    viewModel.currentUser.collect { user ->
+                        if (user != null) {
+                            if (!hasUserTypeArg) {
+                                userType = user.userType
+                            }
+                            setupUI()
+                            prefillUserData(user)
+                        }
+                    }
+                }
+
+                launch {
                     viewModel.uiState.collect { state ->
                         when (state) {
                             is FillProfileUiState.Idle -> setLoadingState(false)
                             is FillProfileUiState.Loading -> setLoadingState(true)
                             is FillProfileUiState.Success -> {
                                 setLoadingState(false)
-                                // Move to Choose Interests
-                                val bundle = Bundle().apply {
-                                    putString("USER_TYPE", userType.name)
+                                if (isEditMode) {
+                                    findNavController().navigateUp()
+                                } else {
+                                    if (flowSource == AuthFlowSource.LOGIN) {
+                                        val bundle = Bundle().apply {
+                                            putString(
+                                                AuthNavArgs.TARGET,
+                                                if (userType == UserType.ORGANIZER) AuthNavTargets.ORGANIZER else AuthNavTargets.USER
+                                            )
+                                        }
+                                        val navOptions = NavOptions.Builder()
+                                            .setLaunchSingleTop(true)
+                                            .setPopUpTo(R.id.fillProfileFragment, true)
+                                            .build()
+                                        findNavController().navigate(R.id.transitionFragment, bundle, navOptions)
+                                    } else {
+                                        // Register onboarding continues to interests selection.
+                                        val bundle = Bundle().apply {
+                                            putString(AuthNavArgs.USER_TYPE, userType.name)
+                                        }
+                                        val navOptions = NavOptions.Builder()
+                                            .setLaunchSingleTop(true)
+                                            .build()
+                                        findNavController().navigate(R.id.action_fillProfile_to_chooseInterests, bundle, navOptions)
+                                    }
                                 }
-                                findNavController().navigate(R.id.action_fillProfile_to_chooseInterests, bundle)
                                 viewModel.resetState()
                             }
                             is FillProfileUiState.Error -> {
@@ -198,9 +248,47 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         binding.btnSaveProfile.isEnabled = !isLoading
         binding.etName.isEnabled = !isLoading
         binding.etCity.isEnabled = !isLoading
-        binding.etEmail.isEnabled = !isLoading
         binding.etContact.isEnabled = !isLoading
         binding.etDescription.isEnabled = !isLoading
+    }
+
+    private fun prefillUserData(user: com.eventfinder.app.domain.model.User) {
+        if (hasPrefilledData) return
+
+        val defaultName = userPreferences.getUserName().takeIf { it.isNotBlank() && it != "Guest User" }
+        if (user.userType == UserType.ORGANIZER) {
+            val profile = user.organizerProfile
+            binding.etName.setText(profile?.organizationName ?: defaultName.orEmpty())
+            binding.etContact.setText(profile?.phoneNumber.orEmpty())
+            binding.etCity.setText(profile?.city.orEmpty())
+            binding.etDescription.setText(profile?.description.orEmpty())
+
+            val logoUrl = profile?.logoUrl
+            if (!logoUrl.isNullOrBlank()) {
+                binding.ivProfileImage.load(logoUrl) {
+                    crossfade(true)
+                    transformations(CircleCropTransformation())
+                    placeholder(R.drawable.ic_profile)
+                    error(R.drawable.ic_profile)
+                }
+            }
+        } else {
+            val profile = user.profile
+            binding.etName.setText(profile?.fullName ?: defaultName.orEmpty())
+            binding.etCity.setText(profile?.city.orEmpty())
+
+            val photoUrl = profile?.photoUrl
+            if (!photoUrl.isNullOrBlank()) {
+                binding.ivProfileImage.load(photoUrl) {
+                    crossfade(true)
+                    transformations(CircleCropTransformation())
+                    placeholder(R.drawable.ic_profile)
+                    error(R.drawable.ic_profile)
+                }
+            }
+        }
+
+        hasPrefilledData = true
     }
 
     override fun onDestroyView() {

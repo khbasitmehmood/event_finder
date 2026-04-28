@@ -21,14 +21,21 @@ class SignupViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    fun signup(email: String, password: String, confirmPassword: String) {
+    fun signup(fullName: String, email: String, password: String, confirmPassword: String) {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
+
+            if (fullName.isBlank()) {
+                _uiState.value = AuthUiState.Error("Full name is required")
+                return@launch
+            }
 
             // Default to USER during initial signup. True type is saved during profile completion.
             signupUseCase(email, password, confirmPassword, UserType.USER).fold(
                 onSuccess = { user ->
                     userPreferences.setUserId(user.uid)
+                    // Keep signup name so Fill Profile can prefill it before the profile document is completed.
+                    userPreferences.setUserName(fullName)
                     _uiState.value = AuthUiState.Success(user)
                 },
                 onFailure = { error ->

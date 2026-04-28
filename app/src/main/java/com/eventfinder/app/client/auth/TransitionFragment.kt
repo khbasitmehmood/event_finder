@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.NavHostFragment
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentTransitionBinding
+import com.eventfinder.app.utils.AuthNavArgs
+import com.eventfinder.app.utils.AuthNavTargets
 import com.eventfinder.app.utils.ModeManager
 
 class TransitionFragment : Fragment(R.layout.fragment_transition) {
@@ -21,18 +23,18 @@ class TransitionFragment : Fragment(R.layout.fragment_transition) {
         _binding = FragmentTransitionBinding.bind(view)
 
         // 1. Get the target from arguments safely
-        val target = arguments?.getString("TARGET") ?: "USER"
+        val target = arguments?.getString(AuthNavArgs.TARGET) ?: AuthNavTargets.USER
 
         // 2. Set Dynamic Status Text based on your sequence
         binding.tvTransitionStatus.text = when (target) {
-            "ADMIN" -> "Switching to Admin Dashboard..." // Deprecated: For future admin use
-            "ORGANIZER" -> "Welcome back! Loading your dashboard..."
-            "USER" -> "Welcome back! Preparing your events..."
+            AuthNavTargets.ADMIN -> "Switching to Admin Dashboard..." // Deprecated: For future admin use
+            AuthNavTargets.ORGANIZER -> "Welcome back! Loading your dashboard..."
+            AuthNavTargets.USER -> "Welcome back! Preparing your events..."
             else -> "Loading..."
         }
 
         // 3. Save mode preference (deprecated for organizers, kept for future admin features)
-        ModeManager.setAdminMode(requireContext(), target == "ADMIN")
+        ModeManager.setAdminMode(requireContext(), target == AuthNavTargets.ADMIN)
 
         // 4. Entrance Animation
         binding.transitionContainer.startAnimation(
@@ -61,11 +63,11 @@ class TransitionFragment : Fragment(R.layout.fragment_transition) {
                 .build()
 
             when (target) {
-                "ADMIN" -> {
+                AuthNavTargets.ADMIN -> {
                     // Deprecated: Admin dashboard for future admin features
                     navController.navigate(R.id.adminDashboardFragment, null, navOptions)
                 }
-                "ORGANIZER" -> {
+                AuthNavTargets.ORGANIZER -> {
                     navController.navigate(R.id.organizerDashboardFragment, null, navOptions)
                 }
                 else -> {
@@ -82,7 +84,7 @@ class TransitionFragment : Fragment(R.layout.fragment_transition) {
         fun newInstance(target: String): TransitionFragment {
             return TransitionFragment().apply {
                 arguments = Bundle().apply {
-                    putString("TARGET", target)
+                    putString(AuthNavArgs.TARGET, target)
                 }
             }
         }

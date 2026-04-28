@@ -5,6 +5,7 @@ import com.eventfinder.app.data.model.UserDto
 import com.eventfinder.app.domain.model.User
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.repository.AuthRepository
+import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -62,7 +63,11 @@ class AuthRepositoryImpl @Inject constructor(
 
             Result.success(user)
         } catch (e: Exception) {
-            Result.failure(Exception("Signup failed: ${e.message}", e))
+            val message = when (e) {
+                is FirebaseAuthUserCollisionException -> "User already exists. Please log in."
+                else -> "Signup failed: ${e.message}"
+            }
+            Result.failure(Exception(message, e))
         }
     }
 
