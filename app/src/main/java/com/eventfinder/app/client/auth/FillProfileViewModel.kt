@@ -99,22 +99,28 @@ class FillProfileViewModel @Inject constructor(
                 }
 
                 val updatedUser = if (user.userType == UserType.ORGANIZER) {
+                    val prevInterests = user.organizerProfile?.offeredEvents ?: emptyList()
+                    val newInterests = if (interests.isNotEmpty()) interests else prevInterests
+
                     user.copy(
                         organizerProfile = OrganizerProfile(
                             organizationName = name,
                             phoneNumber = contactNumber,
                             contactPerson = contactPerson,
                             description = description,
-                            offeredEvents = interests, // Saving category IDs to Firestore
+                            offeredEvents = newInterests, // Keep existing if not provided here
                             logoUrl = photoUrl
                         )
                     )
                 } else {
+                    val prevInterests = user.profile?.interests ?: emptyList()
+                    val newInterests = if (interests.isNotEmpty()) interests else prevInterests
+
                     user.copy(
                         profile = UserProfile(
                             fullName = name,
                             phoneNumber = contactNumber,
-                            interests = interests, // Saving category IDs to Firestore
+                            interests = newInterests, // Keep existing if not provided here
                             photoUrl = photoUrl
                         )
                     )
@@ -128,6 +134,35 @@ class FillProfileViewModel @Inject constructor(
                     },
                     onFailure = {
                         _uiState.value = FillProfileUiState.Error(it.message ?: "Failed to update profile")
+                    }
+                )
+            } catch (e: Exception) {
+                _uiState.value = FillProfileUiState.Error(e.message ?: "An error occurred")
+            }
+        }
+    }
+
+    fun updateInterests(interests: List<String>) {
+        viewModelScope.launch {
+            _uiState.value = FillProfileUiState.Loading
+            try {
+                val userResult = getCurrentUserUseCase()
+                val user = userResult.getOrNull() ?: throw Exception("User not found")
+
+                val updatedUser = if (user.userType == UserType.ORGANIZER) {
+                    val currentProfile = user.organizerProfile ?: OrganizerProfile()
+                    user.copy(organizerProfile = currentProfile.copy(offeredEvents = interests))
+                } else {
+                    val currentProfile = user.profile ?: UserProfile()
+                    user.copy(profile = currentProfile.copy(interests = interests))
+                }
+
+                updateProfileUseCase(updatedUser).fold(
+                    onSuccess = {
+                        _uiState.value = FillProfileUiState.Success
+                    },
+                    onFailure = {
+                        _uiState.value = FillProfileUiState.Error(it.message ?: "Failed to update interests")
                     }
                 )
             } catch (e: Exception) {

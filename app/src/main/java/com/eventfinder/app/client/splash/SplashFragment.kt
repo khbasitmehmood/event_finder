@@ -39,7 +39,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                             findNavController().navigate(R.id.action_splash_to_dashboard)
                         }
                         is SplashNavigationState.NavigateToLogin -> {
-                            findNavController().navigate(R.id.action_splash_to_login)
+                            findNavController().navigate(R.id.action_splash_to_welcome)
                         }
                         is SplashNavigationState.NavigateToFillProfile -> {
                             val navOptions = androidx.navigation.NavOptions.Builder()

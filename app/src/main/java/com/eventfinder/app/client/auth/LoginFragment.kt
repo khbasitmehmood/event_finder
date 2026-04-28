@@ -42,6 +42,10 @@ class LoginFragment : Fragment() {
     }
 
     private fun setupClickListeners() {
+        binding.btnBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         binding.btnLogin.setOnClickListener {
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString()
@@ -74,12 +78,8 @@ class LoginFragment : Fragment() {
 
     private fun handleUiState(state: AuthUiState) {
         when (state) {
-            is AuthUiState.Idle -> {
-                setLoadingState(false)
-            }
-            is AuthUiState.Loading -> {
-                setLoadingState(true)
-            }
+            is AuthUiState.Idle -> setLoadingState(false)
+            is AuthUiState.Loading -> setLoadingState(true)
             is AuthUiState.Success -> {
                 setLoadingState(false)
                 handleLoginSuccess(state.user.isProfileComplete, state.user.userType)
@@ -100,13 +100,11 @@ class LoginFragment : Fragment() {
 
     private fun handleLoginSuccess(isProfileComplete: Boolean, userType: com.eventfinder.app.domain.model.UserType) {
         if (isProfileComplete) {
-            // Navigate to appropriate home screen based on user type
             val bundle = Bundle().apply {
                 putString("TARGET", if (userType == com.eventfinder.app.domain.model.UserType.ORGANIZER) "ORGANIZER" else "USER")
             }
             findNavController().navigate(R.id.transitionFragment, bundle)
         } else {
-            // Navigate to profile setup
             Toast.makeText(context, "Please complete your profile to continue", Toast.LENGTH_LONG).show()
             findNavController().navigate(R.id.fillProfileFragment)
         }
@@ -114,15 +112,9 @@ class LoginFragment : Fragment() {
 
     private fun handleError(message: String) {
         when {
-            message.contains("email", ignoreCase = true) -> {
-                binding.tilEmail.error = message
-            }
-            message.contains("password", ignoreCase = true) -> {
-                binding.tilPassword.error = message
-            }
-            else -> {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-            }
+            message.contains("email", ignoreCase = true) -> binding.tilEmail.error = message
+            message.contains("password", ignoreCase = true) -> binding.tilPassword.error = message
+            else -> Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
         viewModel.resetState()
     }

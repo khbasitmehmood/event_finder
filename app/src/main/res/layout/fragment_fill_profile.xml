@@ -14,36 +14,35 @@
 
         <ImageButton
             android:id="@+id/btnBack"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/bg_circle_back"
-            android:src="@drawable/arrow_back_24px"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_back"
             app:tint="@color/text_primary"
-            android:visibility="gone"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:visibility="visible" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tvTitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/spacing_large"
-            android:text="@string/fill_profile_title"
+            android:text="Let's set up your profile"
             android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/btnBack"
-            app:layout_constraintTop_toTopOf="@+id/btnBack"
-            app:layout_constraintBottom_toBottomOf="@+id/btnBack"
-            app:layout_goneMarginStart="0dp" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/btnBack" />
 
         <TextView
             android:id="@+id/tvSubtitle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_medium"
-            android:text="@string/fill_profile_subtitle"
-            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+            android:layout_marginTop="8dp"
+            android:text="This helps us personalize events for you."
+            android:textAppearance="@style/TextAppearance.App.BodyLarge"
+            android:textColor="@color/text_secondary"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/tvTitle"
             app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -51,9 +50,9 @@
         <!-- Profile Image -->
         <FrameLayout
             android:id="@+id/flProfileImage"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:layout_marginTop="40dp"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="32dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSubtitle">
@@ -68,26 +67,24 @@
                 android:clipToOutline="true" />
 
             <com.google.android.material.card.MaterialCardView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_gravity="bottom|end"
-                android:layout_marginEnd="@dimen/spacing_small"
-                android:layout_marginBottom="@dimen/spacing_small"
-                app:cardCornerRadius="@dimen/corner_radius_medium"
-                app:cardBackgroundColor="@color/md_surface_variant"
-                app:cardElevation="0dp"
-                app:strokeWidth="1dp"
-                app:strokeColor="@color/md_outline">
+                app:cardCornerRadius="14dp"
+                app:cardBackgroundColor="@color/md_primary"
+                app:cardElevation="2dp"
+                app:strokeWidth="2dp"
+                app:strokeColor="@color/md_surface">
                 <ImageView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:padding="6dp"
                     android:src="@android:drawable/ic_menu_camera"
-                    app:tint="@color/md_primary" />
+                    app:tint="@color/md_on_primary" />
             </com.google.android.material.card.MaterialCardView>
         </FrameLayout>
 
-        <!-- Common Fields -->
+        <!-- Common Fields (Name & City) -->
         <LinearLayout
             android:id="@+id/llCommonFields"
             android:layout_width="match_parent"
@@ -95,14 +92,6 @@
             android:orientation="vertical"
             android:layout_marginTop="40dp"
             app:layout_constraintTop_toBottomOf="@id/flProfileImage">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/hint_full_name"
-                android:textAppearance="@style/TextAppearance.App.TitleSmall"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:layout_marginStart="@dimen/spacing_small" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilName"
@@ -116,24 +105,38 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="textPersonName"
+                    android:hint="Full Name"
                     android:background="@drawable/bg_input_pill"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
+            <!-- Organizer Email (Hidden for normal user) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tilEmail"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/hint_contact_number"
-                android:textAppearance="@style/TextAppearance.App.TitleSmall"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:layout_marginStart="@dimen/spacing_small" />
+                android:visibility="gone"
+                app:hintEnabled="false"
+                app:boxBackgroundMode="none"
+                app:errorEnabled="true">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:hint="Email"
+                    android:background="@drawable/bg_input_pill"
+                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                    android:textColor="@color/text_primary" />
+            </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Organizer Phone (Hidden for normal user) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilContact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:hintEnabled="false"
                 app:boxBackgroundMode="none"
                 app:errorEnabled="true">
@@ -142,60 +145,36 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:inputType="phone"
+                    android:hint="Phone Number (optional)"
                     android:background="@drawable/bg_input_pill"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
-        </LinearLayout>
-
-        <!-- Organizer specific fields -->
-        <LinearLayout
-            android:id="@+id/llOrganizerFields"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            app:layout_constraintTop_toBottomOf="@id/llCommonFields">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/hint_contact_person"
-                android:textAppearance="@style/TextAppearance.App.TitleSmall"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:layout_marginStart="@dimen/spacing_small" />
 
             <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/tilContactPerson"
+                android:id="@+id/tilCity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:hintEnabled="false"
                 app:boxBackgroundMode="none"
                 app:errorEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etContactPerson"
+                    android:id="@+id/etCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textPersonName"
+                    android:inputType="text"
+                    android:hint="City"
                     android:background="@drawable/bg_input_pill"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/hint_org_description"
-                android:textAppearance="@style/TextAppearance.App.TitleSmall"
-                android:layout_marginTop="@dimen/spacing_medium"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:layout_marginStart="@dimen/spacing_small" />
-
+            <!-- Organizer Bio (Hidden for normal user) -->
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/tilDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 app:hintEnabled="false"
                 app:boxBackgroundMode="none"
                 app:errorEnabled="true">
@@ -205,6 +184,8 @@
                     android:layout_height="wrap_content"
                     android:inputType="textMultiLine"
                     android:lines="3"
+                    android:maxLength="120"
+                    android:hint="Short Bio (Tell us about your organization)"
                     android:gravity="top|start"
                     android:background="@drawable/bg_input_pill"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
@@ -212,52 +193,77 @@
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
 
-        <!-- Categories / Interests -->
-        <TextView
-            android:id="@+id/tvCategoriesLabel"
-            android:layout_width="wrap_content"
+        <!-- Normal User: Use Location Switch -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardUseLocation"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/spacing_large"
-            android:text="@string/label_add_interests"
-            android:textAppearance="@style/TextAppearance.App.TitleSmall"
-            android:layout_marginStart="@dimen/spacing_small"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/llOrganizerFields" />
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="0dp"
+            app:strokeColor="@color/md_outline"
+            app:strokeWidth="1dp"
+            app:layout_constraintTop_toBottomOf="@id/llCommonFields">
 
-        <!-- Changed from GridLayout to LinearLayout holding multiple rows -->
-        <HorizontalScrollView
-            android:id="@+id/hsvCategories"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:scrollbars="none"
-            android:clipToPadding="false"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tvCategoriesLabel">
-
-            <LinearLayout
-                android:id="@+id/llChipRowsContainer"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical" />
-        </HorizontalScrollView>
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/tvUseLocationTitle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Use my location"
+                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Show events near you."
+                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                    android:textColor="@color/text_secondary"
+                    app:layout_constraintTop_toBottomOf="@id/tvUseLocationTitle"
+                    app:layout_constraintStart_toStartOf="parent"/>
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/switchLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSaveProfile"
             android:layout_width="match_parent"
             android:layout_height="@dimen/button_height"
-            android:text="@string/btn_complete_setup"
+            android:text="Continue"
             android:textAppearance="@style/TextAppearance.App.TitleMedium"
             android:textColor="@color/md_on_primary"
             android:textAllCaps="false"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="@dimen/spacing_xlarge"
+            android:layout_marginTop="32dp"
             app:cornerRadius="@dimen/corner_radius_large"
             app:backgroundTint="@color/md_primary"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cardUseLocation" />
+
+        <TextView
+            android:id="@+id/tvManualLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="I'll choose location manually"
+            android:textColor="@color/md_primary"
+            android:textAppearance="@style/TextAppearance.App.TitleSmall"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="32dp"
+            app:layout_constraintTop_toBottomOf="@id/btnSaveProfile"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/hsvCategories"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
         <ProgressBar

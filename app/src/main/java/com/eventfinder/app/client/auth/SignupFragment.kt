@@ -14,9 +14,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentSignupNewBinding
-import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.utils.UserPreferences
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -44,44 +42,15 @@ class SignupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupUserTypeSelection()
         setupClickListeners()
         observeViewModel()
     }
 
-    private fun setupUserTypeSelection() {
-        // Default selection is USER
-        updateUserTypeSelection(UserType.USER)
-
-        binding.cardUserType.setOnClickListener {
-            viewModel.selectUserType(UserType.USER)
-            updateUserTypeSelection(UserType.USER)
-        }
-
-        binding.cardOrganizerType.setOnClickListener {
-            viewModel.selectUserType(UserType.ORGANIZER)
-            updateUserTypeSelection(UserType.ORGANIZER)
-        }
-    }
-
-    private fun updateUserTypeSelection(selectedType: UserType) {
-        val primaryColor = requireContext().getColor(R.color.md_primary)
-        val outlineColor = requireContext().getColor(R.color.md_outline)
-
-        if (selectedType == UserType.USER) {
-            binding.cardUserType.strokeColor = primaryColor
-            binding.cardUserType.strokeWidth = 3
-            binding.cardOrganizerType.strokeColor = outlineColor
-            binding.cardOrganizerType.strokeWidth = 1
-        } else {
-            binding.cardUserType.strokeColor = outlineColor
-            binding.cardUserType.strokeWidth = 1
-            binding.cardOrganizerType.strokeColor = primaryColor
-            binding.cardOrganizerType.strokeWidth = 3
-        }
-    }
-
     private fun setupClickListeners() {
+        binding.btnBack.setOnClickListener {
+            findNavController().navigateUp()
+        }
+
         binding.btnSignup.setOnClickListener {
             val email = binding.etEmail.text.toString().trim()
             val password = binding.etPassword.text.toString()
@@ -96,7 +65,7 @@ class SignupFragment : Fragment() {
         }
 
         binding.tvBackToLogin.setOnClickListener {
-            findNavController().popBackStack()
+            findNavController().navigate(R.id.loginFragment)
         }
     }
 
@@ -112,15 +81,11 @@ class SignupFragment : Fragment() {
 
     private fun handleUiState(state: AuthUiState) {
         when (state) {
-            is AuthUiState.Idle -> {
-                setLoadingState(false)
-            }
-            is AuthUiState.Loading -> {
-                setLoadingState(true)
-            }
+            is AuthUiState.Idle -> setLoadingState(false)
+            is AuthUiState.Loading -> setLoadingState(true)
             is AuthUiState.Success -> {
                 setLoadingState(false)
-                handleSignupSuccess(state.user.userType)
+                handleSignupSuccess()
             }
             is AuthUiState.Error -> {
                 setLoadingState(false)
@@ -132,24 +97,19 @@ class SignupFragment : Fragment() {
     private fun setLoadingState(isLoading: Boolean) {
         binding.progressBar.isVisible = isLoading
         binding.btnSignup.isEnabled = !isLoading
-        binding.cardUserType.isEnabled = !isLoading
-        binding.cardOrganizerType.isEnabled = !isLoading
         binding.etEmail.isEnabled = !isLoading
         binding.etPassword.isEnabled = !isLoading
         binding.etConfirmPassword.isEnabled = !isLoading
+        binding.etFullName.isEnabled = !isLoading
     }
 
-    private fun handleSignupSuccess(userType: UserType) {
-        userPreferences.setUserType(userType.name)
-        findNavController().navigate(R.id.fillProfileFragment)
+    private fun handleSignupSuccess() {
+        findNavController().navigate(R.id.action_signup_to_accountType)
     }
 
     private fun handleError(message: String) {
-        // Parse error and show appropriate field error
         when {
-            message.contains("email", ignoreCase = true) -> {
-                binding.tilEmail.error = message
-            }
+            message.contains("email", ignoreCase = true) -> binding.tilEmail.error = message
             message.contains("password", ignoreCase = true) -> {
                 if (message.contains("match", ignoreCase = true)) {
                     binding.tilConfirmPassword.error = message
@@ -157,9 +117,7 @@ class SignupFragment : Fragment() {
                     binding.tilPassword.error = message
                 }
             }
-            else -> {
-                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-            }
+            else -> Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
         }
         viewModel.resetState()
     }

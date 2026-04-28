@@ -62,7 +62,6 @@
     <string name="hint_confirm_password">Confirm Password</string>
     <string name="hint_repeat_password">Repeat password</string>
     <string name="btn_create_account">Create Account</string>
-    <string name="signup_to_login">Already have an account? Login</string>
 
     <!-- Forgot Password Screen -->
     <string name="reset_password_title">Reset Password</string>
@@ -294,4 +293,18 @@
     <string name="your_upcoming_tickets">Your Upcoming Tickets</string>
     <string name="no_upcoming_tickets">No upcoming tickets</string>
     <string name="explore_events_to_find">Explore events to find something to attend</string>
+    <string name="btn_login">Log In</string>
+    <string name="login_screen_subtitle">Log in to continue exploring amazing events.</string>
+    <string name="login_screen_title">Welcome back</string>
+    <string name="register_screen_subtitle">Let\'s get started with your details.</string>
+    <string name="register_screen_title">Create your account</string>
+    <string name="dont_have_an_account">Don\'t have an account? </string>
+    <string name="sign_up">Sign Up</string>
+    <string name="account_type_screen_title">How do you want to use the app?</string>
+    <string name="account_type_screen_subtitle">Choose the experience that fits you best.</string>
+    <string name="normal_user_card_type_title">Find Events</string>
+    <string name="normal_user_card_type_subtitle">Discover nearby events, save favorites, and book your spot. Enjoy!</string>
+    <string name="organize_user_card_title">Organize Events</string>
+    <string name="organize_user_card_subtitle">Create events, manage bookings, and reach your audience.</string>
+    <string name="btn_continue">Continue</string>
 </resources>

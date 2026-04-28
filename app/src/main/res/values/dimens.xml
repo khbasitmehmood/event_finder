@@ -16,6 +16,7 @@
 
     <!-- Component-specific Dimensions -->
     <dimen name="button_height">56dp</dimen>
+    <dimen name="back_button_height">48dp</dimen>
 
     <!-- Text Sizes -->
     <dimen name="text_size_small">14sp</dimen>
@@ -23,5 +24,6 @@
     <dimen name="text_size_large">28sp</dimen>
     <dimen name="text_size_headline">20sp</dimen>
     <dimen name="text_size_body">16sp</dimen>
+    <dimen name="account_type_icon_size">64dp</dimen>
 
 </resources>

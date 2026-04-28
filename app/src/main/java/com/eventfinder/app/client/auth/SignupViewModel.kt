@@ -21,20 +21,13 @@ class SignupViewModel @Inject constructor(
     private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()
 
-    private val _selectedUserType = MutableStateFlow(UserType.USER)
-    val selectedUserType: StateFlow<UserType> = _selectedUserType.asStateFlow()
-
-    fun selectUserType(userType: UserType) {
-        _selectedUserType.value = userType
-    }
-
     fun signup(email: String, password: String, confirmPassword: String) {
         viewModelScope.launch {
             _uiState.value = AuthUiState.Loading
 
-            signupUseCase(email, password, confirmPassword, _selectedUserType.value).fold(
+            // Default to USER during initial signup. True type is saved during profile completion.
+            signupUseCase(email, password, confirmPassword, UserType.USER).fold(
                 onSuccess = { user ->
-                    // Store user ID in preferences
                     userPreferences.setUserId(user.uid)
                     _uiState.value = AuthUiState.Success(user)
                 },

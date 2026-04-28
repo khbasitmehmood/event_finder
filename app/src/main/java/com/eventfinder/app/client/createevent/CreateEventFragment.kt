@@ -25,9 +25,6 @@ import java.util.Calendar
 import java.util.Locale
 import javax.inject.Inject
 
-/**
- * Modern Material 3 Create Event Fragment
- */
 @AndroidEntryPoint
 class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
 

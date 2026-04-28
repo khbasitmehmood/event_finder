@@ -6,6 +6,10 @@
     <color name="md_primary_container">#D6E4FF</color>
     <color name="md_on_primary_container">#001D54</color>
 
+
+    <color name="md_primary_lighter">#F5F7FF</color>
+    <color name="md_secondary_lighter">#FCF3ED</color>
+
     <color name="md_secondary">#FFA26B</color>
     <color name="md_on_secondary">#000000</color>
     <color name="md_secondary_container">#FFE2D1</color>
