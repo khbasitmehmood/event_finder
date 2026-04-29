@@ -21,5 +21,17 @@
         android:name="com.eventfinder.app.client.organizer.OrganizerBookingsFragment"
         android:label="Bookings"
         tools:layout="@layout/fragment_organizer_bookings" />
-</navigation>
 
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.eventfinder.app.client.profile.ProfileFragment"
+        android:label="Profile"
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_profile_to_login"
+            app:destination="@id/loginFragment"
+            app:popUpTo="@id/main_nav_graph"
+            app:popUpToInclusive="true" />
+    </fragment>
+</navigation>

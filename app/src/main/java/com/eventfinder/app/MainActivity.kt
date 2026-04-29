@@ -28,6 +28,8 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var seedCategoriesUseCase: SeedCategoriesUseCase
 
+    private var currentUserType: UserType? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -76,6 +78,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            // Ensure the correct menu is loaded for the current user type (e.g. after login)
+            updateBottomNavForUserType()
+
             val uiState = viewModel.onDestinationChanged(destination.id)
             applyNavigationUIState(uiState, destination.label?.toString())
 
@@ -109,8 +114,11 @@ class MainActivity : AppCompatActivity() {
     /**
      * Loads role-specific bottom navigation tabs.
      */
-    private fun updateBottomNavForUserType() {
+    fun updateBottomNavForUserType() {
         val userType = viewModel.getUserType()
+
+        if (currentUserType == userType) return
+        currentUserType = userType
 
         // Clear any old admin mode preference to prevent confusion
         @Suppress("DEPRECATION")
