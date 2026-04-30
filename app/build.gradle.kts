@@ -65,6 +65,10 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.storage)
 
+    // Maps & Location
+    implementation(libs.play.services.maps)
+    implementation(libs.play.services.location)
+
     // Image Loading - Coil
     implementation(libs.coil)
 

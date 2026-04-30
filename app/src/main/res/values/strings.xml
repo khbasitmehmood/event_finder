@@ -198,7 +198,7 @@
     <string name="select_date">Select Date</string>
     <string name="select_time">Select Time</string>
     <string name="location">Location</string>
-    <string name="event_address">Event Location</string>
+    <string name="event_address">Location</string>
     <string name="max_attendees">Maximum Attendees</string>
     <string name="free_event">Free Event</string>
     <string name="ticket_price">Ticket Price</string>
@@ -209,7 +209,8 @@
     <string name="hint_location_name">Enter event location</string>
     <string name="hint_max_attendees">Maximum attendees limit</string>
     <string name="btn_select_date">Select Date</string>
-    <string name="btn_select_time">Select Time</string>
+    <string name="btn_select_start_time">Start Time</string>
+    <string name="btn_select_end_time">End Time</string>
     <string name="btn_pin_on_map">Pin on Map</string>
     <string name="capacity_pricing">Capacity &amp; Pricing</string>
     <string name="hint_category_name">Select a category</string>
@@ -333,4 +334,13 @@
     <string name="organizer_home_empty_title">You have not created\nany events yet</string>
     <string name="organizer_home_empty_subtitle">Create your first event and start\nsharing amazing experiences</string>
     <string name="scan_ticket">Scan Ticket</string>
+
+    <!-- Map Location Picker -->
+    <string name="map_pin">Map Pin</string>
+    <string name="back">Back</string>
+    <string name="search_location">Search location</string>
+    <string name="selected_location">Selected Location</string>
+    <string name="loading_address">Loading address...</string>
+    <string name="select_this_place">Select This Place</string>
+    <string name="current_location_desc">Current Location</string>
 </resources>

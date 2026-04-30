@@ -40,6 +40,7 @@ class ChooseInterestsFragment : Fragment() {
     private val selectedInterestIds = mutableSetOf<String>()
     private var userType: UserType = UserType.USER
     private var initializedSelections = false
+    private var fromCreateEvent: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -53,13 +54,23 @@ class ChooseInterestsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         userType = UserType.valueOf(arguments?.getString(AuthNavArgs.USER_TYPE) ?: UserType.USER.name)
-        userPreferences.setPendingAuthStep(AuthPendingStep.CHOOSE_INTERESTS)
+        fromCreateEvent = arguments?.getBoolean("FROM_CREATE_EVENT", false) ?: false
+
+        if (!fromCreateEvent) {
+            userPreferences.setPendingAuthStep(AuthPendingStep.CHOOSE_INTERESTS)
+        }
 
         if (userType == UserType.ORGANIZER) {
             binding.tvTitle.text = "Events you will offer"
             binding.tvSubtitle.text = "Select the categories that best match your events."
             binding.tvSelectionCount.text = "Select at least 1"
             binding.tvSkip.visibility = View.GONE
+        }
+
+        if (fromCreateEvent) {
+            binding.tvTitle.text = "Update Event Categories"
+            binding.tvSkip.visibility = View.GONE
+            binding.btnContinue.text = "Save Categories"
         }
 
         setupRecyclerView()
@@ -69,8 +80,10 @@ class ChooseInterestsFragment : Fragment() {
         }
 
         binding.tvSkip.setOnClickListener {
-            userPreferences.clearPendingAuthStep()
-            navigateToSuccess()
+            if (!fromCreateEvent) {
+                userPreferences.clearPendingAuthStep()
+                navigateToSuccess()
+            }
         }
 
         binding.btnContinue.setOnClickListener {
@@ -116,19 +129,24 @@ class ChooseInterestsFragment : Fragment() {
                                 binding.btnContinue.text = "Saving..."
                             }
                             is FillProfileUiState.Success -> {
-                                userPreferences.clearPendingAuthStep()
-                                navigateToSuccess()
+                                if (fromCreateEvent) {
+                                    Toast.makeText(context, "Categories updated", Toast.LENGTH_SHORT).show()
+                                    findNavController().navigateUp()
+                                } else {
+                                    userPreferences.clearPendingAuthStep()
+                                    navigateToSuccess()
+                                }
                                 viewModel.resetState()
                             }
                             is FillProfileUiState.Error -> {
                                 binding.btnContinue.isEnabled = true
-                                binding.btnContinue.text = "Continue"
+                                binding.btnContinue.text = if (fromCreateEvent) "Save Categories" else "Continue"
                                 Toast.makeText(context, state.message, Toast.LENGTH_SHORT).show()
                                 viewModel.resetState()
                             }
                             is FillProfileUiState.Idle -> {
                                 updateContinueButton()
-                                binding.btnContinue.text = "Continue"
+                                binding.btnContinue.text = if (fromCreateEvent) "Save Categories" else "Continue"
                             }
                         }
                     }

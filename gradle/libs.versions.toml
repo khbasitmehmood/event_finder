@@ -19,6 +19,8 @@ firebaseBom = "33.8.0"
 swiperefreshlayout = "1.2.0"
 coil = "2.5.0"
 palette = "1.0.0"
+playServicesMaps = "18.2.0"
+playServicesLocation = "21.2.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -43,6 +45,8 @@ firebase-storage = { group = "com.google.firebase", name = "firebase-storage" }
 androidx-swiperefreshlayout = { group = "androidx.swiperefreshlayout", name = "swiperefreshlayout", version.ref = "swiperefreshlayout" }
 coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 androidx-palette-ktx = { group = "androidx.palette", name = "palette-ktx", version.ref = "palette" }
+play-services-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "playServicesMaps" }
+play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playServicesLocation" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

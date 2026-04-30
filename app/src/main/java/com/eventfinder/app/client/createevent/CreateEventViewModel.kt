@@ -8,6 +8,7 @@ import com.eventfinder.app.domain.model.EventLocation
 import com.eventfinder.app.domain.model.EventVisibility
 import com.eventfinder.app.domain.usecase.CreateEventUseCase
 import com.eventfinder.app.domain.usecase.GetEventCategoriesUseCase
+import com.eventfinder.app.domain.usecase.auth.GetCurrentUserUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +23,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CreateEventViewModel @Inject constructor(
     private val createEventUseCase: CreateEventUseCase,
-    private val getEventCategoriesUseCase: GetEventCategoriesUseCase
+    private val getEventCategoriesUseCase: GetEventCategoriesUseCase,
+    private val getCurrentUserUseCase: GetCurrentUserUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<CreateEventUiState>(CreateEventUiState.Idle)
@@ -38,11 +40,23 @@ class CreateEventViewModel @Inject constructor(
         loadCategories()
     }
     
-    private fun loadCategories() {
+    fun loadCategories() {
         viewModelScope.launch {
+            // First get the current user to know their offered categories
+            val userResult = getCurrentUserUseCase()
+            val user = userResult.getOrNull()
+            val offeredCategoryIds = user?.organizerProfile?.offeredEvents.orEmpty()
+            
             getEventCategoriesUseCase().fold(
                 onSuccess = { list ->
-                    _categories.value = list
+                    // Filter down to only those categories present in the user's offeredEvents profile
+                    val filteredList = if (offeredCategoryIds.isNotEmpty()) {
+                        list.filter { offeredCategoryIds.contains(it.id) }
+                    } else {
+                        // Fallback: If no categories found in profile, show all or handle appropriately
+                        list
+                    }
+                    _categories.value = filteredList
                 },
                 onFailure = {
                     _categories.value = emptyList()

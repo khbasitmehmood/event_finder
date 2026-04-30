@@ -77,5 +77,15 @@
         android:id="@+id/createEventFragment"
         android:name="com.eventfinder.app.client.createevent.CreateEventFragment"
         android:label="Create Event"
-        tools:layout="@layout/fragment_create_event_new" />
+        tools:layout="@layout/fragment_create_event_new">
+        <action
+            android:id="@+id/action_createEvent_to_mapPicker"
+            app:destination="@id/mapLocationPickerFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/mapLocationPickerFragment"
+        android:name="com.eventfinder.app.client.createevent.MapLocationPickerFragment"
+        android:label="Map Picker"
+        tools:layout="@layout/fragment_map_location_picker" />
 </navigation>

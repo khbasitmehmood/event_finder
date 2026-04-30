@@ -47,6 +47,7 @@
                 android:layout_marginBottom="@dimen/spacing_xlarge"
                 android:clickable="true"
                 android:focusable="true"
+                android:visibility="gone"
                 app:cardBackgroundColor="@color/md_surface_variant"
                 app:cardCornerRadius="@dimen/corner_radius_medium"
                 app:cardElevation="0dp">
@@ -90,13 +91,6 @@
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Basic Info Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_large"
-                android:text="@string/basic_info"
-                android:textAppearance="@style/TextAppearance.App.TitleLarge" />
 
             <!-- Title -->
             <TextView
@@ -133,14 +127,16 @@
                 android:layout_marginStart="@dimen/spacing_small"
                 android:layout_marginBottom="@dimen/spacing_medium"
                 android:text="@string/description"
-                android:textAppearance="@style/TextAppearance.App.TitleSmall" />
+                android:textAppearance="@style/TextAppearance.App.TitleSmall"
+                tools:visibility="gone" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 app:boxBackgroundMode="none"
-                app:hintEnabled="false">
+                app:hintEnabled="false"
+                tools:visibility="gone">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etDescription"
@@ -164,33 +160,31 @@
                 android:text="@string/category"
                 android:textAppearance="@style/TextAppearance.App.TitleSmall" />
 
-            <com.google.android.material.textfield.TextInputLayout
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_xlarge"
-                app:boxBackgroundColor="@color/md_surface_variant"
-                app:boxCornerRadiusBottomEnd="@dimen/corner_radius_large"
-                app:boxCornerRadiusBottomStart="@dimen/corner_radius_large"
-                app:boxCornerRadiusTopEnd="@dimen/corner_radius_large"
-                app:boxCornerRadiusTopStart="@dimen/corner_radius_large"
-                app:boxStrokeWidth="0dp"
-                app:hintEnabled="false">
+                android:clipToPadding="false"
+                android:paddingBottom="@dimen/spacing_medium"
+                android:scrollbars="none">
 
-                <com.google.android.material.textfield.MaterialAutoCompleteTextView
-                    android:id="@+id/actvCategory"
-                    android:layout_width="match_parent"
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/cgCategories"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@null"
-                    android:paddingTop="16dp"
-                    android:paddingBottom="16dp"
-                    android:paddingStart="24dp"
-                    android:paddingEnd="24dp"
-                    android:hint="@string/hint_category_name"
-                    android:inputType="none"
-                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                    android:textColor="@color/text_primary" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    app:singleLine="true" />
+            </HorizontalScrollView>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAddMoreCategories"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_xlarge"
+                android:text="Add More Categories"
+                android:textColor="@color/md_primary"
+                app:cornerRadius="@dimen/corner_radius_large"
+                app:strokeColor="@color/md_primary" />
+
 
             <!-- Date & Time Section -->
             <TextView
@@ -198,7 +192,47 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_large"
                 android:text="@string/date_time"
-                android:textAppearance="@style/TextAppearance.App.TitleLarge" />
+                android:textAppearance="@style/TextAppearance.App.TitleSmall" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSelectDate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/md_surface_variant"
+                app:cardCornerRadius="@dimen/corner_radius_medium"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvSelectedDate"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/spacing_large"
+                        android:layout_weight="1"
+                        android:hint="@string/btn_select_date"
+                        android:textAppearance="@style/TextAppearance.App.BodyMedium" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/spacing_large"
+                        android:background="@drawable/bg_circle_back"
+                        android:contentDescription="Date"
+                        android:src="@drawable/ic_select_date"
+                        app:tint="@color/text_secondary" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -207,92 +241,85 @@
                 android:orientation="horizontal">
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardSelectDate"
+                    android:id="@+id/cardSelectStartTime"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/spacing_medium"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     app:cardBackgroundColor="@color/md_surface_variant"
-                    app:cardCornerRadius="@dimen/corner_radius_large"
-                    app:cardElevation="0dp">
+                    app:cardCornerRadius="@dimen/corner_radius_medium"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="12dp">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:contentDescription="Date"
-                            android:src="@android:drawable/ic_menu_my_calendar"
-                            app:tint="@color/md_primary" />
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvSelectedDate"
+                            android:id="@+id/tvSelectedStartTime"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/spacing_medium"
+                            android:layout_marginStart="@dimen/spacing_large"
                             android:layout_weight="1"
-                            android:text="@string/btn_select_date"
-                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                            android:textColor="@color/text_primary" />
+                            android:hint="@string/btn_select_start_time"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/spacing_large"
+                            android:contentDescription="Date"
+                            android:src="@drawable/ic_clock"
+                            app:tint="@color/text_secondary" />
+
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardSelectTime"
+                    android:id="@+id/cardSelectEndTime"
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/spacing_medium"
                     android:layout_weight="1"
                     android:clickable="true"
                     android:focusable="true"
                     app:cardBackgroundColor="@color/md_surface_variant"
-                    app:cardCornerRadius="@dimen/corner_radius_large"
-                    app:cardElevation="0dp">
+                    app:cardCornerRadius="@dimen/corner_radius_medium"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="0dp">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:orientation="horizontal"
-                        android:padding="12dp">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:contentDescription="Time"
-                            android:src="@android:drawable/ic_menu_recent_history"
-                            app:tint="@color/md_primary" />
+                        android:orientation="horizontal">
 
                         <TextView
-                            android:id="@+id/tvSelectedTime"
+                            android:id="@+id/tvSelectedEndTime"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/spacing_medium"
+                            android:layout_marginStart="@dimen/spacing_large"
                             android:layout_weight="1"
-                            android:text="@string/btn_select_time"
-                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                            android:textColor="@color/text_primary" />
+                            android:hint="@string/btn_select_end_time"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium" />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/spacing_large"
+                            android:contentDescription="Time"
+                            android:src="@drawable/ic_clock"
+                            app:tint="@color/text_secondary" />
 
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
-
-            <!-- Location Section -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_large"
-                android:text="@string/location"
-                android:textAppearance="@style/TextAppearance.App.TitleLarge" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -303,13 +330,14 @@
                 android:textAppearance="@style/TextAppearance.App.TitleSmall" />
 
             <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutLocation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_xlarge"
+                android:layout_marginBottom="@dimen/spacing_medium"
                 app:boxBackgroundMode="none"
-                app:endIconDrawable="@android:drawable/ic_dialog_map"
+                app:endIconDrawable="@drawable/ic_add_location"
                 app:endIconMode="custom"
-                app:endIconTint="@color/md_primary"
+                app:endIconTint="@color/text_secondary"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -325,13 +353,17 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Capacity & Pricing Section -->
-            <TextView
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSelectLocationOnMap"
+                style="@style/Widget.Material3.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_large"
-                android:text="@string/capacity_pricing"
-                android:textAppearance="@style/TextAppearance.App.TitleLarge" />
+                android:layout_marginBottom="@dimen/spacing_xlarge"
+                android:text="Select Event Location on Map"
+                android:textColor="@color/md_primary"
+                app:cornerRadius="@dimen/corner_radius_large"
+                app:strokeColor="@color/md_primary" />
+
 
             <TextView
                 android:layout_width="wrap_content"
