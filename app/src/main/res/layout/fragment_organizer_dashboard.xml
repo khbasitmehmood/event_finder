@@ -13,13 +13,14 @@
         android:clipToPadding="false"
         android:paddingBottom="100dp">
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
             <!-- Header Section -->
             <RelativeLayout
+                android:id="@+id/headerLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/spacing_large">
@@ -27,8 +28,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_alignParentStart="true">
+                    android:layout_alignParentStart="true"
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -38,379 +39,388 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Good evening, "
-                            android:textAppearance="@style/TextAppearance.App.TitleLarge"
-                            android:textStyle="bold" />
+                            android:text="@string/welcome_back"
+                            android:textAppearance="@style/TextAppearance.App.TitleLarge" />
 
                         <TextView
                             android:id="@+id/tvOrganizerName"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/spacing_small"
                             android:textAppearance="@style/TextAppearance.App.TitleLarge"
-                            android:textStyle="bold"
                             tools:text="Ali" />
 
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text=" 👋"
-                            android:textAppearance="@style/TextAppearance.App.TitleLarge"
-                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Here's what's happening with your events"
+                        android:text="@string/welcome_message_for_organizer"
                         android:textAppearance="@style/TextAppearance.App.BodyMedium"
                         android:textColor="@color/md_on_surface_variant" />
                 </LinearLayout>
 
             </RelativeLayout>
 
-            <!-- Month / Year -->
-            <TextView
-                android:id="@+id/tvMonthYear"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
-                android:layout_marginBottom="8dp"
-                android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                android:textStyle="bold"
-                tools:text="May 2024" />
-
             <!-- Calendar Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/calendarLayout"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
-                android:layout_marginBottom="@dimen/spacing_xlarge"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <ImageButton
-                    android:id="@+id/btnPreviousWeek"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/previous_week"
-                    android:src="@drawable/ic_chevron_left"
-                    app:tint="@color/md_on_surface" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvCalendar"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:clipToPadding="false"
-                    android:orientation="horizontal"
-                    tools:listitem="@layout/item_calendar_day" />
-
-                <ImageButton
-                    android:id="@+id/btnNextWeek"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="@string/next_week"
-                    android:src="@drawable/ic_chevron_right"
-                    app:tint="@color/md_on_surface" />
-
-            </LinearLayout>
-
-            <!-- Overview Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
-                android:layout_marginBottom="@dimen/spacing_medium"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/headerLayout">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="Overview"
-                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                    android:textStyle="bold" />
-
-                <TextView
+                    android:id="@+id/tvMonthYear"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="This Month ∨"
-                    android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                    android:textColor="@color/md_on_surface_variant" />
-
-            </LinearLayout>
-
-            <!-- Statistics Cards -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
-                android:layout_marginBottom="@dimen/spacing_large"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-
-                <!-- Total Events Card -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardTotalEvents"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    app:cardBackgroundColor="@color/md_surface"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="16dp"
-                            app:cardBackgroundColor="#00A96E"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp">
-                            <ImageView
-                                android:id="@+id/ivEventsIcon"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_events_stat"
-                                app:tint="#FFFFFF"
-                                android:contentDescription="@string/stat_icon" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:id="@+id/tvEventsValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
-                            android:textColor="@color/md_on_surface"
-                            android:textStyle="bold"
-                            android:text="12" />
-
-                        <TextView
-                            android:id="@+id/tvEventsLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                            android:textColor="@color/md_on_surface"
-                            android:text="Total Events" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.App.BodySmall"
-                            android:textColor="#00A96E"
-                            android:text="2 new this month ↗" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Total Earnings Card -> Tickets Sold Card in mock -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardTotalEarnings"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    app:cardBackgroundColor="@color/md_surface"
-                    app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="start"
-                        android:orientation="vertical"
-                        android:padding="16dp">
-
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:layout_marginBottom="16dp"
-                            app:cardBackgroundColor="#FF9800"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="0dp"
-                            app:strokeWidth="0dp">
-                            <ImageView
-                                android:id="@+id/ivEarningsIcon"
-                                android:layout_width="24dp"
-                                android:layout_height="24dp"
-                                android:layout_gravity="center"
-                                android:src="@drawable/ic_earnings"
-                                app:tint="#FFFFFF"
-                                android:contentDescription="@string/stat_icon" />
-                        </com.google.android.material.card.MaterialCardView>
-
-                        <TextView
-                            android:id="@+id/tvEarningsValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="4dp"
-                            android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
-                            android:textColor="@color/md_on_surface"
-                            android:textStyle="bold"
-                            android:text="438" />
-
-                        <TextView
-                            android:id="@+id/tvEarningsLabel"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginBottom="8dp"
-                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                            android:textColor="@color/md_on_surface"
-                            android:text="Tickets Sold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.App.BodySmall"
-                            android:textColor="#00A96E"
-                            android:text="18% vs last month ↗" />
-
-                    </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-            </LinearLayout>
-
-            <!-- Action Buttons -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="@dimen/spacing_large"
-                android:layout_marginBottom="@dimen/spacing_xlarge"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnCreateEventLarge"
-                    style="@style/Widget.Material3.Button"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:layout_marginEnd="8dp"
-                    android:text="Create Event"
-                    android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                    android:backgroundTint="#00A96E"
-                    android:textColor="#FFFFFF"
-                    app:icon="@drawable/ic_add"
-                    app:iconTint="#FFFFFF"
-                    app:cornerRadius="12dp" />
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btnStartEvent"
-                    style="@style/Widget.Material3.Button.OutlinedButton"
-                    android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_weight="1"
-                    android:layout_marginStart="8dp"
-                    android:text="Scan Ticket"
-                    android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                    android:textColor="#00A96E"
-                    app:icon="@drawable/ic_filter"
-                    app:iconTint="#00A96E"
-                    app:strokeColor="#00A96E"
-                    app:cornerRadius="12dp" />
-
-            </LinearLayout>
-
-            <!-- Your Events Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:paddingHorizontal="@dimen/spacing_large">
+                    android:layout_marginHorizontal="@dimen/spacing_large"
+                    android:layout_marginBottom="8dp"
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/headerLayout"
+                    tools:text="May 2024" />
 
                 <LinearLayout
-                    android:id="@+id/layoutYourEventsHeader"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_medium"
+                    android:layout_marginHorizontal="@dimen/spacing_large"
+                    android:layout_marginBottom="@dimen/spacing_xlarge"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvMonthYear">
 
-                    <TextView
-                        android:id="@+id/tvYourEvents"
+                    <ImageButton
+                        android:id="@+id/btnPreviousWeek"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/previous_week"
+                        android:src="@drawable/ic_chevron_left"
+                        app:tint="@color/md_on_surface" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvCalendar"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="My Events"
-                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                        android:textStyle="bold" />
+                        android:clipToPadding="false"
+                        android:orientation="horizontal"
+                        tools:listitem="@layout/item_calendar_day"
+                        tools:visibility="gone" />
 
-                    <TextView
-                        android:id="@+id/tvSeeAllEvents"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="See all"
-                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                        android:textColor="#00A96E"
-                        android:visibility="visible" />
+                    <ImageButton
+                        android:id="@+id/btnNextWeek"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="@string/next_week"
+                        android:src="@drawable/ic_next"
+                        app:tint="@color/md_on_surface" />
 
                 </LinearLayout>
 
-                <!-- Your Events RecyclerView -->
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rvYourEvents"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_large"
-                    android:nestedScrollingEnabled="false"
-                    android:visibility="gone"
-                    tools:listitem="@layout/item_event_upcoming"
-                    tools:visibility="visible" />
 
-                <!-- Empty State -->
-                <LinearLayout
-                    android:id="@+id/layoutEmptyEvents"
-                    android:layout_width="match_parent"
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Empty Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/emptyLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_xxlarge"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/calendarLayout">
+
+                <ImageView
+                    android:id="@+id/ivEmptyPlaceHolder"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/illustration_size"
+                    android:adjustViewBounds="true"
+                    android:src="@drawable/ill_empty_event"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+                <TextView
+                    android:id="@+id/tvEmptyStateMessage"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_large"
                     android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_xlarge"
-                    android:visibility="visible"
-                    tools:visibility="gone">
+                    android:text="@string/organizer_home_empty_title"
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/ivEmptyPlaceHolder" />
 
-                    <TextView
-                        android:id="@+id/tvEmptyStateTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/spacing_small"
-                        android:text="No events"
-                        android:textAppearance="@style/TextAppearance.App.TitleMedium" />
+                <TextView
+                    android:id="@+id/tvEmptyStateSubMessage"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:gravity="center"
+                    android:text="@string/organizer_home_empty_subtitle"
+                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvEmptyStateMessage" />
 
-                    <TextView
-                        android:id="@+id/tvEmptyStateDesc"
-                        android:layout_width="wrap_content"
+                <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                    android:id="@+id/btnCreateEventEmptyState"
+                    style="@style/Widget.Material3.Button"
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/button_height"
+                    android:layout_marginHorizontal="@dimen/spacing_xxlarge"
+                    android:layout_marginVertical="@dimen/spacing_large"
+                    android:text="@string/create_event"
+                    android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                    app:icon="@drawable/ic_add"
+                    app:iconGravity="textStart"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvEmptyStateSubMessage" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- Events Section -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/eventListLayout"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/calendarLayout">
+
+                <TextView
+                    android:id="@+id/tvYourUpcomingEvents"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/spacing_large"
+                    android:layout_weight="1"
+                    android:text="@string/upcoming_events"
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                    app:layout_constraintStart_toStartOf="parent" />
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvUpcomingEvents"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:clipToPadding="false"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/spacing_large"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvYourUpcomingEvents"
+                    tools:listitem="@layout/item_event_card"
+                    tools:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/eventStats"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="@dimen/spacing_large"
+                    android:weightSum="2"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/rvUpcomingEvents">
+
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardStatTicketsSold"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/spacing_medium"
-                        android:gravity="center"
-                        android:text="Create your first event"
-                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                        android:textColor="@color/md_on_surface_variant" />
+                        android:layout_marginEnd="@dimen/spacing_small"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/md_primary_lighter"
+                        app:cardCornerRadius="@dimen/corner_radius_medium">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="@dimen/spacing_large"
+                            android:paddingVertical="@dimen/spacing_medium">
+
+                            <TextView
+                                android:id="@+id/tvTicketsSoldValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:text="12"
+                                android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
+                                android:textColor="@color/md_primary" />
+
+                            <TextView
+                                android:id="@+id/tvTicketsSoldLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tickets Sold"
+                                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                                android:textColor="@color/md_primary" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardStatAttendees"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:layout_weight="1"
+                        app:cardBackgroundColor="@color/md_secondary_lighter"
+                        app:cardCornerRadius="@dimen/corner_radius_medium">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="start"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="@dimen/spacing_large"
+                            android:paddingVertical="@dimen/spacing_medium">
+
+                            <TextView
+                                android:id="@+id/tvAttendeeValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:text="56"
+                                android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
+                                android:textColor="@color/md_secondary" />
+
+                            <TextView
+                                android:id="@+id/tvAttendeeLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="People Attending"
+                                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                                android:textColor="@color/md_secondary" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
 
                 </LinearLayout>
 
-            </LinearLayout>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnScanTicket"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                    android:layout_width="0dp"
+                    android:layout_height="60dp"
+                    android:layout_marginHorizontal="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:elevation="0dp"
+                    android:text="@string/scan_ticket"
+                    android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                    app:backgroundTint="@color/md_secondary"
+                    app:cornerRadius="@dimen/corner_radius_small"
+                    app:elevation="0dp"
+                    app:icon="@drawable/ic_qr_scan"
+                    app:iconGravity="textStart"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/eventStats" />
 
-        </LinearLayout>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/creatMoreEventsCard"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="@dimen/spacing_large"
+                    android:layout_marginTop="@dimen/spacing_medium"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardBackgroundColor="@color/md_primary"
+                    app:cardCornerRadius="@dimen/corner_radius_small"
+                    app:cardElevation="0dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/btnScanTicket"
+                    app:strokeWidth="0dp">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="start"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/spacing_large"
+                            android:gravity="start"
+                            android:orientation="vertical"
+                            android:paddingVertical="@dimen/spacing_medium"
+                            app:layout_constraintEnd_toStartOf="@+id/ivCreateEventArrow"
+                            app:layout_constraintStart_toStartOf="parent">
+
+                            <TextView
+                                android:id="@+id/tvCreateMoreEventTitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/spacing_xxlarge"
+                                android:text="@string/create_event"
+                                android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                                android:textColor="@color/md_on_primary" />
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="32dp"
+                                    android:adjustViewBounds="true"
+                                    android:src="@drawable/ic_tip"
+                                    android:tint="@color/yellow_golden" />
+
+                                <TextView
+                                    android:id="@+id/tvCreateTip"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="You can save drafts and publish your event later"
+                                    android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                                    android:textColor="@color/md_on_primary" />
+
+                            </LinearLayout>
+
+
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/ivCreateEventArrow"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="@dimen/spacing_large"
+                            android:src="@drawable/ic_arrow_forward"
+                            android:tint="@color/md_on_primary"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
@@ -426,6 +436,7 @@
         android:textColor="@color/md_on_primary"
         android:visibility="gone"
         app:icon="@drawable/chat_add_on_24px"
-        app:iconTint="@color/md_on_primary" />
+        app:iconTint="@color/md_on_primary"
+        tools:visibility="gone" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -24,7 +24,6 @@ class OrganizerDashboardViewModel @Inject constructor(
 
     data class OrganizerDashboardUiState(
         val user: User? = null,
-        val statistics: OrganizerStatistics? = null,
         val userEvents: List<Event> = emptyList(),
         val isLoading: Boolean = false,
         val error: String? = null
@@ -57,17 +56,8 @@ class OrganizerDashboardViewModel @Inject constructor(
     private suspend fun loadUserEvents(userId: String) {
         getUserEventsUseCase(userId).fold(
             onSuccess = { events ->
-                // Calculate mock statistics based on actual events
-                val mockStatistics = OrganizerStatistics(
-                    totalEvents = events.size,
-                    totalEarnings = "$5,000", // Mock data
-                    activeEvents = events.count { it.endTime ?: 0 > System.currentTimeMillis() },
-                    totalParticipants = events.sumOf { it.currentParticipantCount }
-                )
-
                 _uiState.value = _uiState.value.copy(
                     userEvents = events,
-                    statistics = mockStatistics,
                     isLoading = false
                 )
             },

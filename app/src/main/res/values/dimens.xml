@@ -8,6 +8,7 @@
     <dimen name="spacing_xxlarge">32dp</dimen>
 
     <!-- Corner Radii -->
+    <dimen name="corner_radius_small">10dp</dimen>
     <dimen name="corner_radius_medium">16dp</dimen>
     <dimen name="corner_radius_large">28dp</dimen>
 
@@ -34,5 +35,8 @@
     <dimen name="fill_profile_photo_badge_icon_padding">6dp</dimen>
     <dimen name="fill_profile_photo_badge_elevation">2dp</dimen>
     <dimen name="fill_profile_card_stroke_width">1dp</dimen>
+
+    <!-- Organizer Dashboard -->
+    <dimen name="illustration_size">150dp</dimen>
 
 </resources>

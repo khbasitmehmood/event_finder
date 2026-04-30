@@ -329,4 +329,8 @@
     <string name="organize_user_card_title">Organize Events</string>
     <string name="organize_user_card_subtitle">Create events, manage bookings, and reach your audience.</string>
     <string name="btn_continue">Continue</string>
+    <string name="welcome_message_for_organizer">Here\'s what\'s happening with your events</string>
+    <string name="organizer_home_empty_title">You have not created\nany events yet</string>
+    <string name="organizer_home_empty_subtitle">Create your first event and start\nsharing amazing experiences</string>
+    <string name="scan_ticket">Scan Ticket</string>
 </resources>

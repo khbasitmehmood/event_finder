@@ -2,8 +2,6 @@ package com.eventfinder.app.client.dashboard
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -52,27 +50,27 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
     private fun setupUI() {
         // Setup events RecyclerView
         eventsAdapter = HomeEventAdapter { event -> navigateToEventDetail(event) }
-        binding.rvYourEvents.apply {
+        binding.rvUpcomingEvents.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = eventsAdapter
             setHasFixedSize(false)
         }
 
         // Create Event buttons
-        binding.btnCreateEventLarge.setOnClickListener {
+        binding.btnCreateEventEmptyState.setOnClickListener {
             findNavController().navigate(R.id.createEventFragment)
         }
 
-        // Scan Ticket button (formerly Start Event)
-        binding.btnStartEvent.setOnClickListener {
+
+        // Create More Event card as button
+        binding.creatMoreEventsCard.setOnClickListener {
+            findNavController().navigate(R.id.createEventFragment)
+        }
+
+        binding.btnScanTicket.setOnClickListener {
             Toast.makeText(context, "Scan Ticket feature coming soon", Toast.LENGTH_SHORT).show()
         }
 
-        // See All button
-        binding.tvSeeAllEvents.setOnClickListener {
-            // TODO: Navigate to all events list
-            Toast.makeText(context, "View all events", Toast.LENGTH_SHORT).show()
-        }
 
         // Chat button
         binding.btnChat.setOnClickListener {
@@ -94,7 +92,8 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
         updateMonthYearDisplay()
 
         calendarAdapter = CalendarAdapter(generateWeek(currentWeekStart)) { day ->
-            Toast.makeText(context, "Selected: ${day.dayName} ${day.dayNumber}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Selected: ${day.dayName} ${day.dayNumber}", Toast.LENGTH_SHORT)
+                .show()
         }
 
         binding.rvCalendar.apply {
@@ -169,11 +168,6 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
                         binding.tvOrganizerName.text = name
                     }
 
-                    // Update statistics cards
-                    state.statistics?.let { stats ->
-                        updateStatisticsCards(stats)
-                    }
-
                     // Update events list
                     eventsAdapter.submitList(state.userEvents)
                     updateEventsVisibility(state.userEvents)
@@ -188,23 +182,13 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
         }
     }
 
-    private fun updateStatisticsCards(statistics: OrganizerStatistics) {
-        // Update Total Events card
-        binding.tvEventsValue.text = statistics.totalEvents.toString()
-
-        // Update Tickets Sold (formerly Total Earnings) card
-        binding.tvEarningsValue.text = statistics.totalParticipants.toString()
-    }
-
     private fun updateEventsVisibility(events: List<Event>) {
         if (events.isEmpty()) {
-            binding.layoutEmptyEvents.isVisible = true
-            binding.rvYourEvents.isVisible = false
-            binding.tvSeeAllEvents.isVisible = false
+            binding.emptyLayout.isVisible = true
+            binding.eventListLayout.isVisible = false
         } else {
-            binding.layoutEmptyEvents.isVisible = false
-            binding.rvYourEvents.isVisible = true
-            binding.tvSeeAllEvents.isVisible = events.size > 2
+            binding.eventListLayout.isVisible = true
+            binding.emptyLayout.isVisible = false
         }
     }
 
