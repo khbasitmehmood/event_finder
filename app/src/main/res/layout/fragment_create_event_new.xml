@@ -160,7 +160,18 @@
                 android:text="@string/category"
                 android:textAppearance="@style/TextAppearance.App.TitleSmall" />
 
+            <com.google.android.material.progressindicator.LinearProgressIndicator
+                android:id="@+id/progressCategories"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/spacing_large"
+                app:trackCornerRadius="@dimen/corner_radius_large"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:indeterminate="true"
+                app:indicatorColor="@color/md_primary" />
+
             <HorizontalScrollView
+                android:id="@+id/scrollCategories"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:clipToPadding="false"
@@ -177,7 +188,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnAddMoreCategories"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_xlarge"
                 android:text="Add More Categories"
@@ -356,7 +367,7 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSelectLocationOnMap"
                 style="@style/Widget.Material3.Button.OutlinedButton"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/spacing_xlarge"
                 android:text="Select Event Location on Map"
@@ -370,13 +381,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_small"
                 android:layout_marginBottom="@dimen/spacing_medium"
-                android:text="@string/max_attendees"
+                android:text="@string/capacity_pricing"
                 android:textAppearance="@style/TextAppearance.App.TitleSmall" />
 
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="@dimen/spacing_large"
                 app:boxBackgroundMode="none"
                 app:hintEnabled="false">
 
@@ -389,70 +400,58 @@
                     android:inputType="number"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_primary" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Free/Paid Toggle -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Pricing Toggle -->
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupPricing"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/spacing_large"
-                app:cardBackgroundColor="@color/md_surface_variant"
-                app:cardCornerRadius="@dimen/corner_radius_medium"
-                app:cardElevation="0dp">
+                android:layout_marginBottom="@dimen/spacing_medium"
+                app:checkedButton="@+id/btnFree"
+                app:selectionRequired="true"
+                app:singleSelection="true">
 
-                <LinearLayout
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFree"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/free_event" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPaid"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Paid Event" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/layoutPrice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_xlarge"
+                android:visibility="gone"
+                app:boxBackgroundMode="none"
+                app:hintEnabled="false"
+                app:prefixText="PKR "
+                app:prefixTextAppearance="@style/TextAppearance.App.TitleMedium"
+                tools:visibility="visible">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etTicketPrice"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/spacing_large">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="@string/free_event"
-                            android:textAppearance="@style/TextAppearance.App.TitleMedium" />
-
-                        <com.google.android.material.switchmaterial.SwitchMaterial
-                            android:id="@+id/switchFreeEvent"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:checked="true" />
-
-                    </LinearLayout>
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/layoutPrice"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/spacing_large"
-                        android:visibility="gone"
-                        app:boxBackgroundMode="none"
-                        app:hintEnabled="false"
-                        app:prefixText="PKR "
-                        tools:visibility="visible">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/etTicketPrice"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/bg_input_pill"
-                            android:hint="@string/ticket_price"
-                            android:inputType="numberDecimal"
-                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
-                            android:textColor="@color/text_primary" />
-
-                    </com.google.android.material.textfield.TextInputLayout>
-
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                    android:background="@drawable/bg_input_pill"
+                    android:hint="@string/ticket_price"
+                    android:inputType="numberDecimal"
+                    android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                    android:textColor="@color/md_primary" />
+            </com.google.android.material.textfield.TextInputLayout>
 
         </LinearLayout>
 

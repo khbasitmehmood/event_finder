@@ -88,6 +88,14 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
                 }
                 
                 launch {
+                    viewModel.isCategoriesLoading.collect { isLoading ->
+                        binding.progressCategories.isVisible = isLoading
+                        binding.scrollCategories.isVisible = !isLoading
+                        binding.btnAddMoreCategories.isEnabled = !isLoading
+                    }
+                }
+                
+                launch {
                     viewModel.categories.collect { categories ->
                         setupCategoryChips(categories)
                     }
@@ -283,10 +291,13 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
     }
 
     private fun setupPricingToggle() {
-        binding.switchFreeEvent.setOnCheckedChangeListener { _, isChecked ->
-            binding.layoutPrice.isVisible = !isChecked
+        binding.toggleGroupPricing.addOnButtonCheckedListener { _, checkedId, isChecked ->
             if (isChecked) {
-                binding.etTicketPrice.text?.clear()
+                val isFree = checkedId == R.id.btnFree
+                binding.layoutPrice.isVisible = !isFree
+                if (isFree) {
+                    binding.etTicketPrice.text?.clear()
+                }
             }
         }
     }
@@ -421,7 +432,7 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         val address = locationName // Use location name as address for now
 
         val maxParticipants = binding.etMaxAttendees.text?.toString()?.toIntOrNull()
-        val isFree = binding.switchFreeEvent.isChecked
+        val isFree = binding.toggleGroupPricing.checkedButtonId == R.id.btnFree
         val price = if (!isFree) binding.etTicketPrice.text?.toString()?.toDoubleOrNull() else null
         val currency = if (!isFree) "PKR" else null
 

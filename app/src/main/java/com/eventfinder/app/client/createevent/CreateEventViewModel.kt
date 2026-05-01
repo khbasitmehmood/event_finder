@@ -35,6 +35,9 @@ class CreateEventViewModel @Inject constructor(
     
     private val _categories = MutableStateFlow<List<EventCategory>>(emptyList())
     val categories: StateFlow<List<EventCategory>> = _categories.asStateFlow()
+
+    private val _isCategoriesLoading = MutableStateFlow(true)
+    val isCategoriesLoading: StateFlow<Boolean> = _isCategoriesLoading.asStateFlow()
     
     init {
         loadCategories()
@@ -42,6 +45,7 @@ class CreateEventViewModel @Inject constructor(
     
     fun loadCategories() {
         viewModelScope.launch {
+            _isCategoriesLoading.value = true
             // First get the current user to know their offered categories
             val userResult = getCurrentUserUseCase()
             val user = userResult.getOrNull()
@@ -57,9 +61,11 @@ class CreateEventViewModel @Inject constructor(
                         list
                     }
                     _categories.value = filteredList
+                    _isCategoriesLoading.value = false
                 },
                 onFailure = {
                     _categories.value = emptyList()
+                    _isCategoriesLoading.value = false
                 }
             )
         }
