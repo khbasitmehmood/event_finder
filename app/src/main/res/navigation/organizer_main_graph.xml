@@ -8,13 +8,27 @@
         android:id="@+id/organizerDashboardFragment"
         android:name="com.eventfinder.app.client.dashboard.OrganizerDashboardFragment"
         android:label="Dashboard"
-        tools:layout="@layout/fragment_organizer_dashboard" />
+        tools:layout="@layout/fragment_organizer_dashboard">
+        <action
+            android:id="@+id/action_organizerDashboardFragment_to_manageEventFragment"
+            app:destination="@id/manageEventFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/organizerEventsFragment"
         android:name="com.eventfinder.app.client.organizer.OrganizerEventsFragment"
         android:label="Events"
-        tools:layout="@layout/fragment_organizer_events" />
+        tools:layout="@layout/fragment_organizer_events">
+        <action
+            android:id="@+id/action_organizerEventsFragment_to_manageEventFragment"
+            app:destination="@id/manageEventFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/manageEventFragment"
+        android:name="com.eventfinder.app.client.organizer.ManageEventFragment"
+        android:label="Manage Event"
+        tools:layout="@layout/fragment_manage_event" />
 
     <fragment
         android:id="@+id/organizerBookingsFragment"

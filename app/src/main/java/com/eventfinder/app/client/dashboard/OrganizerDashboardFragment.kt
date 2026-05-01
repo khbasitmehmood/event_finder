@@ -51,7 +51,7 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
         // Setup events RecyclerView
         eventsAdapter = HomeEventAdapter { event -> navigateToEventDetail(event) }
         binding.rvUpcomingEvents.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = eventsAdapter
             setHasFixedSize(false)
         }
@@ -197,7 +197,7 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
             putString("EVENT_ID", event.id)
             putString("EVENT_TITLE", event.title)
         }
-        findNavController().navigate(R.id.eventDetailFragment, bundle)
+        findNavController().navigate(R.id.action_organizerDashboardFragment_to_manageEventFragment, bundle)
     }
 
     override fun onResume() {
