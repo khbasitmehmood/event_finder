@@ -61,18 +61,6 @@ class ManageEventFragment : Fragment() {
                 else -> false
             }
         }
-        
-        binding.toolbar.title = ""
-
-        binding.appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
-            if (abs(verticalOffset) >= appBarLayout.totalScrollRange) {
-                // Collapsed completely
-                binding.toolbar.title = currentEventTitle
-            } else {
-                // Expanded
-                binding.toolbar.title = ""
-            }
-        })
 
         val adapter = ManageEventPagerAdapter(this)
         binding.viewPager.adapter = adapter

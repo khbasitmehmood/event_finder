@@ -1,30 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- Generic Spacing -->
+    <dimen name="spacing_xsmall">2dp</dimen>
     <dimen name="spacing_small">4dp</dimen>
     <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_medium_large">12dp</dimen>
     <dimen name="spacing_large">16dp</dimen>
+    <dimen name="spacing_large_plus">20dp</dimen>
     <dimen name="spacing_xlarge">24dp</dimen>
     <dimen name="spacing_xxlarge">32dp</dimen>
+    <dimen name="spacing_top_overlay">36dp</dimen>
 
     <!-- Corner Radii -->
     <dimen name="corner_radius_small">10dp</dimen>
+    <dimen name="corner_radius_medium_small">12dp</dimen>
     <dimen name="corner_radius_medium">16dp</dimen>
+    <dimen name="corner_radius_xlarge">24dp</dimen>
     <dimen name="corner_radius_large">28dp</dimen>
 
     <!-- Elevation -->
+    <dimen name="elevation_small">8dp</dimen>
     <dimen name="elevation_medium">12dp</dimen>
+    <dimen name="elevation_large">16dp</dimen>
 
     <!-- Component-specific Dimensions -->
     <dimen name="button_height">56dp</dimen>
+    <dimen name="bottom_action_button_height">60dp</dimen>
     <dimen name="back_button_height">48dp</dimen>
 
+    <dimen name="icon_btn_size">44dp</dimen>
+    <dimen name="icon_avatar_size">52dp</dimen>
+    <dimen name="icon_size_small">20dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="icon_size_large">48dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+
+    <!-- Event Detail Layout Constraints -->
+    <dimen name="event_detail_hero_height">350dp</dimen>
+    <dimen name="event_detail_gradient_height">200dp</dimen>
+    <dimen name="event_detail_toolbar_height">120dp</dimen>
+    <dimen name="event_detail_scroll_padding_bottom">56dp</dimen>
+    <dimen name="event_detail_sheet_overlap">-30dp</dimen>
+
     <!-- Text Sizes -->
+    <dimen name="text_size_xsmall">12sp</dimen>
     <dimen name="text_size_small">14sp</dimen>
+    <dimen name="text_size_body">16sp</dimen>
     <dimen name="text_size_medium">20sp</dimen>
+    <dimen name="text_size_title_large">24sp</dimen>
+    <dimen name="text_size_xlarge">26sp</dimen>
     <dimen name="text_size_large">28sp</dimen>
     <dimen name="text_size_headline">20sp</dimen>
-    <dimen name="text_size_body">16sp</dimen>
     <dimen name="account_type_icon_size">64dp</dimen>
 
     <!-- Fill Profile -->

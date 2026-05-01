@@ -9,6 +9,8 @@
 
     <color name="md_primary_lighter">#F5F7FF</color>
     <color name="md_secondary_lighter">#FCF3ED</color>
+    <color name="md_secondary_darker">#FF7B2E</color>
+    <color name="md_primary_darker">#0B4DF4</color>
 
     <color name="md_secondary">#FFA26B</color>
     <color name="md_on_secondary">#000000</color>

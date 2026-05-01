@@ -338,6 +338,9 @@
     <string name="organizer_home_empty_subtitle">Create your first event and start\nsharing amazing experiences</string>
     <string name="scan_ticket">Scan Ticket</string>
 
+    <string name="follow">Follow</string>
+    <string name="book_now">Book Now</string>
+
     <!-- Map Location Picker -->
     <string name="map_pin">Map Pin</string>
     <string name="back">Back</string>

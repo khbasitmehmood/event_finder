@@ -6,6 +6,7 @@
     android:layout_height="200dp"
     android:layout_marginBottom="@dimen/spacing_large"
     app:cardCornerRadius="@dimen/spacing_xlarge"
+    android:layout_marginEnd="@dimen/spacing_large"
     app:cardElevation="2dp"
     app:strokeWidth="0dp">
 
