@@ -82,14 +82,6 @@ class HomeEventAdapter(
                     eventPrice.visibility = android.view.View.VISIBLE
                 }
 
-                // Distance
-                event.distanceKm?.let { distance ->
-                    eventDistance.text = LocationUtils.formatDistance(distance)
-                    eventDistance.visibility = android.view.View.VISIBLE
-                } ?: run {
-                    eventDistance.visibility = android.view.View.GONE
-                }
-
                 // Image
                 event.mainImageUrl?.let { url ->
                     eventImage.load(url) {

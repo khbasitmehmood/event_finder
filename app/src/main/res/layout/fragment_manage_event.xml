@@ -2,6 +2,7 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
@@ -17,14 +18,14 @@
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleEnabled="false"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:titleEnabled="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
                 android:layout_marginTop="?actionBarSize"
+                android:orientation="vertical"
                 android:paddingHorizontal="16dp"
                 android:paddingBottom="8dp"
                 app:layout_collapseMode="parallax">
@@ -33,7 +34,7 @@
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/ivEventImage"
                     android:layout_width="match_parent"
-                    android:layout_height="180dp"
+                    android:layout_height="@dimen/event_hero_image_height"
                     android:scaleType="centerCrop"
                     android:src="@drawable/event_img"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
@@ -43,12 +44,12 @@
                     android:id="@+id/chipCategory"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
                     android:text="@string/category"
                     android:textAppearance="@style/TextAppearance.App.LabelLarge"
                     android:textColor="@color/md_primary"
                     app:chipBackgroundColor="@color/md_primary_container"
                     app:chipStrokeWidth="0dp"
-                    android:layout_marginTop="12dp"
                     tools:visibility="visible" />
 
                 <!-- Title -->
@@ -57,18 +58,16 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    tools:text="Sunset Beats Festival: Coastal Music \u0026 Food Weekend"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    android:textColor="?attr/colorOnSurface" />
+                    android:textAppearance="@style/TextAppearance.App.TitleLarge"
+                    tools:text="Sunset Beats Festival: Coastal Music \u0026 Food Weekend" />
 
                 <!-- Date & Time -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="8dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="16dp"
@@ -81,23 +80,22 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        tools:text="Sat, 31 May 2025 - 4:00 PM - 10:00 PM"
-                        android:textSize="13sp"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:textAppearance="@style/TextAppearance.App.BodySmall"
+                        tools:text="Sat, 31 May 2025 - 4:00 PM - 10:00 PM" />
                 </LinearLayout>
 
                 <!-- Location -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="4dp"
-                    android:gravity="center_vertical">
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <ImageView
                         android:layout_width="16dp"
                         android:layout_height="16dp"
-                        android:src="@drawable/ic_add_location"
+                        android:src="@drawable/ic_location"
                         app:tint="?attr/colorOnSurfaceVariant" />
 
                     <TextView
@@ -105,36 +103,37 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        tools:text="Crissy Field, San Francisco, CA"
-                        android:textSize="13sp"
-                        android:textColor="?attr/colorOnSurfaceVariant" />
+                        android:textAppearance="@style/TextAppearance.App.BodySmall"
+                        tools:text="Crissy Field, San Francisco, CA" />
                 </LinearLayout>
 
                 <!-- Buttons -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:layout_marginTop="16dp"
+                    android:orientation="horizontal"
                     android:weightSum="2">
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnEditEvent"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                        android:layout_marginEnd="8dp"
                         android:layout_weight="1"
                         android:text="@string/edit_event"
-                        android:layout_marginEnd="8dp"
                         app:cornerRadius="8dp" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnViewBookings"
                         style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:text="@string/view_bookings"
-                        android:layout_marginStart="8dp"
                         app:cornerRadius="8dp" />
                 </LinearLayout>
 
@@ -145,8 +144,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 app:layout_collapseMode="pin"
-                app:navigationIcon="@drawable/ic_arrow_back"
-                app:menu="@menu/menu_manage_event" />
+                app:menu="@menu/menu_manage_event"
+                app:navigationIcon="@drawable/ic_arrow_back" />
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
@@ -155,11 +154,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
+            app:tabGravity="fill"
             app:tabIndicatorColor="@color/md_primary"
-            app:tabSelectedTextColor="@color/md_primary"
-            app:tabTextColor="?attr/colorOnSurfaceVariant"
             app:tabMode="fixed"
-            app:tabGravity="fill" />
+            app:tabSelectedTextColor="@color/md_primary"
+            app:tabTextColor="?attr/colorOnSurfaceVariant" />
 
     </com.google.android.material.appbar.AppBarLayout>
 

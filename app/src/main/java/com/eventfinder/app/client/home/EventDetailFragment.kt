@@ -47,25 +47,25 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
             findNavController().navigateUp()
         }
 
-        binding.btnBack.setOnClickListener {
+        binding.toolbar.setOnMenuItemClickListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.action_share -> {
+                   shareEvent()
+                    true
+                }
+                R.id.action_save -> {
+                    // TODO: Toggle favorite logic
+                    Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                else -> false
+            }
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
             findNavController().navigateUp()
         }
 
-        binding.btnShare.setOnClickListener {
-            val eventTitle = viewModel.uiState.value.event?.title ?: "an event"
-            val shareIntent = Intent().apply {
-                action = Intent.ACTION_SEND
-                putExtra(Intent.EXTRA_TEXT, "Check out this event: $eventTitle! Download EventFinder to join.")
-                type = "text/plain"
-            }
-            startActivity(Intent.createChooser(shareIntent, "Share Event"))
-        }
-
-        binding.btnFavorite.setOnClickListener {
-            // TODO: Toggle favorite logic
-            Toast.makeText(context, "Added to favorites", Toast.LENGTH_SHORT).show()
-        }
-        
         binding.btnAddCalendar.setOnClickListener {
             val event = viewModel.uiState.value.event ?: return@setOnClickListener
             val intent = Intent(Intent.ACTION_INSERT)
@@ -97,7 +97,17 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
         
         observeViewModel()
     }
-    
+
+    private fun shareEvent() {
+        val eventTitle = viewModel.uiState.value.event?.title ?: "an event"
+        val shareIntent = Intent().apply {
+            action = Intent.ACTION_SEND
+            putExtra(Intent.EXTRA_TEXT, "Check out this event: $eventTitle! Download EventFinder to join.")
+            type = "text/plain"
+        }
+        startActivity(Intent.createChooser(shareIntent, "Share Event"))
+    }
+
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {

@@ -1,44 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/spacing_large">
 
         <!-- Top summary stats -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal"
-            android:weightSum="4"
-            android:baselineAligned="false">
+            android:weightSum="4">
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Total Bookings"
-                    android:textSize="10sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
+                    android:text="@string/total_bookings"
+                    android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="10sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
                     android:text="132"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.App.TitleLarge"
                     android:textColor="?attr/colorOnSurface"
-                    android:layout_marginTop="4dp"/>
+                    tools:text="132" />
             </LinearLayout>
 
             <LinearLayout
@@ -46,20 +50,23 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Paid Bookings"
-                    android:textSize="10sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
+                    android:text="@string/paid_bookings"
+                    android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="10sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
                     android:text="112"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.App.TitleLarge"
                     android:textColor="?attr/colorOnSurface"
-                    android:layout_marginTop="4dp"/>
+                    tools:text="112" />
             </LinearLayout>
 
             <LinearLayout
@@ -67,20 +74,23 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Free Bookings"
-                    android:textSize="10sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
+                    android:text="@string/free_bookings"
+                    android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="10sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
                     android:text="16"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.App.TitleLarge"
                     android:textColor="@color/md_primary"
-                    android:layout_marginTop="4dp"/>
+                    tools:text="16" />
             </LinearLayout>
 
             <LinearLayout
@@ -88,217 +98,246 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Pending Bookings"
-                    android:textSize="10sp"
-                    android:textColor="?attr/colorOnSurfaceVariant"/>
+                    android:text="@string/pending_bookings"
+                    android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                    android:textColor="?attr/colorOnSurfaceVariant"
+                    android:textSize="10sp" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
                     android:text="4"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
+                    android:textAppearance="@style/TextAppearance.App.TitleLarge"
                     android:textColor="@color/md_secondary"
-                    android:layout_marginTop="4dp"/>
+                    tools:text="4" />
             </LinearLayout>
         </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/colorOutlineVariant"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:background="?attr/colorOutlineVariant" />
 
         <!-- Capacity -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Capacity"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="?attr/colorOnSurface"/>
+            android:text="@string/capacity"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            android:textColor="?attr/colorOnSurface" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="@dimen/spacing_medium_large"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="132 / 200 "
+                android:text="132 / 200"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 android:textColor="@color/md_primary"
-                android:textStyle="bold"/>
+                tools:text="132 / 200 " />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="tickets sold"
-                android:textColor="?attr/colorOnSurfaceVariant"/>
+                android:text="@string/tickets_sold_space"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
 
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:progress="66"
+            android:layout_height="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_medium"
             android:max="100"
-            android:progressTint="@color/md_primary"
+            android:progress="66"
             android:progressBackgroundTint="?attr/colorSurfaceVariant"
-            android:layout_marginTop="8dp"/>
+            android:progressTint="@color/md_primary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="68 tickets remaining"
-            android:textSize="12sp"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:text="@string/tickets_remaining_placeholder"
+            android:textAppearance="@style/TextAppearance.App.BodySmall"
             android:textColor="?attr/colorOnSurfaceVariant"
-            android:layout_marginTop="8dp"/>
+            tools:text="@string/tickets_remaining_placeholder" />
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/colorOutlineVariant"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:background="?attr/colorOutlineVariant" />
 
         <!-- Revenue -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Revenue"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="?attr/colorOnSurface"/>
+            android:text="@string/revenue"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            android:textColor="?attr/colorOnSurface" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="@dimen/spacing_medium_large"
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Total Revenue"
-                android:textColor="?attr/colorOnSurface"
-                android:layout_alignParentStart="true"/>
+                android:layout_weight="1"
+                android:text="@string/total_revenue"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurface" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$4,789"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 android:textColor="@color/md_primary"
-                android:textStyle="bold"
-                android:layout_alignParentEnd="true"/>
-        </RelativeLayout>
+                tools:text="$4,789" />
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Paid Revenue"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_alignParentStart="true"/>
+                android:layout_weight="1"
+                android:text="@string/paid_revenue"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$4,320"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 android:textColor="@color/md_primary"
-                android:textStyle="bold"
-                android:layout_alignParentEnd="true"/>
-        </RelativeLayout>
+                tools:text="$4,320" />
+        </LinearLayout>
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:orientation="horizontal">
+
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="Pending Revenue"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_alignParentStart="true"/>
+                android:layout_weight="1"
+                android:text="@string/pending_revenue"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="$469"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 android:textColor="@color/md_secondary"
-                android:textStyle="bold"
-                android:layout_alignParentEnd="true"/>
-        </RelativeLayout>
+                tools:text="$469" />
+        </LinearLayout>
 
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="?attr/colorOutlineVariant"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="16dp"/>
+            android:layout_height="@dimen/divider_height"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:background="?attr/colorOutlineVariant" />
 
         <!-- Ticket Type Split -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ticket Type Split"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:textColor="?attr/colorOnSurface"/>
+            android:text="@string/ticket_type_split"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            android:textColor="?attr/colorOnSurface" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="@dimen/spacing_medium_large"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/general_admission"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurface" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="General Admission"
-                android:textColor="?attr/colorOnSurface"
-                android:layout_alignParentStart="true"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="96 sold"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_alignParentEnd="true"/>
-        </RelativeLayout>
+                android:text="@string/tickets_sold_placeholder"
+                tools:text="@string/tickets_sold_placeholder" />
+        </LinearLayout>
+
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="8dp"
+            android:layout_height="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:max="100"
             android:progress="64"
-            android:max="100"
-            android:progressTint="@color/md_primary"
             android:progressBackgroundTint="?attr/colorSurfaceVariant"
-            android:layout_marginTop="8dp"/>
+            android:progressTint="@color/md_primary" />
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="@dimen/spacing_large"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/vip"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurface" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="VIP"
-                android:textColor="?attr/colorOnSurface"
-                android:layout_alignParentStart="true"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="36 sold"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
                 android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_alignParentEnd="true"/>
-        </RelativeLayout>
+                android:text="@string/tickets_sold_vip_placeholder"
+                tools:text="@string/tickets_sold_vip_placeholder" />
+        </LinearLayout>
+
         <ProgressBar
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:progress="72"
+            android:layout_height="@dimen/spacing_medium"
+            android:layout_marginTop="@dimen/spacing_medium"
             android:max="100"
-            android:progressTint="@color/md_secondary"
+            android:progress="72"
             android:progressBackgroundTint="?attr/colorSurfaceVariant"
-            android:layout_marginTop="8dp"/>
+            android:progressTint="@color/md_secondary" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

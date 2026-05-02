@@ -125,7 +125,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     private fun setupChips(items: List<String>) {
         binding.chipGroupInterests.removeAllViews()
         for (item in items) {
-            val chip = layoutInflater.inflate(R.layout.item_chip_choice, binding.chipGroupInterests, false) as Chip
+            val chip = Chip(requireContext())
             chip.text = item
             chip.isChecked = true
             chip.isClickable = false

@@ -60,14 +60,6 @@ class ExploreUpcomingAdapter(
             // Set location
             eventLocation.text = LocationUtils.getShortAddress(event.address)
 
-            // Set distance if available
-            if (event.distanceKm != null) {
-                eventDistance.text = LocationUtils.formatDistance(event.distanceKm)
-                eventDistance.isVisible = true
-            } else {
-                eventDistance.isVisible = false
-            }
-
             // Set time only (more compact)
             eventDateTime.text = DateFormatter.formatTime(event.startTime)
 

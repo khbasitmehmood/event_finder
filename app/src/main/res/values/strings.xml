@@ -349,4 +349,48 @@
     <string name="loading_address">Loading address...</string>
     <string name="select_this_place">Select This Place</string>
     <string name="current_location_desc">Current Location</string>
+
+    <!-- Manage Event Overview -->
+    <string name="tickets_sold">Tickets Sold</string>
+    <string name="attendees">Attendees</string>
+    <string name="revenue">Revenue</string>
+    <string name="remaining">Remaining</string>
+    <string name="registration_open">Registration Open</string>
+    <string name="sales_end_placeholder">Sales end: Fri, 30 May 2025 · 11:59 PM</string>
+    <string name="pause_sales">Pause Sales</string>
+    <string name="ticket_types">Ticket Types</string>
+    <string name="general_admission">General Admission</string>
+    <string name="vip">VIP</string>
+    <string name="about_this_event">About this event</string>
+    <string name="event_description_short">An all-day outdoor festival with live music, food trucks, and sunset performances by the bay.</string>
+    <string name="read_more">Read more</string>
+    <string name="update_event">Update Event</string>
+    <string name="tickets_placeholder">132 / 200</string>
+    <string name="attendees_placeholder">156</string>
+    <string name="revenue_placeholder">$4,789</string>
+    <string name="remaining_placeholder">44</string>
+    <string name="tickets_ga_placeholder">96 / 150</string>
+    <string name="tickets_vip_placeholder">36 / 50</string>
+
+    <!-- Manage Event Insights -->
+    <string name="total_bookings">Total Bookings</string>
+    <string name="paid_bookings">Paid Bookings</string>
+    <string name="free_bookings">Free Bookings</string>
+    <string name="pending_bookings">Pending Bookings</string>
+    <string name="capacity">Capacity</string>
+    <string name="tickets_remaining_placeholder">68 tickets remaining</string>
+    <string name="total_revenue">Total Revenue</string>
+    <string name="paid_revenue">Paid Revenue</string>
+    <string name="pending_revenue">Pending Revenue</string>
+    <string name="ticket_type_split">Ticket Type Split</string>
+    <string name="tickets_sold_placeholder">96 sold</string>
+    <string name="tickets_sold_vip_placeholder">36 sold</string>
+    <string name="tickets_sold_space"> tickets sold</string>
+
+    <!-- Manage Event Attendees -->
+    <string name="search_attendee_hint">Search attendee or booking ID</string>
+    <string name="filter_all">All</string>
+    <string name="filter_paid">Paid</string>
+    <string name="filter_pending">Pending</string>
+    <string name="filter_free">Free</string>
 </resources>

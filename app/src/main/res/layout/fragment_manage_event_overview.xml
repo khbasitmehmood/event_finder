@@ -1,89 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="?attr/colorSurface">
+    android:background="?attr/colorSurface"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="@dimen/spacing_large">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.EventFinder.CardView.StatCard"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:strokeWidth="1dp">
+                android:layout_marginEnd="@dimen/spacing_medium"
+                android:layout_weight="1">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="@dimen/spacing_medium_large">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Tickets Sold"
-                        android:textSize="12sp"
-                        android:textColor="?attr/colorOnSurfaceVariant"/>
+                        android:text="@string/tickets_sold"
+                        android:textAppearance="@style/TextAppearance.App.LabelMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="132 / 200"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginTop="4dp"/>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="66% sold"
-                        android:textSize="12sp"
-                        android:textColor="@color/md_primary"
-                        android:layout_marginTop="4dp"/>
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:text="@string/tickets_placeholder"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.EventFinder.CardView.StatCard"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:strokeWidth="1dp">
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_weight="1">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="@dimen/spacing_medium_large">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Attendees"
-                        android:textSize="12sp"
-                        android:textColor="?attr/colorOnSurfaceVariant"/>
+                        android:text="@string/attendees"
+                        android:textAppearance="@style/TextAppearance.App.LabelMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="156"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginTop="4dp"/>
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:text="@string/attendees_placeholder"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
@@ -91,211 +81,226 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp"
-            android:baselineAligned="false">
+            android:layout_marginTop="@dimen/spacing_large"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.EventFinder.CardView.StatCard"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:strokeWidth="1dp">
+                android:layout_marginEnd="@dimen/spacing_medium"
+                android:layout_weight="1">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="@dimen/spacing_medium_large">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Revenue"
-                        android:textSize="12sp"
-                        android:textColor="?attr/colorOnSurfaceVariant"/>
+                        android:text="@string/revenue"
+                        android:textAppearance="@style/TextAppearance.App.LabelMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="$4,789"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginTop="4dp"/>
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:text="@string/revenue_placeholder"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.EventFinder.CardView.StatCard"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                app:cardCornerRadius="12dp"
-                app:cardElevation="0dp"
-                app:strokeColor="?attr/colorOutlineVariant"
-                app:strokeWidth="1dp">
+                android:layout_marginStart="@dimen/spacing_medium"
+                android:layout_weight="1">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
-                    android:padding="12dp">
+                    android:padding="@dimen/spacing_medium_large">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Remaining"
-                        android:textSize="12sp"
-                        android:textColor="?attr/colorOnSurfaceVariant"/>
+                        android:text="@string/remaining"
+                        android:textAppearance="@style/TextAppearance.App.LabelMedium"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="44"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:textColor="?attr/colorOnSurface"
-                        android:layout_marginTop="4dp"/>
+                        android:layout_marginTop="@dimen/spacing_small"
+                        android:text="@string/remaining_placeholder"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <!-- Registration Open -->
         <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.EventFinder.CardView.StatCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="0dp"
-            app:strokeColor="?attr/colorOutlineVariant"
-            app:strokeWidth="1dp">
-            <RelativeLayout
+            android:layout_marginTop="@dimen/spacing_large">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="12dp">
+                android:padding="@dimen/spacing_medium_large">
+
                 <TextView
                     android:id="@+id/tvRegTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Registration Open"
+                    android:layout_marginEnd="@dimen/spacing_medium"
+                    android:text="@string/registration_open"
+                    android:textAppearance="@style/TextAppearance.App.TitleSmall"
                     android:textColor="@color/md_primary"
-                    android:textStyle="bold"
-                    android:textSize="14sp"/>
+                    app:layout_constraintEnd_toStartOf="@+id/btnPauseSales"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/tvRegTitle"
-                    android:text="Sales end: Fri, 30 May 2025 · 11:59 PM"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginEnd="@dimen/spacing_medium"
+                    android:text="@string/sales_end_placeholder"
+                    android:textAppearance="@style/TextAppearance.App.BodySmall"
                     android:textColor="?attr/colorOnSurfaceVariant"
-                    android:textSize="12sp"
-                    android:layout_marginTop="4dp"/>
+                    app:layout_constraintEnd_toStartOf="@+id/btnPauseSales"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvRegTitle" />
+
                 <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPauseSales"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:text="Pause Sales"
-                    android:textColor="@color/md_secondary"
-                    app:strokeColor="@color/md_secondary"
-                    android:textSize="12sp"
-                    app:cornerRadius="8dp"
                     android:minHeight="0dp"
-                    android:paddingVertical="4dp"/>
-            </RelativeLayout>
+                    android:paddingVertical="@dimen/spacing_small"
+                    android:text="@string/pause_sales"
+                    android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                    android:textColor="@color/md_secondary"
+                    app:cornerRadius="@dimen/spacing_medium"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:strokeColor="@color/md_secondary" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </com.google.android.material.card.MaterialCardView>
 
         <!-- Ticket Types -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Ticket Types"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"
-            android:layout_marginTop="24dp"
-            android:textSize="16sp"/>
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:text="@string/ticket_types"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            android:textColor="?attr/colorOnSurface" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="@dimen/spacing_medium_large"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="General Admission"
-                android:textColor="?attr/colorOnSurface"/>
+                android:text="@string/general_admission"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurface" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="96 / 150"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/spacing_medium"
+                android:text="@string/tickets_ga_placeholder"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="@dimen/spacing_large"
+                android:layout_height="@dimen/spacing_large"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="?attr/colorOnSurfaceVariant"/>
+                app:tint="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="12dp">
+            android:layout_marginTop="@dimen/spacing_medium_large"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="VIP"
-                android:textColor="?attr/colorOnSurface"/>
+                android:text="@string/vip"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurface" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="36 / 50"
-                android:textColor="?attr/colorOnSurfaceVariant"
-                android:layout_marginEnd="8dp"/>
+                android:layout_marginEnd="@dimen/spacing_medium"
+                android:text="@string/tickets_vip_placeholder"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant" />
+
             <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+                android:layout_width="@dimen/spacing_large"
+                android:layout_height="@dimen/spacing_large"
+                android:contentDescription="@null"
                 android:src="@drawable/ic_arrow_right"
-                app:tint="?attr/colorOnSurfaceVariant"/>
+                app:tint="?attr/colorOnSurfaceVariant" />
         </LinearLayout>
 
         <!-- About this event -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="About this event"
-            android:textStyle="bold"
-            android:textColor="?attr/colorOnSurface"
-            android:layout_marginTop="24dp"
-            android:textSize="16sp"/>
+            android:layout_marginTop="@dimen/spacing_xlarge"
+            android:text="@string/about_this_event"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            android:textColor="?attr/colorOnSurface" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="An all-day outdoor festival with live music, food trucks, and sunset performances by the bay."
-            android:textColor="?attr/colorOnSurfaceVariant"
-            android:layout_marginTop="8dp"
-            android:textSize="14sp"/>
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:text="@string/event_description_short"
+            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Read more"
-            android:textColor="@color/md_primary"
             android:layout_gravity="end"
-            android:layout_marginTop="4dp"
-            android:textSize="14sp"/>
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="@string/read_more"
+            android:textAppearance="@style/TextAppearance.App.LabelLarge"
+            android:textColor="@color/md_primary" />
 
         <!-- Update Event Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnUpdateEvent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Update Event"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="16dp"
-            app:cornerRadius="8dp" />
+            android:layout_marginTop="@dimen/spacing_xxlarge"
+            android:layout_marginBottom="@dimen/spacing_large"
+            android:text="@string/update_event"
+            app:cornerRadius="@dimen/spacing_medium" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

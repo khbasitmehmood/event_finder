@@ -109,7 +109,6 @@ class LoginFragment : Fragment() {
     }
 
     private fun handleLoginSuccess(userType: com.eventfinder.app.domain.model.UserType) {
-        Toast.makeText(context, "Please confirm your profile to continue", Toast.LENGTH_SHORT).show()
         val bundle = Bundle().apply {
             putString(AuthNavArgs.USER_TYPE, userType.name)
             putString(AuthNavArgs.FLOW_SOURCE, AuthFlowSource.LOGIN)

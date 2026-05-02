@@ -36,7 +36,7 @@
     <dimen name="divider_height">1dp</dimen>
 
     <!-- Event Detail Layout Constraints -->
-    <dimen name="event_detail_hero_height">350dp</dimen>
+    <dimen name="event_detail_hero_height">250dp</dimen>
     <dimen name="event_detail_gradient_height">200dp</dimen>
     <dimen name="event_detail_toolbar_height">120dp</dimen>
     <dimen name="event_detail_scroll_padding_bottom">56dp</dimen>
@@ -64,5 +64,6 @@
 
     <!-- Organizer Dashboard -->
     <dimen name="illustration_size">150dp</dimen>
+    <dimen name="event_hero_image_height">180dp</dimen>
 
 </resources>
