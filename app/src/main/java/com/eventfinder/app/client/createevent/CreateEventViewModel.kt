@@ -73,7 +73,7 @@ class CreateEventViewModel @Inject constructor(
     }
 
     /**
-     * Create a new event and publish it
+     * Create a new event (either as draft or published)
      */
     fun createEvent(
         title: String,
@@ -93,7 +93,8 @@ class CreateEventViewModel @Inject constructor(
         organizerName: String,
         tags: List<String> = emptyList(),
         visibility: EventVisibility = EventVisibility.PUBLIC,
-        requiresTicket: Boolean = false
+        requiresTicket: Boolean = false,
+        saveAsDraft: Boolean = false
     ) {
         viewModelScope.launch {
             _uiState.value = CreateEventUiState.Loading
@@ -131,8 +132,12 @@ class CreateEventViewModel @Inject constructor(
                     distanceKm = null,
                     isUserParticipating = false,
                     isUserOrganizer = true,
-                    state = com.eventfinder.app.domain.model.EventState.SCHEDULED,
-                    publishedAt = System.currentTimeMillis()
+                    state = if (saveAsDraft) {
+                        com.eventfinder.app.domain.model.EventState.DRAFT
+                    } else {
+                        com.eventfinder.app.domain.model.EventState.SCHEDULED
+                    },
+                    publishedAt = if (saveAsDraft) null else System.currentTimeMillis()
                 )
 
                 android.util.Log.d("CreateEventViewModel", "Creating event with userId: $organizerId")

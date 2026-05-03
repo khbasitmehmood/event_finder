@@ -48,4 +48,8 @@ interface EventRepository {
         eventId: String,
         cancellation: com.eventfinder.app.domain.model.EventCancellation
     ): Result<Event>
+
+    // Draft/Publish Management
+    suspend fun getDraftEvents(organizerId: String): Result<List<Event>>
+    suspend fun publishEvent(eventId: String, organizerId: String): Result<Event>
 }

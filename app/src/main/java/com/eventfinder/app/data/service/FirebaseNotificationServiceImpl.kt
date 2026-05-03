@@ -191,8 +191,11 @@ class FirebaseNotificationServiceImpl @Inject constructor(
             "The event has been postponed to a date TBD. Reason: $reason"
         }
 
+        val eventIdToUse = event.eventId.ifEmpty { event.id }
+        android.util.Log.d(TAG, "Notifying postponed event - eventId: $eventIdToUse, title: ${event.title}")
+
         return notifyEventAttendees(
-            eventId = event.id,
+            eventId = eventIdToUse,
             type = NotificationType.EVENT_POSTPONED,
             title = "${event.title} - Postponed",
             message = message,
@@ -211,8 +214,11 @@ class FirebaseNotificationServiceImpl @Inject constructor(
         val changes = changedFields.joinToString(", ")
         val message = "The event has been rescheduled. Changes: $changes. Reason: $reason"
 
+        val eventIdToUse = event.eventId.ifEmpty { event.id }
+        android.util.Log.d(TAG, "Notifying rescheduled event - eventId: $eventIdToUse, title: ${event.title}")
+
         return notifyEventAttendees(
-            eventId = event.id,
+            eventId = eventIdToUse,
             type = NotificationType.EVENT_RESCHEDULED,
             title = "${event.title} - Rescheduled",
             message = message,
@@ -235,8 +241,11 @@ class FirebaseNotificationServiceImpl @Inject constructor(
             }
         }
 
+        val eventIdToUse = event.eventId.ifEmpty { event.id }
+        android.util.Log.d(TAG, "Notifying cancelled event - eventId: $eventIdToUse, title: ${event.title}")
+
         return notifyEventAttendees(
-            eventId = event.id,
+            eventId = eventIdToUse,
             type = NotificationType.EVENT_CANCELLED,
             title = "${event.title} - Cancelled",
             message = message,
@@ -252,10 +261,11 @@ class FirebaseNotificationServiceImpl @Inject constructor(
             val now = System.currentTimeMillis()
 
             // Get attendees for this event
-            val attendeeIds = getEventAttendees(event.id)
+            val eventIdToUse = event.eventId.ifEmpty { event.id }
+            val attendeeIds = getEventAttendees(eventIdToUse)
 
             if (attendeeIds.isEmpty()) {
-                android.util.Log.d(TAG, "No attendees to send reminders for event: ${event.id}")
+                android.util.Log.d(TAG, "No attendees to send reminders for event: $eventIdToUse")
                 return Result.success(Unit)
             }
 
@@ -273,7 +283,7 @@ class FirebaseNotificationServiceImpl @Inject constructor(
                             message = "Your event starts tomorrow at ${dateTimeFormat.format(event.startTime)}",
                             recipientUserId = userId,
                             recipientUserType = NotificationRecipientType.ATTENDEE,
-                            eventId = event.id,
+                            eventId = eventIdToUse,
                             eventTitle = event.title,
                             eventImageUrl = event.mainImageUrl,
                             scheduledFor = reminder24h
@@ -293,7 +303,7 @@ class FirebaseNotificationServiceImpl @Inject constructor(
                             message = "Your event starts in 1 hour!",
                             recipientUserId = userId,
                             recipientUserType = NotificationRecipientType.ATTENDEE,
-                            eventId = event.id,
+                            eventId = eventIdToUse,
                             eventTitle = event.title,
                             eventImageUrl = event.mainImageUrl,
                             scheduledFor = reminder1h

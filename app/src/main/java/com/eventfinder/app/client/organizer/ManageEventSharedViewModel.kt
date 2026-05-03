@@ -6,6 +6,7 @@ import com.eventfinder.app.domain.model.Event
 import com.eventfinder.app.domain.model.EventLocation
 import com.eventfinder.app.domain.model.EventStats
 import com.eventfinder.app.domain.model.Ticket
+import com.eventfinder.app.domain.repository.EventRepository
 import com.eventfinder.app.domain.repository.TicketRepository
 import com.eventfinder.app.domain.usecase.CancelEventUseCase
 import com.eventfinder.app.domain.usecase.PostponeEventUseCase
@@ -21,6 +22,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ManageEventSharedViewModel @Inject constructor(
     private val ticketRepository: TicketRepository,
+    private val eventRepository: EventRepository,
     private val networkObserver: NetworkConnectivityObserver,
     private val postponeEventUseCase: PostponeEventUseCase,
     private val rescheduleEventUseCase: RescheduleEventUseCase,
@@ -224,6 +226,34 @@ class ManageEventSharedViewModel @Inject constructor(
                 onFailure = { exception ->
                     _isLoading.value = false
                     val errorMessage = exception.message ?: "Failed to cancel event"
+                    _error.value = errorMessage
+                    onError(errorMessage)
+                }
+            )
+        }
+    }
+
+    fun publishEvent(
+        eventId: String,
+        organizerId: String,
+        onSuccess: (Event) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+
+            eventRepository.publishEvent(
+                eventId = eventId,
+                organizerId = organizerId
+            ).fold(
+                onSuccess = { event ->
+                    _isLoading.value = false
+                    onSuccess(event)
+                },
+                onFailure = { exception ->
+                    _isLoading.value = false
+                    val errorMessage = exception.message ?: "Failed to publish event"
                     _error.value = errorMessage
                     onError(errorMessage)
                 }

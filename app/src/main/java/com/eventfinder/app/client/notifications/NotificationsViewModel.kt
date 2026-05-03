@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eventfinder.app.domain.model.EventNotification
 import com.eventfinder.app.domain.service.NotificationService
+import com.eventfinder.app.utils.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,8 @@ import javax.inject.Inject
  */
 @HiltViewModel
 class NotificationsViewModel @Inject constructor(
-    private val notificationService: NotificationService
+    private val notificationService: NotificationService,
+    private val userPreferences: UserPreferences
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<NotificationsUiState>(NotificationsUiState.Loading)
@@ -24,9 +26,6 @@ class NotificationsViewModel @Inject constructor(
 
     private val _unreadCount = MutableStateFlow(0)
     val unreadCount: StateFlow<Int> = _unreadCount.asStateFlow()
-
-    // TODO: Replace with actual user ID from auth
-    private val currentUserId = "user_placeholder"
 
     init {
         loadNotifications()
@@ -37,8 +36,14 @@ class NotificationsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = NotificationsUiState.Loading
 
+            val userId = userPreferences.getUserId()
+            if (userId == null) {
+                _uiState.value = NotificationsUiState.Error("User not logged in")
+                return@launch
+            }
+
             val result = notificationService.getUserNotifications(
-                userId = currentUserId,
+                userId = userId,
                 limit = 50
             )
 
@@ -72,7 +77,8 @@ class NotificationsViewModel @Inject constructor(
 
     fun markAllAsRead() {
         viewModelScope.launch {
-            notificationService.markAllAsRead(currentUserId)
+            val userId = userPreferences.getUserId() ?: return@launch
+            notificationService.markAllAsRead(userId)
             loadNotifications()
         }
     }
@@ -86,7 +92,8 @@ class NotificationsViewModel @Inject constructor(
 
     private fun loadUnreadCount() {
         viewModelScope.launch {
-            val result = notificationService.getUnreadCount(currentUserId)
+            val userId = userPreferences.getUserId() ?: return@launch
+            val result = notificationService.getUnreadCount(userId)
             result.onSuccess { count ->
                 _unreadCount.value = count
             }

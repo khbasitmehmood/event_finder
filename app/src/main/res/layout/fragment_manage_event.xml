@@ -186,6 +186,19 @@
         app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabPublish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|center_horizontal"
+        android:layout_margin="@dimen/spacing_xlarge"
+        android:text="Publish Event"
+        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+        android:visibility="gone"
+        app:icon="@drawable/ic_publish"
+        app:iconSize="24dp"
+        tools:visibility="visible" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabScanQR"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

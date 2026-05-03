@@ -23,6 +23,7 @@ class OrganizerEventsViewModel @Inject constructor(
     val uiState: StateFlow<EventsUiState> = _uiState.asStateFlow()
 
     data class EventsUiState(
+        val draftEvents: List<Event> = emptyList(),
         val upcomingEvents: List<Event> = emptyList(),
         val happeningNowEvents: List<Event> = emptyList(),
         val pastEvents: List<Event> = emptyList(),
@@ -48,9 +49,10 @@ class OrganizerEventsViewModel @Inject constructor(
 
             eventRepository.getUserEvents(organizerId).fold(
                 onSuccess = { events ->
-                    val (upcoming, happeningNow, past) = categorizeEvents(events)
+                    val (drafts, upcoming, happeningNow, past) = categorizeEvents(events)
                     _uiState.update {
                         it.copy(
+                            draftEvents = drafts,
                             upcomingEvents = upcoming,
                             happeningNowEvents = happeningNow,
                             pastEvents = past,
@@ -70,23 +72,36 @@ class OrganizerEventsViewModel @Inject constructor(
         }
     }
 
-    private fun categorizeEvents(events: List<Event>): Triple<List<Event>, List<Event>, List<Event>> {
+    private fun categorizeEvents(events: List<Event>): Quadruple<List<Event>, List<Event>, List<Event>, List<Event>> {
         val now = System.currentTimeMillis()
 
-        val upcoming = events
+        val drafts = events
+            .filter { it.state == com.eventfinder.app.domain.model.EventState.DRAFT }
+            .sortedByDescending { it.createdAt }
+
+        val nonDrafts = events.filter { it.state != com.eventfinder.app.domain.model.EventState.DRAFT }
+
+        val upcoming = nonDrafts
             .filter { it.startTime > now }
             .sortedBy { it.startTime }
 
-        val happeningNow = events
+        val happeningNow = nonDrafts
             .filter { it.startTime <= now && (it.endTime ?: Long.MAX_VALUE) >= now }
             .sortedBy { it.startTime }
 
-        val past = events
+        val past = nonDrafts
             .filter { (it.endTime ?: it.startTime) < now }
             .sortedByDescending { it.endTime ?: it.startTime }
 
-        return Triple(upcoming, happeningNow, past)
+        return Quadruple(drafts, upcoming, happeningNow, past)
     }
+
+    private data class Quadruple<out A, out B, out C, out D>(
+        val first: A,
+        val second: B,
+        val third: C,
+        val fourth: D
+    )
 
     fun refreshEvents() {
         loadEvents()

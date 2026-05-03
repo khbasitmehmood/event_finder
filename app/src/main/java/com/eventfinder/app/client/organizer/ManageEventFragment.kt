@@ -73,6 +73,10 @@ class ManageEventFragment : Fragment() {
             findNavController().navigate(R.id.qrScannerFragment)
         }
 
+        binding.fabPublish.setOnClickListener {
+            showPublishDialog()
+        }
+
         val adapter = ManageEventPagerAdapter(this)
         binding.viewPager.adapter = adapter
 
@@ -148,6 +152,10 @@ class ManageEventFragment : Fragment() {
         val stateColors = getStateColors(event.state)
         binding.chipState.setChipBackgroundColorResource(stateColors.first)
         binding.chipState.setTextColor(resources.getColor(stateColors.second, null))
+
+        // Show/hide Publish FAB based on state
+        binding.fabPublish.isVisible = event.state == com.eventfinder.app.domain.model.EventState.DRAFT
+        binding.fabScanQR.isVisible = event.state != com.eventfinder.app.domain.model.EventState.DRAFT
 
         if (!event.mainImageUrl.isNullOrBlank()) {
             binding.ivEventImage.load(event.mainImageUrl) {
@@ -323,6 +331,52 @@ class ManageEventFragment : Fragment() {
         }
 
         dialog.show(parentFragmentManager, CancelEventDialog.TAG)
+    }
+
+    private fun showPublishDialog() {
+        val eventId = arguments?.getString("EVENT_ID") ?: return
+        val userId = userPreferences.getUserId() ?: return
+
+        val currentEvent = viewModel.uiState.value.event ?: run {
+            Toast.makeText(
+                requireContext(),
+                "Event not loaded yet. Please try again.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        com.google.android.material.dialog.MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Publish Event")
+            .setMessage("Are you ready to publish \"${currentEvent.title}\"? It will become visible to all users and they can start purchasing tickets.")
+            .setPositiveButton("Publish") { _, _ ->
+                publishEvent(eventId, userId)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun publishEvent(eventId: String, userId: String) {
+        sharedViewModel.publishEvent(
+            eventId = eventId,
+            organizerId = userId,
+            onSuccess = { event ->
+                Toast.makeText(
+                    requireContext(),
+                    "Event published successfully!",
+                    Toast.LENGTH_SHORT
+                ).show()
+                // Reload event data to update UI
+                viewModel.loadEvent(eventId, userId)
+            },
+            onError = { error ->
+                Toast.makeText(
+                    requireContext(),
+                    error,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        )
     }
 
     override fun onDestroyView() {

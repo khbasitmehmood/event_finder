@@ -28,6 +28,7 @@ class OrganizerEventsFragment : Fragment() {
 
     private val viewModel: OrganizerEventsViewModel by viewModels()
 
+    private lateinit var draftsAdapter: UpcomingEventAdapter
     private lateinit var happeningNowAdapter: UpcomingEventAdapter
     private lateinit var upcomingAdapter: UpcomingEventAdapter
     private lateinit var pastAdapter: UpcomingEventAdapter
@@ -51,6 +52,14 @@ class OrganizerEventsFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
+        // Drafts
+        draftsAdapter = UpcomingEventAdapter(onClick = ::onEventClick)
+        binding.rvDrafts.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = draftsAdapter
+            isNestedScrollingEnabled = false
+        }
+
         // Happening Now
         happeningNowAdapter = UpcomingEventAdapter(onClick = ::onEventClick)
         binding.rvHappeningNow.apply {
@@ -94,6 +103,16 @@ class OrganizerEventsFragment : Fragment() {
                 viewModel.uiState.collect { state ->
                     binding.swipeRefresh.isRefreshing = state.isLoading
 
+                    // Drafts Section
+                    if (state.draftEvents.isNotEmpty()) {
+                        binding.sectionDrafts.isVisible = true
+                        binding.tvDraftsCount.text = "${state.draftEvents.size}"
+                        binding.rvDrafts.isVisible = true
+                        draftsAdapter.submitList(state.draftEvents)
+                    } else {
+                        binding.sectionDrafts.isVisible = false
+                    }
+
                     // Happening Now Section
                     if (state.happeningNowEvents.isNotEmpty()) {
                         binding.sectionHappeningNow.isVisible = true
@@ -133,13 +152,15 @@ class OrganizerEventsFragment : Fragment() {
                     }
 
                     // Show "all empty" state if no events at all
-                    val allEmpty = state.happeningNowEvents.isEmpty() &&
+                    val allEmpty = state.draftEvents.isEmpty() &&
+                            state.happeningNowEvents.isEmpty() &&
                             state.upcomingEvents.isEmpty() &&
                             state.pastEvents.isEmpty()
                     binding.layoutAllEmpty.isVisible = allEmpty && !state.isLoading
 
                     // Hide sections if all empty
                     if (allEmpty) {
+                        binding.sectionDrafts.isVisible = false
                         binding.sectionHappeningNow.isVisible = false
                         binding.sectionUpcoming.isVisible = false
                         binding.sectionPast.isVisible = false

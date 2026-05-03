@@ -354,7 +354,13 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         // Publish Event
         binding.btnPublish.setOnClickListener {
             if (validateAllFields()) {
-                publishEvent()
+                publishEvent(saveAsDraft = false)
+            }
+        }
+
+        binding.btnSaveDraft.setOnClickListener {
+            if (validateBasicInfo()) {
+                publishEvent(saveAsDraft = true)
             }
         }
     }
@@ -476,7 +482,7 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         )
     }
 
-    private fun publishEvent() {
+    private fun publishEvent(saveAsDraft: Boolean = false) {
         // Combine date and start time
         val eventStartDateTime = Calendar.getInstance().apply {
             set(Calendar.YEAR, selectedDate!!.get(Calendar.YEAR))
@@ -547,7 +553,8 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
             organizerName = userName,
             tags = extraTags,
             visibility = visibility,
-            requiresTicket = requiresTicket
+            requiresTicket = requiresTicket,
+            saveAsDraft = saveAsDraft
         )
     }
 

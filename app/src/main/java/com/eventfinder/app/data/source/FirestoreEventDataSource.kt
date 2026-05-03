@@ -46,7 +46,11 @@ class FirestoreEventDataSource @Inject constructor(
                 doc.toObject(EventDto::class.java)?.let { dto ->
                     EventMapper.toDomain(dto.copy(id = doc.id))
                 }
-            }.sortedBy { it.startTime }.take(50)
+            }
+            // Filter out DRAFT events from public views
+            .filter { it.state != EventState.DRAFT }
+            .sortedBy { it.startTime }
+            .take(50)
         } catch (e: Exception) {
             android.util.Log.e("FirestoreEventDataSource", "Failed to fetch events", e)
             throw Exception("Failed to fetch events: ${e.message}", e)
@@ -175,12 +179,10 @@ class FirestoreEventDataSource @Inject constructor(
                 doc.toObject(EventDto::class.java)?.let { dto ->
                     EventMapper.toDomain(dto.copy(id = doc.id))
                 }
-            }.filter { event ->
-                // Filter out DRAFT events - they shouldn't appear in manage events
-                event.state != com.eventfinder.app.domain.model.EventState.DRAFT
             }
+            // Note: Removed DRAFT filter - organizers should see ALL their events including drafts
 
-            android.util.Log.d("FirestoreEventDataSource", "Mapped to ${events.size} non-draft events")
+            android.util.Log.d("FirestoreEventDataSource", "Mapped to ${events.size} events")
             events.sortedByDescending { it.startTime }
         } catch (e: Exception) {
             android.util.Log.e("FirestoreEventDataSource", "Failed to fetch user events", e)
@@ -599,6 +601,62 @@ class FirestoreEventDataSource @Inject constructor(
         } catch (e: Exception) {
             android.util.Log.e("FirestoreEventDataSource", "Failed to cancel event", e)
             throw Exception("Failed to cancel event: ${e.message}", e)
+        }
+    }
+
+    // Draft/Publish Management
+    override suspend fun publishEvent(eventId: String, organizerId: String): Event {
+        return try {
+            val event = getEventById(eventId)
+                ?: throw Exception("Event not found")
+
+            // Verify ownership
+            if (event.organizerId != organizerId) {
+                throw Exception("Only the event organizer can publish this event")
+            }
+
+            // Verify it's a draft
+            if (event.state != EventState.DRAFT) {
+                throw Exception("Only draft events can be published")
+            }
+
+            // Update to SCHEDULED state
+            val stateChange = StateChange(
+                fromState = EventState.DRAFT,
+                toState = EventState.SCHEDULED,
+                changedAt = System.currentTimeMillis(),
+                changedBy = organizerId,
+                reason = "Event published",
+                automatic = false
+            )
+
+            val updates = mapOf(
+                "state" to EventState.SCHEDULED.name,
+                "publishedAt" to FieldValue.serverTimestamp(),
+                "stateHistory" to FieldValue.arrayUnion(
+                    mapOf(
+                        "fromState" to stateChange.fromState.name,
+                        "toState" to stateChange.toState.name,
+                        "changedAt" to stateChange.changedAt,
+                        "changedBy" to stateChange.changedBy,
+                        "reason" to stateChange.reason,
+                        "automatic" to stateChange.automatic
+                    )
+                )
+            )
+
+            firestore.collection(EVENTS_COLLECTION)
+                .document(eventId)
+                .update(updates)
+                .await()
+
+            android.util.Log.d("FirestoreEventDataSource", "Event $eventId published successfully")
+
+            // Return updated event
+            getEventById(eventId) ?: throw Exception("Failed to fetch updated event")
+        } catch (e: Exception) {
+            android.util.Log.e("FirestoreEventDataSource", "Failed to publish event", e)
+            throw Exception("Failed to publish event: ${e.message}", e)
         }
     }
 }

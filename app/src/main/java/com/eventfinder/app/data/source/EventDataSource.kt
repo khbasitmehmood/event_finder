@@ -48,4 +48,7 @@ interface EventDataSource {
         eventId: String,
         cancellation: com.eventfinder.app.domain.model.EventCancellation
     ): Event
+
+    // Draft/Publish Management
+    suspend fun publishEvent(eventId: String, organizerId: String): Event
 }

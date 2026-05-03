@@ -192,4 +192,23 @@ class EventRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    // Draft/Publish Management
+    override suspend fun getDraftEvents(organizerId: String): Result<List<Event>> {
+        return try {
+            val events = eventDataSource.getOrganizerEventsByState(organizerId, EventState.DRAFT)
+            Result.success(events)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun publishEvent(eventId: String, organizerId: String): Result<Event> {
+        return try {
+            val event = eventDataSource.publishEvent(eventId, organizerId)
+            Result.success(event)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }
