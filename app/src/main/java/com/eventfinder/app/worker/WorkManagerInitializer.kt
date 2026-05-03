@@ -20,6 +20,7 @@ object WorkManagerInitializer {
      */
     fun initialize(context: Context) {
         scheduleEventStateUpdateWorker(context)
+        scheduleNotificationDeliveryWorker(context)
     }
 
     /**
@@ -45,6 +46,31 @@ object WorkManagerInitializer {
         )
 
         android.util.Log.d("WorkManagerInitializer", "Event state update worker scheduled")
+    }
+
+    /**
+     * Schedule periodic notification delivery worker
+     * Runs every 15 minutes to check for scheduled notifications
+     */
+    private fun scheduleNotificationDeliveryWorker(context: Context) {
+        val constraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val workRequest = PeriodicWorkRequestBuilder<NotificationDeliveryWorker>(
+            repeatInterval = 15,
+            repeatIntervalTimeUnit = TimeUnit.MINUTES
+        )
+            .setConstraints(constraints)
+            .build()
+
+        WorkManager.getInstance(context).enqueueUniquePeriodicWork(
+            NotificationDeliveryWorker.WORK_NAME,
+            ExistingPeriodicWorkPolicy.KEEP,
+            workRequest
+        )
+
+        android.util.Log.d("WorkManagerInitializer", "Notification delivery worker scheduled")
     }
 
     /**

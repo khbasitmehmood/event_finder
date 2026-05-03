@@ -1,7 +1,10 @@
 package com.eventfinder.app
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.View
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
@@ -13,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.eventfinder.app.databinding.ActivityMainBinding
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.usecase.SeedCategoriesUseCase
+import com.eventfinder.app.fcm.FcmTokenManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -28,7 +32,29 @@ class MainActivity : AppCompatActivity() {
     @Inject
     lateinit var seedCategoriesUseCase: SeedCategoriesUseCase
 
+    @Inject
+    lateinit var fcmTokenManager: FcmTokenManager
+
     private var currentUserType: UserType? = null
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            android.util.Log.d("MainActivity", "Notification permission granted")
+            // Get and log FCM token
+            lifecycleScope.launch {
+                fcmTokenManager.getToken().onSuccess { token ->
+                    android.util.Log.d("FCM_TOKEN", "========================================")
+                    android.util.Log.d("FCM_TOKEN", "YOUR FCM TOKEN:")
+                    android.util.Log.d("FCM_TOKEN", token)
+                    android.util.Log.d("FCM_TOKEN", "========================================")
+                }
+            }
+        } else {
+            android.util.Log.d("MainActivity", "Notification permission denied")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +71,9 @@ class MainActivity : AppCompatActivity() {
         updateBottomNavForUserType() // Setup dynamic bottom nav based on user type
         setupNavigation()
         observeViewModel()
+
+        // Request notification permission
+        requestNotificationPermission()
     }
 
     private fun observeViewModel() {
@@ -144,6 +173,22 @@ class MainActivity : AppCompatActivity() {
             // Update admin title if in admin mode
             if (uiState.showAdminTopBar) {
                 tvAdminTitle.text = destinationLabel ?: getString(R.string.admin_dashboard)
+            }
+        }
+    }
+
+    private fun requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        } else {
+            // For older Android versions, get FCM token directly
+            lifecycleScope.launch {
+                fcmTokenManager.getToken().onSuccess { token ->
+                    android.util.Log.d("FCM_TOKEN", "========================================")
+                    android.util.Log.d("FCM_TOKEN", "YOUR FCM TOKEN:")
+                    android.util.Log.d("FCM_TOKEN", token)
+                    android.util.Log.d("FCM_TOKEN", "========================================")
+                }
             }
         }
     }

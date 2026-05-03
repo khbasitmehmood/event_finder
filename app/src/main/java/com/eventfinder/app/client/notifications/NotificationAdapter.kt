@@ -110,7 +110,7 @@ class NotificationAdapter(
 
         private fun getNotificationIcon(typeName: String): Int {
             return when {
-                typeName.contains("CANCEL") -> R.drawable.ic_cancel
+                typeName.contains("CANCEL") -> R.drawable.ic_close
                 typeName.contains("POSTPONE") -> R.drawable.ic_calendar
                 typeName.contains("RESCHEDULE") -> R.drawable.ic_calendar
                 typeName.contains("TICKET") -> R.drawable.ic_check_circle
