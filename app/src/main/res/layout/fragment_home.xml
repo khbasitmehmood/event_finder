@@ -165,32 +165,24 @@
                 </LinearLayout>
 
                 <!-- User Interest Categories Section -->
-                <LinearLayout
+                <HorizontalScrollView
                     android:id="@+id/layoutCategoriesSection"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/spacing_large"
-                    android:orientation="vertical"
                     android:paddingHorizontal="@dimen/spacing_large"
+                    android:scrollbars="none"
                     android:visibility="gone"
                     tools:visibility="visible">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/spacing_medium"
-                        android:text="Your Interests"
-                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                        android:textStyle="bold" />
-
                     <com.google.android.material.chip.ChipGroup
                         android:id="@+id/chipGroupCategories"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         app:chipSpacingHorizontal="8dp"
-                        app:singleLine="false" />
+                        app:singleLine="true" />
 
-                </LinearLayout>
+                </HorizontalScrollView>
 
                 <!-- Date Filtered Events Section -->
                 <LinearLayout
