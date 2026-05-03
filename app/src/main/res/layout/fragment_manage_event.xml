@@ -39,18 +39,35 @@
                     android:src="@drawable/event_img"
                     app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium" />
 
-                <!-- Category -->
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chipCategory"
+                <!-- Category & State -->
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="@string/category"
-                    android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                    android:textColor="@color/md_primary"
-                    app:chipBackgroundColor="@color/md_primary_container"
-                    app:chipStrokeWidth="0dp"
-                    tools:visibility="visible" />
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipCategory"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/category"
+                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                        android:textColor="@color/md_primary"
+                        app:chipBackgroundColor="@color/md_primary_container"
+                        app:chipStrokeWidth="0dp"
+                        tools:visibility="visible" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chipState"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:text="Scheduled"
+                        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+                        app:chipStrokeWidth="0dp"
+                        tools:visibility="visible" />
+
+                </LinearLayout>
 
                 <!-- Title -->
                 <TextView

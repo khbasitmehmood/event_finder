@@ -170,6 +170,54 @@
             android:textSize="14sp"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/btnPostpone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_event"
+            app:tint="?attr/colorOnSurfaceVariant"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Postpone Event"
+            android:layout_marginStart="16dp"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btnReschedule"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingVertical="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
+        <ImageView
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:src="@drawable/ic_select_date"
+            app:tint="?attr/colorOnSurfaceVariant"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reschedule Event"
+            android:layout_marginStart="16dp"
+            android:textColor="?attr/colorOnSurface"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -186,11 +234,15 @@
         android:layout_marginBottom="8dp"/>
 
     <LinearLayout
+        android:id="@+id/btnCancelEvent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingVertical="12dp">
+        android:paddingVertical="12dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:background="?attr/selectableItemBackground">
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"

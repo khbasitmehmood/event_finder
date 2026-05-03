@@ -44,5 +44,29 @@ data class EventDto(
     val requiresTicket: Boolean = false,
 
     val createdAt: Timestamp? = null,
-    val updatedAt: Timestamp? = null
+    val updatedAt: Timestamp? = null,
+
+    // Phase 1: State Management
+    val state: String = "DRAFT",
+    val publishedAt: Timestamp? = null,
+    val completedAt: Timestamp? = null,
+    val stateHistory: List<Map<String, Any>> = emptyList(),
+
+    // Phase 2: Postponement
+    val postponementHistory: List<Map<String, Any>> = emptyList(),
+    val currentPostponement: Map<String, Any>? = null,
+    val postponementCount: Int = 0,
+    val maxPostponements: Int = 3,
+    val allowPostponement: Boolean = true,
+
+    // Phase 3: Rescheduling
+    val rescheduleHistory: List<Map<String, Any>> = emptyList(),
+    val currentReschedule: Map<String, Any>? = null,
+    val rescheduleCount: Int = 0,
+    val maxReschedules: Int = 5,
+    val allowReschedule: Boolean = true,
+
+    // Phase 4: Cancellation
+    val cancellation: Map<String, Any>? = null,
+    val cancelledAt: Timestamp? = null
 )

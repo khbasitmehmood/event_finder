@@ -143,6 +143,12 @@ class ManageEventFragment : Fragment() {
             binding.chipCategory.isVisible = false
         }
 
+        // Show event state
+        binding.chipState.text = event.state.getDisplayName()
+        val stateColors = getStateColors(event.state)
+        binding.chipState.setChipBackgroundColorResource(stateColors.first)
+        binding.chipState.setTextColor(resources.getColor(stateColors.second, null))
+
         if (!event.mainImageUrl.isNullOrBlank()) {
             binding.ivEventImage.load(event.mainImageUrl) {
                 crossfade(true)
@@ -154,16 +160,169 @@ class ManageEventFragment : Fragment() {
         }
     }
 
+    private fun getStateColors(state: com.eventfinder.app.domain.model.EventState): Pair<Int, Int> {
+        return when (state) {
+            com.eventfinder.app.domain.model.EventState.DRAFT ->
+                Pair(R.color.md_surface_container_high, R.color.md_on_surface_variant)
+            com.eventfinder.app.domain.model.EventState.SCHEDULED ->
+                Pair(R.color.md_primary_container, R.color.md_primary)
+            com.eventfinder.app.domain.model.EventState.LIVE ->
+                Pair(R.color.md_tertiary_container, R.color.md_tertiary)
+            com.eventfinder.app.domain.model.EventState.COMPLETED ->
+                Pair(R.color.md_surface_container_high, R.color.md_on_surface_variant)
+            com.eventfinder.app.domain.model.EventState.CANCELLED ->
+                Pair(R.color.md_error_container, R.color.md_error)
+            com.eventfinder.app.domain.model.EventState.POSTPONED ->
+                Pair(R.color.md_secondary_container, R.color.md_secondary)
+            com.eventfinder.app.domain.model.EventState.EXPIRED ->
+                Pair(R.color.md_error_container, R.color.md_error)
+        }
+    }
+
     private fun showEventActionsBottomSheet() {
         val bottomSheetDialog = BottomSheetDialog(requireContext())
         val bottomSheetView = layoutInflater.inflate(R.layout.bottom_sheet_event_actions, null)
-        
+
         bottomSheetView.findViewById<View>(R.id.btnClose).setOnClickListener {
             bottomSheetDialog.dismiss()
         }
-        
+
+        bottomSheetView.findViewById<View>(R.id.btnPostpone).setOnClickListener {
+            bottomSheetDialog.dismiss()
+            showPostponeEventBottomSheet()
+        }
+
+        bottomSheetView.findViewById<View>(R.id.btnReschedule).setOnClickListener {
+            bottomSheetDialog.dismiss()
+            showRescheduleEventBottomSheet()
+        }
+
+        bottomSheetView.findViewById<View>(R.id.btnCancelEvent).setOnClickListener {
+            bottomSheetDialog.dismiss()
+            showCancelEventDialog()
+        }
+
         bottomSheetDialog.setContentView(bottomSheetView)
         bottomSheetDialog.show()
+    }
+
+    private fun showPostponeEventBottomSheet() {
+        val eventId = arguments?.getString("EVENT_ID") ?: return
+        val userId = userPreferences.getUserId() ?: return
+
+        val bottomSheet = PostponeEventBottomSheet.newInstance { newStartTime, newEndTime, reason ->
+            sharedViewModel.postponeEvent(
+                eventId = eventId,
+                newStartTime = newStartTime,
+                newEndTime = newEndTime,
+                reason = reason,
+                userId = userId,
+                onSuccess = { event ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Event postponed successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    // Reload event data
+                    viewModel.loadEvent(eventId, userId)
+                },
+                onError = { error ->
+                    Toast.makeText(
+                        requireContext(),
+                        error,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            )
+        }
+
+        bottomSheet.show(parentFragmentManager, PostponeEventBottomSheet.TAG)
+    }
+
+    private fun showRescheduleEventBottomSheet() {
+        val eventId = arguments?.getString("EVENT_ID") ?: return
+        val userId = userPreferences.getUserId() ?: return
+
+        // Get current event from viewModel state
+        val currentEvent = viewModel.uiState.value.event ?: run {
+            Toast.makeText(
+                requireContext(),
+                "Event not loaded yet. Please try again.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        val bottomSheet = RescheduleEventBottomSheet.newInstance(currentEvent) { newStartTime, newEndTime, newLocation, newAddress, reason ->
+            sharedViewModel.rescheduleEvent(
+                eventId = eventId,
+                newStartTime = newStartTime,
+                newEndTime = newEndTime,
+                newLocation = newLocation,
+                newAddress = newAddress,
+                reason = reason,
+                userId = userId,
+                onSuccess = { event ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Event rescheduled successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    // Reload event data
+                    viewModel.loadEvent(eventId, userId)
+                },
+                onError = { error ->
+                    Toast.makeText(
+                        requireContext(),
+                        error,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            )
+        }
+
+        bottomSheet.show(parentFragmentManager, RescheduleEventBottomSheet.TAG)
+    }
+
+    private fun showCancelEventDialog() {
+        val eventId = arguments?.getString("EVENT_ID") ?: return
+        val userId = userPreferences.getUserId() ?: return
+
+        // Get current event from viewModel state
+        val currentEvent = viewModel.uiState.value.event ?: run {
+            Toast.makeText(
+                requireContext(),
+                "Event not loaded yet. Please try again.",
+                Toast.LENGTH_SHORT
+            ).show()
+            return
+        }
+
+        val dialog = CancelEventDialog.newInstance(currentEvent) { reason ->
+            sharedViewModel.cancelEvent(
+                eventId = eventId,
+                reason = reason,
+                userId = userId,
+                onSuccess = { event ->
+                    Toast.makeText(
+                        requireContext(),
+                        "Event cancelled successfully",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    // Reload event data
+                    viewModel.loadEvent(eventId, userId)
+                },
+                onError = { error ->
+                    Toast.makeText(
+                        requireContext(),
+                        error,
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            )
+        }
+
+        dialog.show(parentFragmentManager, CancelEventDialog.TAG)
     }
 
     override fun onDestroyView() {

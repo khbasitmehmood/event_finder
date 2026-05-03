@@ -130,7 +130,9 @@ class CreateEventViewModel @Inject constructor(
                     updatedAt = null,
                     distanceKm = null,
                     isUserParticipating = false,
-                    isUserOrganizer = true
+                    isUserOrganizer = true,
+                    state = com.eventfinder.app.domain.model.EventState.SCHEDULED,
+                    publishedAt = System.currentTimeMillis()
                 )
 
                 android.util.Log.d("CreateEventViewModel", "Creating event with userId: $organizerId")

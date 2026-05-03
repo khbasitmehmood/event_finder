@@ -2,9 +2,14 @@ package com.eventfinder.app.client.organizer
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eventfinder.app.domain.model.Event
+import com.eventfinder.app.domain.model.EventLocation
 import com.eventfinder.app.domain.model.EventStats
 import com.eventfinder.app.domain.model.Ticket
 import com.eventfinder.app.domain.repository.TicketRepository
+import com.eventfinder.app.domain.usecase.CancelEventUseCase
+import com.eventfinder.app.domain.usecase.PostponeEventUseCase
+import com.eventfinder.app.domain.usecase.RescheduleEventUseCase
 import com.eventfinder.app.utils.NetworkConnectivityObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +21,10 @@ import javax.inject.Inject
 @HiltViewModel
 class ManageEventSharedViewModel @Inject constructor(
     private val ticketRepository: TicketRepository,
-    private val networkObserver: NetworkConnectivityObserver
+    private val networkObserver: NetworkConnectivityObserver,
+    private val postponeEventUseCase: PostponeEventUseCase,
+    private val rescheduleEventUseCase: RescheduleEventUseCase,
+    private val cancelEventUseCase: CancelEventUseCase
 ) : ViewModel() {
 
     private val _attendees = MutableStateFlow<List<Ticket>>(emptyList())
@@ -119,5 +127,107 @@ class ManageEventSharedViewModel @Inject constructor(
 
     fun clearError() {
         _error.value = null
+    }
+
+    fun postponeEvent(
+        eventId: String,
+        newStartTime: Long?,
+        newEndTime: Long?,
+        reason: String,
+        userId: String,
+        onSuccess: (Event) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+
+            postponeEventUseCase(
+                eventId = eventId,
+                newStartTime = newStartTime,
+                newEndTime = newEndTime,
+                reason = reason,
+                userId = userId
+            ).fold(
+                onSuccess = { event ->
+                    _isLoading.value = false
+                    onSuccess(event)
+                },
+                onFailure = { exception ->
+                    _isLoading.value = false
+                    val errorMessage = exception.message ?: "Failed to postpone event"
+                    _error.value = errorMessage
+                    onError(errorMessage)
+                }
+            )
+        }
+    }
+
+    fun rescheduleEvent(
+        eventId: String,
+        newStartTime: Long,
+        newEndTime: Long?,
+        newLocation: EventLocation?,
+        newAddress: String?,
+        reason: String,
+        userId: String,
+        onSuccess: (Event) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+
+            rescheduleEventUseCase(
+                eventId = eventId,
+                newStartTime = newStartTime,
+                newEndTime = newEndTime,
+                newLocation = newLocation,
+                newAddress = newAddress,
+                reason = reason,
+                userId = userId
+            ).fold(
+                onSuccess = { event ->
+                    _isLoading.value = false
+                    onSuccess(event)
+                },
+                onFailure = { exception ->
+                    _isLoading.value = false
+                    val errorMessage = exception.message ?: "Failed to reschedule event"
+                    _error.value = errorMessage
+                    onError(errorMessage)
+                }
+            )
+        }
+    }
+
+    fun cancelEvent(
+        eventId: String,
+        reason: String,
+        userId: String,
+        onSuccess: (Event) -> Unit,
+        onError: (String) -> Unit
+    ) {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _error.value = null
+
+            cancelEventUseCase(
+                eventId = eventId,
+                reason = reason,
+                userId = userId
+            ).fold(
+                onSuccess = { event ->
+                    _isLoading.value = false
+                    onSuccess(event)
+                },
+                onFailure = { exception ->
+                    _isLoading.value = false
+                    val errorMessage = exception.message ?: "Failed to cancel event"
+                    _error.value = errorMessage
+                    onError(errorMessage)
+                }
+            )
+        }
     }
 }

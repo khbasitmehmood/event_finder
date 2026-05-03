@@ -3,6 +3,8 @@ package com.eventfinder.app.data.source
 import com.eventfinder.app.domain.model.Event
 import com.eventfinder.app.domain.model.EventCategory
 import com.eventfinder.app.domain.model.EventLocation
+import com.eventfinder.app.domain.model.EventPostponement
+import com.eventfinder.app.domain.model.EventState
 import com.eventfinder.app.domain.model.EventVisibility
 import kotlinx.coroutines.delay
 import javax.inject.Inject
@@ -39,7 +41,9 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             mainImageUrl = "https://images.unsplash.com/photo-1540575467063-178a50c2df87",
             tags = listOf("technology", "conference", "networking"),
             visibility = EventVisibility.PUBLIC,
-            createdAt = System.currentTimeMillis()
+            createdAt = System.currentTimeMillis(),
+            state = EventState.SCHEDULED,
+            publishedAt = System.currentTimeMillis()
         ),
         Event(
             id = "2",
@@ -59,7 +63,9 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             mainImageUrl = "https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3",
             tags = listOf("music", "concert", "entertainment"),
             visibility = EventVisibility.PUBLIC,
-            createdAt = System.currentTimeMillis()
+            createdAt = System.currentTimeMillis(),
+            state = EventState.SCHEDULED,
+            publishedAt = System.currentTimeMillis()
         ),
         Event(
             id = "3",
@@ -77,7 +83,9 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             mainImageUrl = "https://images.unsplash.com/photo-1555939594-58d7cb561ad1",
             tags = listOf("food", "festival", "family"),
             visibility = EventVisibility.PUBLIC,
-            createdAt = System.currentTimeMillis()
+            createdAt = System.currentTimeMillis(),
+            state = EventState.SCHEDULED,
+            publishedAt = System.currentTimeMillis()
         ),
         Event(
             id = "4",
@@ -99,7 +107,9 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             mainImageUrl = "https://images.unsplash.com/photo-1531415074968-036ba1b575da",
             tags = listOf("sports", "cricket", "tournament"),
             visibility = EventVisibility.PUBLIC,
-            createdAt = System.currentTimeMillis()
+            createdAt = System.currentTimeMillis(),
+            state = EventState.SCHEDULED,
+            publishedAt = System.currentTimeMillis()
         ),
         Event(
             id = "5",
@@ -121,7 +131,9 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
             mainImageUrl = "https://images.unsplash.com/photo-1552664730-d307ca884978",
             tags = listOf("workshop", "marketing", "business"),
             visibility = EventVisibility.PUBLIC,
-            createdAt = System.currentTimeMillis()
+            createdAt = System.currentTimeMillis(),
+            state = EventState.SCHEDULED,
+            publishedAt = System.currentTimeMillis()
         )
     )
 
@@ -185,7 +197,9 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
         val eventWithId = event.copy(
             id = "user_event_${System.currentTimeMillis()}",
             eventId = "user_event_${System.currentTimeMillis()}",
-            createdAt = System.currentTimeMillis()
+            createdAt = System.currentTimeMillis(),
+            state = EventState.SCHEDULED, // Set to SCHEDULED when created
+            publishedAt = System.currentTimeMillis()
         )
         userCreatedEvents.add(0, eventWithId)
         return eventWithId
@@ -193,7 +207,9 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
 
     override suspend fun getUserEvents(userId: String): List<Event> {
         delay(500)
-        return userCreatedEvents.filter { it.organizerId == userId }
+        return userCreatedEvents.filter {
+            it.organizerId == userId && it.state != EventState.DRAFT
+        }
     }
 
     override suspend fun updateEvent(event: Event): Event {
@@ -220,5 +236,91 @@ class DummyEventDataSource @Inject constructor() : EventDataSource {
                 sin(dLon / 2) * sin(dLon / 2)
         val c = 2 * atan2(sqrt(a), sqrt(1 - a))
         return earthRadiusKm * c
+    }
+
+    // Phase 1: State Management - Dummy implementations
+    override suspend fun updateEventState(
+        eventId: String,
+        newState: EventState,
+        reason: String?,
+        changedBy: String?,
+        automatic: Boolean
+    ): Event {
+        delay(300)
+        // Find and update the event (dummy implementation)
+        val event = getEventById(eventId) ?: throw Exception("Event not found")
+        return event.copy(state = newState)
+    }
+
+    override suspend fun getEventsByState(state: EventState): List<Event> {
+        delay(300)
+        return dummyEvents.filter { it.state == state }
+    }
+
+    override suspend fun getEventsByStates(states: List<EventState>): List<Event> {
+        delay(300)
+        return dummyEvents.filter { it.state in states }
+    }
+
+    override suspend fun getOrganizerEventsByState(
+        organizerId: String,
+        state: EventState
+    ): List<Event> {
+        delay(300)
+        return dummyEvents.filter { it.organizerId == organizerId && it.state == state }
+    }
+
+    // Phase 2: Postponement - Dummy implementation
+    override suspend fun postponeEvent(
+        eventId: String,
+        postponement: EventPostponement
+    ): Event {
+        delay(300)
+        val event = getEventById(eventId) ?: throw Exception("Event not found")
+
+        return event.copy(
+            state = EventState.POSTPONED,
+            startTime = postponement.newStartTime ?: event.startTime,
+            endTime = postponement.newEndTime ?: event.endTime,
+            currentPostponement = postponement,
+            postponementHistory = event.postponementHistory + postponement,
+            postponementCount = event.postponementCount + 1
+        )
+    }
+
+    // Phase 3: Rescheduling - Dummy implementation
+    override suspend fun rescheduleEvent(
+        eventId: String,
+        reschedule: com.eventfinder.app.domain.model.EventReschedule
+    ): Event {
+        delay(300)
+        val event = getEventById(eventId) ?: throw Exception("Event not found")
+
+        return event.copy(
+            state = EventState.SCHEDULED,
+            startTime = reschedule.newStartTime,
+            endTime = reschedule.newEndTime ?: event.endTime,
+            location = reschedule.newLocation ?: event.location,
+            address = reschedule.newAddress ?: event.address,
+            currentReschedule = reschedule,
+            rescheduleHistory = event.rescheduleHistory + reschedule,
+            rescheduleCount = event.rescheduleCount + 1,
+            currentPostponement = null // Clear postponement if any
+        )
+    }
+
+    // Phase 4: Cancellation - Dummy implementation
+    override suspend fun cancelEvent(
+        eventId: String,
+        cancellation: com.eventfinder.app.domain.model.EventCancellation
+    ): Event {
+        delay(300)
+        val event = getEventById(eventId) ?: throw Exception("Event not found")
+
+        return event.copy(
+            state = EventState.CANCELLED,
+            cancellation = cancellation,
+            cancelledAt = cancellation.cancelledAt
+        )
     }
 }
