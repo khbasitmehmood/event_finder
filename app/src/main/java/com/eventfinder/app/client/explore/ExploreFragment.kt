@@ -120,9 +120,11 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         binding.layoutEventsSection.isVisible = state.filteredEvents.isNotEmpty()
         binding.tvEventCount.text = "${state.filteredEvents.size} events"
 
-        // Organizers
-        organizerAdapter.submitList(state.organizers.take(10))
-        binding.layoutOrganizersSection.isVisible = state.organizers.isNotEmpty()
+        // Organizers - Show all for now
+        android.util.Log.d("ExploreFragment", "Organizers count: ${state.organizers.size}")
+        organizerAdapter.submitList(state.organizers)
+        // Always show section if we have events loaded (even if extraction failed)
+        binding.layoutOrganizersSection.isVisible = state.organizers.isNotEmpty() || state.allEvents.isNotEmpty()
 
         // User interests chip
         binding.chipUserInterests.isVisible = state.userInterests.isNotEmpty()

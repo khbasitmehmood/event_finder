@@ -38,6 +38,8 @@ data class ExploreState(
     val allEvents: List<Event> = emptyList(),
     val filteredEvents: List<Event> = emptyList(),
     val organizers: List<User> = emptyList(),
+    val promotedOrganizers: List<User> = emptyList(), // TODO: Implement promoted organizers
+    val interestBasedOrganizers: List<User> = emptyList(), // TODO: Implement interest filtering
     val allCategories: List<EventCategory> = emptyList(),
     val userInterests: List<String> = emptyList(),
     val filters: ExploreFilters = ExploreFilters(),
@@ -226,12 +228,24 @@ class ExploreViewModel @Inject constructor(
 
     /**
      * Extract unique organizers from events
+     * TODO: Add interest-based filtering and promoted organizers
      */
     private fun extractOrganizers(events: List<Event>): List<User> {
+        if (events.isEmpty()) {
+            android.util.Log.d("ExploreViewModel", "No events to extract organizers from")
+            return emptyList()
+        }
+
         // Group events by organizer ID and create User objects
         val organizerMap = mutableMapOf<String, User>()
 
         events.forEach { event ->
+            // Skip if organizer ID is empty
+            if (event.organizerId.isBlank()) {
+                android.util.Log.d("ExploreViewModel", "Event ${event.title} has empty organizerId")
+                return@forEach
+            }
+
             if (!organizerMap.containsKey(event.organizerId)) {
                 // Create a minimal User object from event data
                 organizerMap[event.organizerId] = User(
@@ -239,16 +253,51 @@ class ExploreViewModel @Inject constructor(
                     email = "",
                     userType = UserType.ORGANIZER,
                     organizerProfile = com.eventfinder.app.domain.model.OrganizerProfile(
-                        organizationName = event.organizerName,
-                        contactPerson = event.organizerName,
+                        organizationName = event.organizerName.ifBlank { "Unknown Organizer" },
+                        contactPerson = event.organizerName.ifBlank { "Unknown" },
                         phoneNumber = "",
-                        logoUrl = event.organizerPhotoUrl
+                        logoUrl = event.organizerPhotoUrl,
+                        city = null // TODO: Extract from event address
                     ),
                     isProfileComplete = true
                 )
+                android.util.Log.d("ExploreViewModel", "Added organizer: ${event.organizerName} (${event.organizerId})")
             }
         }
 
-        return organizerMap.values.toList()
+        val organizers = organizerMap.values.toList()
+        android.util.Log.d("ExploreViewModel", "Extracted ${organizers.size} unique organizers from ${events.size} events")
+
+        // TODO: Future enhancement - sort by:
+        // 1. Promoted organizers (premium feature)
+        // 2. Organizers matching user interests
+        // 3. Organizers with most upcoming events
+        // 4. Organizers with highest rated events
+
+        return organizers
+    }
+
+    /**
+     * TODO: Filter organizers by user interests
+     * This will show organizers who host events in categories the user is interested in
+     */
+    private fun filterOrganizersByInterests(
+        organizers: List<User>,
+        userInterests: List<String>,
+        events: List<Event>
+    ): List<User> {
+        // Count events per organizer per interest category
+        // Return organizers sorted by relevance to user interests
+        return organizers // Placeholder for now
+    }
+
+    /**
+     * TODO: Get promoted organizers
+     * This will return organizers who have paid for promotion
+     */
+    private fun getPromotedOrganizers(organizers: List<User>): List<User> {
+        // Check organizer profile for promotion status
+        // Return promoted organizers first
+        return organizers // Placeholder for now
     }
 }
