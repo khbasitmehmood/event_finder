@@ -157,6 +157,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.btnChat.setOnClickListener {
             findNavController().navigate(R.id.chatbotFragment)
         }
+
+        binding.btnNotifications.setOnClickListener {
+            findNavController().navigate(R.id.notificationsFragment)
+        }
     }
 
     private fun navigateToEventDetail(event: Event) {

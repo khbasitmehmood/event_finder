@@ -84,6 +84,11 @@ dependencies {
     implementation(libs.androidx.swiperefreshlayout)
     ksp(libs.hilt.compiler)
 
+    // WorkManager
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.hilt.work)
+    ksp(libs.hilt.compiler)
+
     // Lifecycle
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -60,4 +60,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="yellow_golden">#FFCC00</color>
+
+    <!-- ================= NOTIFICATION COLORS ================= -->
+    <color name="notification_unread_bg">#F5F7FF</color>
+    <color name="priority_urgent_bg">#FEE2E2</color>
+    <color name="priority_high_bg">#FEF3C7</color>
 </resources>

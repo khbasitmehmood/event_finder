@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardNotification"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="12dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginEnd="12dp"
+    android:layout_marginBottom="4dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:strokeWidth="0dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp">
+
+        <!-- Notification Icon -->
+        <ImageView
+            android:id="@+id/iconNotification"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/bg_circle"
+            android:backgroundTint="?attr/colorPrimaryContainer"
+            android:contentDescription="Notification icon"
+            android:padding="8dp"
+            android:src="@drawable/ic_notifications"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorOnPrimaryContainer" />
+
+        <!-- Event Image (Optional) -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/imageEvent"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="Event image"
+            android:scaleType="centerCrop"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:shapeAppearanceOverlay="@style/ShapeAppearance.Material3.Corner.Medium"
+            tools:src="@tools:sample/backgrounds/scenic"
+            tools:visibility="visible" />
+
+        <!-- Unread Indicator -->
+        <View
+            android:id="@+id/unreadIndicator"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/bg_circle"
+            android:backgroundTint="?attr/colorPrimary"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:visibility="visible" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="8dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="?attr/textAppearanceBodyLarge"
+            android:textColor="?attr/colorOnSurface"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/unreadIndicator"
+            app:layout_constraintStart_toEndOf="@id/iconNotification"
+            app:layout_constraintTop_toTopOf="@id/iconNotification"
+            tools:text="Event Postponed" />
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/textMessage"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textAppearance="?attr/textAppearanceBodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintEnd_toEndOf="@id/textTitle"
+            app:layout_constraintStart_toStartOf="@id/textTitle"
+            app:layout_constraintTop_toBottomOf="@id/textTitle"
+            tools:text="The event has been postponed to a new date. Check details for more information." />
+
+        <!-- Time -->
+        <TextView
+            android:id="@+id/textTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            app:layout_constraintStart_toStartOf="@id/textMessage"
+            app:layout_constraintTop_toBottomOf="@id/textMessage"
+            tools:text="2h ago" />
+
+        <!-- Event Title (Optional) -->
+        <TextView
+            android:id="@+id/textEventTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceLabelMedium"
+            android:textColor="?attr/colorPrimary"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/textTime"
+            app:layout_constraintTop_toBottomOf="@id/textMessage"
+            tools:text="Summer Music Festival 2024"
+            tools:visibility="visible" />
+
+        <!-- Priority Badge -->
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPriority"
+            style="@style/Widget.Material3.Chip.Assist.Elevated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textAppearance="?attr/textAppearanceLabelSmall"
+            android:visibility="gone"
+            app:chipMinHeight="24dp"
+            app:layout_constraintStart_toStartOf="@id/textTime"
+            app:layout_constraintTop_toBottomOf="@id/textTime"
+            tools:text="Urgent"
+            tools:visibility="visible" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</com.google.android.material.card.MaterialCardView>

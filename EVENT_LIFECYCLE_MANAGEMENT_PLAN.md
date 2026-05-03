@@ -839,32 +839,114 @@ class EventLifecycleWorker @AssistedInject constructor(
 
 ---
 
-### Phase 6: Background Jobs (Priority: MEDIUM)
-**Files to Create:**
-1. ✅ EventLifecycleWorker.kt
-2. ✅ UpdateEventLifecycleUseCase.kt
+### Phase 6: Background Jobs (Priority: MEDIUM) ✅ COMPLETED
+**Status:** ✅ Fully Implemented
 
-**Files to Modify:**
-3. ✅ Application class (schedule worker)
+**Files Created:**
+1. ✅ EventStateUpdateWorker.kt - Background worker for automatic state updates
+2. ✅ WorkManagerInitializer.kt - Schedules periodic workers
+3. ✅ HiltWorkerConfiguration.kt - Hilt + WorkManager integration
+4. ✅ EventStateUpdateTrigger.kt - Manual trigger for testing
+
+**Files Modified:**
+5. ✅ EventFinderApplication.kt - Initialize WorkManager on app startup
+6. ✅ build.gradle.kts - Added WorkManager dependencies
+7. ✅ libs.versions.toml - Added WorkManager versions
+
+**Features Implemented:**
+- ✅ Automatic SCHEDULED → LIVE transition when event starts
+- ✅ Automatic LIVE → COMPLETED transition when event ends
+- ✅ Periodic worker runs every 15 minutes
+- ✅ Notifies organizers when events start and end
+- ✅ Uses Hilt for dependency injection in workers
+- ✅ Network connectivity constraint (requires internet)
+- ✅ 5-minute grace period to account for timing variations
+- ✅ Manual trigger available for testing
+
+**Implementation Details:**
+- WorkManager PeriodicWorkRequest with 15-minute interval
+- HiltWorker annotation enables @Inject in Worker classes
+- Configuration.Provider interface in Application class for Hilt integration
+- Fetches events by state (SCHEDULED, LIVE) and checks timestamps
+- Updates event state via repository
+- Sends notifications via NotificationService
+- Logs all state transitions for debugging
+- ExistingPeriodicWorkPolicy.KEEP prevents duplicate schedules
+
+**Notification Integration:**
+- EVENT_STARTED notification sent to organizer when SCHEDULED → LIVE
+- EVENT_ENDED_MARK_COMPLETE notification sent when LIVE → COMPLETED
+- Metadata includes attendee count for completed events
 
 **Testing:**
-- Worker execution
-- Batch updates
-- Performance with large datasets
+- Worker execution via WorkManager periodic schedule
+- Manual trigger via EventStateUpdateTrigger.triggerImmediateUpdate()
+- View logs with tag "EventStateUpdateWorker"
 
-**Time Estimate:** 2-3 hours
+**Time Taken:** ~1.5 hours
 
 ---
 
-### Phase 7: UI Polish (Priority: LOW)
-**Enhancements:**
-1. ✅ State badges everywhere
-2. ✅ Postponement notices
-3. ✅ Reschedule history view
-4. ✅ Cancellation notices
-5. ✅ Analytics dashboard updates
+### Phase 7: Notification UI & Badge Display (Priority: MEDIUM) ✅ COMPLETED
+**Status:** ✅ Fully Implemented
 
-**Time Estimate:** 3-4 hours
+**Files Created:**
+1. ✅ NotificationsFragment.kt - Main notifications screen
+2. ✅ NotificationsViewModel.kt - ViewModel with StateFlow
+3. ✅ NotificationAdapter.kt - RecyclerView adapter with DiffUtil
+4. ✅ fragment_notifications.xml - Layout with sections and states
+5. ✅ item_notification.xml - Notification item card layout
+6. ✅ menu_notifications.xml - Menu with "Mark all as read"
+7. ✅ BadgeUtils.kt - Utility for managing badges
+
+**Files Modified:**
+8. ✅ user_main_graph.xml - Added notificationsFragment destination
+9. ✅ organizer_main_graph.xml - Added notificationsFragment destination
+10. ✅ fragment_home.xml - Added notification icon button
+11. ✅ HomeFragment.kt - Added navigation to notifications
+12. ✅ colors.xml - Added notification colors
+
+**Features Implemented:**
+- ✅ Full notification list UI with unread/read sections
+- ✅ Pull-to-refresh support
+- ✅ Mark single notification as read on tap
+- ✅ Mark all as read menu action
+- ✅ Unread indicator (blue dot) on cards
+- ✅ Priority badges for HIGH/URGENT notifications
+- ✅ Event image/icon display
+- ✅ Relative time display (2h ago, 1d ago)
+- ✅ Empty state with helpful message
+- ✅ Loading state with progress indicator
+- ✅ Error state handling
+- ✅ Notification icon in HomeFragment header
+- ✅ Navigation from home to notifications screen
+
+**UI/UX Details:**
+- Unread notifications have light blue background (#F5F7FF)
+- Two-section layout: "Unread" and "Earlier"
+- Material 3 card design with 12dp corner radius
+- Priority chips with color coding:
+  - URGENT: Red background (#FEE2E2)
+  - HIGH: Yellow background (#FEF3C7)
+- Dynamic icon based on notification type
+- Event title and image shown when available
+- Smooth scrolling with NestedScrollView
+- SwipeRefreshLayout integration
+
+**State Management:**
+- Uses sealed class NotificationsUiState (Loading, Empty, Success, Error)
+- StateFlow for reactive updates
+- Separate lists for unread vs all notifications
+- Unread count tracking in ViewModel
+
+**Future Enhancements (TODO):**
+- Deep linking to event detail from notification
+- Delete notification with swipe gesture
+- Filter notifications by type
+- Notification settings screen
+- Toolbar badge with unread count
+
+**Time Taken:** ~2 hours
 
 ---
 
