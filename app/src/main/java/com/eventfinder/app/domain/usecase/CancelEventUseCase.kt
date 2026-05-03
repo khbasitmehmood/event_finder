@@ -4,6 +4,7 @@ import com.eventfinder.app.domain.model.Event
 import com.eventfinder.app.domain.model.EventCancellation
 import com.eventfinder.app.domain.model.RefundStatus
 import com.eventfinder.app.domain.repository.EventRepository
+import com.eventfinder.app.domain.service.NotificationService
 import javax.inject.Inject
 
 /**
@@ -11,7 +12,8 @@ import javax.inject.Inject
  * Handles cancellation logic and initiates refunds for paid events
  */
 class CancelEventUseCase @Inject constructor(
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val notificationService: NotificationService
 ) {
     /**
      * Cancel an event with validation
@@ -80,10 +82,21 @@ class CancelEventUseCase @Inject constructor(
             )
 
             // Cancel the event
-            eventRepository.cancelEvent(
+            val result = eventRepository.cancelEvent(
                 eventId = eventId,
                 cancellation = cancellation
             )
+
+            // Send notifications to attendees
+            result.onSuccess { updatedEvent ->
+                notificationService.notifyEventCancelled(
+                    event = updatedEvent,
+                    reason = reason,
+                    refundStatus = refundStatus.getDisplayName()
+                )
+            }
+
+            result
         } catch (e: Exception) {
             Result.failure(e)
         }

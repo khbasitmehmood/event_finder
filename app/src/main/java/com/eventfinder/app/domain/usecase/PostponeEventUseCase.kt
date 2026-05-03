@@ -4,6 +4,7 @@ import com.eventfinder.app.domain.model.Event
 import com.eventfinder.app.domain.model.EventPostponement
 import com.eventfinder.app.domain.model.EventState
 import com.eventfinder.app.domain.repository.EventRepository
+import com.eventfinder.app.domain.service.NotificationService
 import javax.inject.Inject
 
 /**
@@ -11,7 +12,8 @@ import javax.inject.Inject
  */
 class PostponeEventUseCase @Inject constructor(
     private val eventRepository: EventRepository,
-    private val updateEventStateUseCase: UpdateEventStateUseCase
+    private val updateEventStateUseCase: UpdateEventStateUseCase,
+    private val notificationService: NotificationService
 ) {
     /**
      * Postpone an event with validation
@@ -100,10 +102,22 @@ class PostponeEventUseCase @Inject constructor(
             )
 
             // Postpone the event
-            eventRepository.postponeEvent(
+            val result = eventRepository.postponeEvent(
                 eventId = eventId,
                 postponement = postponement
             )
+
+            // Send notifications to attendees
+            result.onSuccess { updatedEvent ->
+                notificationService.notifyEventPostponed(
+                    event = updatedEvent,
+                    reason = reason,
+                    newStartTime = newStartTime,
+                    newEndTime = newEndTime
+                )
+            }
+
+            result
         } catch (e: Exception) {
             Result.failure(e)
         }

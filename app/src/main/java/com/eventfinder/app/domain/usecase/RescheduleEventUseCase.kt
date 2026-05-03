@@ -4,6 +4,7 @@ import com.eventfinder.app.domain.model.Event
 import com.eventfinder.app.domain.model.EventLocation
 import com.eventfinder.app.domain.model.EventReschedule
 import com.eventfinder.app.domain.repository.EventRepository
+import com.eventfinder.app.domain.service.NotificationService
 import javax.inject.Inject
 
 /**
@@ -11,7 +12,8 @@ import javax.inject.Inject
  * Allows changing date, time, and optionally location
  */
 class RescheduleEventUseCase @Inject constructor(
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val notificationService: NotificationService
 ) {
     /**
      * Reschedule an event with validation
@@ -115,10 +117,21 @@ class RescheduleEventUseCase @Inject constructor(
             )
 
             // Reschedule the event
-            eventRepository.rescheduleEvent(
+            val result = eventRepository.rescheduleEvent(
                 eventId = eventId,
                 reschedule = reschedule
             )
+
+            // Send notifications to attendees
+            result.onSuccess { updatedEvent ->
+                notificationService.notifyEventRescheduled(
+                    event = updatedEvent,
+                    reason = reason,
+                    changedFields = reschedule.getChangedFields().map { it.getDisplayName() }
+                )
+            }
+
+            result
         } catch (e: Exception) {
             Result.failure(e)
         }
