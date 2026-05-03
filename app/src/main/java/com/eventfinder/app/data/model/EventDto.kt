@@ -41,6 +41,7 @@ data class EventDto(
 
     val tags: List<String> = emptyList(),
     val visibility: String = "PUBLIC",
+    val requiresTicket: Boolean = false,
 
     val createdAt: Timestamp? = null,
     val updatedAt: Timestamp? = null

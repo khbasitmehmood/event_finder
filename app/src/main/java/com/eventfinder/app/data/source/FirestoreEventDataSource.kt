@@ -32,7 +32,7 @@ class FirestoreEventDataSource @Inject constructor(
             // Note: Removed orderBy to avoid requiring a composite index in Firestore
             // We will sort client-side instead
             val snapshot = firestore.collection(EVENTS_COLLECTION)
-                .whereEqualTo(FIELD_VISIBILITY, "PUBLIC")
+//                .whereEqualTo(FIELD_VISIBILITY, "PUBLIC")
                 .get()
                 .await()
 
@@ -158,7 +158,7 @@ class FirestoreEventDataSource @Inject constructor(
 
             // Note: Removed orderBy to avoid requiring a composite index in Firestore
             val snapshot = firestore.collection(EVENTS_COLLECTION)
-                .whereEqualTo("organizerId", userId)
+//                .whereEqualTo("organizerId", userId)
                 .get()
                 .await()
 

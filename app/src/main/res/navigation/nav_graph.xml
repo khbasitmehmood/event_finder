@@ -88,4 +88,16 @@
         android:name="com.eventfinder.app.client.createevent.MapLocationPickerFragment"
         android:label="Map Picker"
         tools:layout="@layout/fragment_map_location_picker" />
+
+    <fragment
+        android:id="@+id/ticketDetailFragment"
+        android:name="com.eventfinder.app.client.tickets.TicketDetailFragment"
+        android:label="Ticket Detail"
+        tools:layout="@layout/fragment_ticket_detail" />
+
+    <fragment
+        android:id="@+id/qrScannerFragment"
+        android:name="com.eventfinder.app.client.organizer.QRScannerFragment"
+        android:label="Scan QR Code"
+        tools:layout="@layout/fragment_qr_scanner" />
 </navigation>

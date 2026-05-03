@@ -61,7 +61,7 @@ class UpcomingEventAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Event, newItem: Event): Boolean {
-            return oldItem == newItem
+            return oldItem.createdAt == newItem.createdAt
         }
     }
 }

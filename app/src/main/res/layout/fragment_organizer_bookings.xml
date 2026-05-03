@@ -1,15 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/swipeRefresh"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/md_background">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="Organizer Bookings"
-        android:textAppearance="@style/TextAppearance.App.TitleLarge" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="?attr/colorSurface">
 
-</FrameLayout>
+        <!-- Search Bar -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_large"
+            app:boxCornerRadiusTopStart="@dimen/corner_radius_xlarge"
+            app:boxCornerRadiusTopEnd="@dimen/corner_radius_xlarge"
+            app:boxCornerRadiusBottomStart="@dimen/corner_radius_xlarge"
+            app:boxCornerRadiusBottomEnd="@dimen/corner_radius_xlarge"
+            app:boxStrokeWidth="0dp"
+            app:boxBackgroundColor="?attr/colorSurfaceVariant"
+            app:startIconDrawable="@drawable/ic_search"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/searchInput"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Search by name, email, or ticket ID"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Filter Chips -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none"
+            android:paddingHorizontal="@dimen/spacing_large"
+            android:clipToPadding="false">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All"
+                    android:checked="true"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_marginEnd="@dimen/spacing_small"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipPaid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Paid"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_marginEnd="@dimen/spacing_small"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipFree"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Free"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_marginEnd="@dimen/spacing_small"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipPending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Pending"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_marginEnd="@dimen/spacing_small"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCheckedIn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Checked In"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"
+                    android:layout_marginEnd="@dimen/spacing_small"/>
+
+                <com.google.android.material.chip.Chip
+                    android:id="@+id/chipCancelled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cancelled"
+                    style="@style/Widget.MaterialComponents.Chip.Choice"/>
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <!-- Bookings List -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBookings"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/spacing_medium"
+            android:clipToPadding="false"
+            android:paddingBottom="@dimen/spacing_large"/>
+
+        <!-- Empty State -->
+        <include
+            android:id="@+id/layoutEmpty"
+            layout="@layout/view_empty_state_simple"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"/>
+
+    </LinearLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 

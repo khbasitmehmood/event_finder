@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -18,6 +19,7 @@ import com.eventfinder.app.R
 import com.eventfinder.app.client.home.EventDetailViewModel
 import com.eventfinder.app.databinding.FragmentManageEventBinding
 import com.eventfinder.app.domain.model.Event
+import com.eventfinder.app.utils.UserPreferences
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayoutMediator
@@ -26,6 +28,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 import kotlin.math.abs
 
 @AndroidEntryPoint
@@ -35,7 +38,11 @@ class ManageEventFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: EventDetailViewModel by viewModels()
+    private val sharedViewModel: ManageEventSharedViewModel by activityViewModels()
     private var currentEventTitle: String = ""
+
+    @Inject
+    lateinit var userPreferences: UserPreferences
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -62,6 +69,10 @@ class ManageEventFragment : Fragment() {
             }
         }
 
+        binding.fabScanQR.setOnClickListener {
+            findNavController().navigate(R.id.qrScannerFragment)
+        }
+
         val adapter = ManageEventPagerAdapter(this)
         binding.viewPager.adapter = adapter
 
@@ -75,8 +86,12 @@ class ManageEventFragment : Fragment() {
         }.attach()
 
         val eventId = arguments?.getString("EVENT_ID")
+        val userId = userPreferences.getUserId()
+
         if (eventId != null) {
-            viewModel.loadEvent(eventId)
+            viewModel.loadEvent(eventId, userId)
+            // Load data for child fragments
+            sharedViewModel.loadEventData(eventId)
         } else {
             Toast.makeText(context, "Event not found", Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
@@ -85,14 +100,28 @@ class ManageEventFragment : Fragment() {
         observeViewModel()
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Refresh data when returning from QR scanner
+        sharedViewModel.refreshData()
+    }
+
     private fun observeViewModel() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.uiState.collect { state ->
-                    if (state.error != null) {
-                        Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
-                    } else if (state.event != null) {
-                        bindEventData(state.event)
+                launch {
+                    viewModel.uiState.collect { state ->
+                        if (state.error != null) {
+                            Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
+                        } else if (state.event != null) {
+                            bindEventData(state.event)
+                        }
+                    }
+                }
+
+                launch {
+                    sharedViewModel.isOnline.collect { isOnline ->
+                        binding.cardOffline.isVisible = !isOnline
                     }
                 }
             }
@@ -146,10 +175,15 @@ class ManageEventFragment : Fragment() {
         override fun getItemCount(): Int = 3
 
         override fun createFragment(position: Int): Fragment {
+            val eventId = arguments?.getString("EVENT_ID")
+            val bundle = Bundle().apply {
+                putString("EVENT_ID", eventId)
+            }
+
             return when (position) {
-                0 -> ManageEventOverviewFragment()
-                1 -> ManageEventAttendeesFragment()
-                2 -> ManageEventInsightsFragment()
+                0 -> ManageEventOverviewFragment().apply { arguments = bundle }
+                1 -> ManageEventAttendeesFragment().apply { arguments = bundle }
+                2 -> ManageEventInsightsFragment().apply { arguments = bundle }
                 else -> throw IllegalArgumentException("Invalid position")
             }
         }

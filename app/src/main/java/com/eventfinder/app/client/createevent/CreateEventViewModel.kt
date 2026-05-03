@@ -24,7 +24,8 @@ import javax.inject.Inject
 class CreateEventViewModel @Inject constructor(
     private val createEventUseCase: CreateEventUseCase,
     private val getEventCategoriesUseCase: GetEventCategoriesUseCase,
-    private val getCurrentUserUseCase: GetCurrentUserUseCase
+    private val getCurrentUserUseCase: GetCurrentUserUseCase,
+    private val draftPreferences: com.eventfinder.app.data.local.DraftPreferences
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<CreateEventUiState>(CreateEventUiState.Idle)
@@ -90,7 +91,9 @@ class CreateEventViewModel @Inject constructor(
         currency: String?,
         organizerId: String,
         organizerName: String,
-        tags: List<String> = emptyList()
+        tags: List<String> = emptyList(),
+        visibility: EventVisibility = EventVisibility.PUBLIC,
+        requiresTicket: Boolean = false
     ) {
         viewModelScope.launch {
             _uiState.value = CreateEventUiState.Loading
@@ -121,7 +124,8 @@ class CreateEventViewModel @Inject constructor(
                     imageUrls = generateDummyImageUrls(category),
                     mainImageUrl = generateDummyImageUrls(category).firstOrNull(),
                     tags = tags,
-                    visibility = EventVisibility.PUBLIC,
+                    visibility = visibility,
+                    requiresTicket = requiresTicket,
                     createdAt = System.currentTimeMillis(),
                     updatedAt = null,
                     distanceKm = null,
@@ -154,19 +158,81 @@ class CreateEventViewModel @Inject constructor(
     }
 
     /**
-     * Save event as draft (for future implementation)
+     * Save event as draft to local storage
      */
     fun saveDraft(
         title: String,
         description: String?,
-        category: String?
+        selectedCategories: List<EventCategory>,
+        startTimeMillis: Long?,
+        endTimeMillis: Long?,
+        locationName: String?,
+        latitude: Double?,
+        longitude: Double?,
+        address: String?,
+        maxParticipants: Int?,
+        isFree: Boolean,
+        price: Double?,
+        currency: String?,
+        organizerId: String,
+        tags: List<String>,
+        visibility: EventVisibility,
+        requiresTicket: Boolean
     ) {
         viewModelScope.launch {
             _draftState.value = DraftState.Saving
-            // TODO: Implement draft saving to local storage
-            kotlinx.coroutines.delay(1000)
-            _draftState.value = DraftState.Saved
+
+            try {
+                val draft = com.eventfinder.app.domain.model.EventDraft(
+                    title = title.trim(),
+                    description = description?.trim(),
+                    selectedCategories = selectedCategories,
+                    startTimeMillis = startTimeMillis,
+                    endTimeMillis = endTimeMillis,
+                    locationName = locationName,
+                    latitude = latitude,
+                    longitude = longitude,
+                    address = address,
+                    maxParticipants = maxParticipants,
+                    isFree = isFree,
+                    price = price,
+                    currency = currency,
+                    tags = tags,
+                    visibility = visibility,
+                    requiresTicket = requiresTicket,
+                    organizerId = organizerId
+                )
+
+                draftPreferences.saveDraft(draft)
+
+                _draftState.value = DraftState.Saved
+            } catch (e: Exception) {
+                _draftState.value = DraftState.Error(
+                    e.message ?: "Failed to save draft"
+                )
+            }
         }
+    }
+
+    /**
+     * Load a draft by ID
+     */
+    fun loadDraft(draftId: String): com.eventfinder.app.domain.model.EventDraft? {
+        return draftPreferences.getDraft(draftId)
+    }
+
+    /**
+     * Get all saved drafts
+     */
+    fun getAllDrafts(): List<com.eventfinder.app.domain.model.EventDraft> {
+        return draftPreferences.getAllDrafts()
+    }
+
+    /**
+     * Delete a specific draft
+     */
+    fun deleteDraft(draftId: String) {
+        draftPreferences.deleteDraft(draftId)
     }
 
     /**

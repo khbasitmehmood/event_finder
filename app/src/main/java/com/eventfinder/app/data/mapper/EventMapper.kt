@@ -64,6 +64,7 @@ object EventMapper {
 
             tags = dto.tags,
             visibility = safeValueOfVisibility(dto.visibility),
+            requiresTicket = dto.requiresTicket,
 
             createdAt = dto.createdAt?.toDate()?.time ?: 0L,
             updatedAt = dto.updatedAt?.toDate()?.time
@@ -114,6 +115,7 @@ object EventMapper {
 
             tags = event.tags,
             visibility = event.visibility.name,
+            requiresTicket = event.requiresTicket,
 
             createdAt = Timestamp(event.createdAt / 1000, ((event.createdAt % 1000) * 1000000).toInt()),
             updatedAt = event.updatedAt?.let { Timestamp(it / 1000, ((it % 1000) * 1000000).toInt()) }

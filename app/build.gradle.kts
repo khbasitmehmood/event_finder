@@ -10,6 +10,12 @@ android {
     namespace = "com.eventfinder.app"
     compileSdk = 35
 
+    // Enable 16KB page size support (AGP 8.7+)
+    @Suppress("UnstableApiUsage")
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         applicationId = "com.eventfinder.app"
         minSdk = 24
@@ -18,6 +24,29 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        ndk {
+            //noinspection ChromeOsAbiSupport
+            abiFilters.addAll(listOf("armeabi-v7a", "arm64-v8a", "x86", "x86_64"))
+        }
+    }
+
+    packaging {
+        jniLibs {
+            useLegacyPackaging = true
+            // Keep uncompressed for 16KB alignment
+            keepDebugSymbols += listOf("**/*.so")
+            excludes += setOf(
+                "META-INF/DEPENDENCIES",
+                "META-INF/LICENSE",
+                "META-INF/LICENSE.txt",
+                "META-INF/license.txt",
+                "META-INF/NOTICE",
+                "META-INF/NOTICE.txt",
+                "META-INF/notice.txt",
+                "META-INF/ASL2.0"
+            )
+        }
     }
 
     buildTypes {
@@ -71,6 +100,25 @@ dependencies {
 
     // Image Loading - Coil
     implementation(libs.coil)
+
+    // QR Code Generation
+    implementation(libs.zxing.core)
+    implementation(libs.zxing.android.embedded)
+
+    // CameraX
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+
+    // ML Kit Barcode Scanning
+    implementation(libs.mlkit.barcode.scanning)
+
+    // Guava (required by CameraX)
+    implementation(libs.guava)
+
+    // Gson for JSON serialization
+    implementation(libs.gson)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

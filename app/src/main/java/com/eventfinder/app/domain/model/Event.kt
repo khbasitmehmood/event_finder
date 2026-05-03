@@ -34,6 +34,7 @@ data class Event(
 
     val tags: List<String> = emptyList(),
     val visibility: EventVisibility = EventVisibility.PUBLIC,
+    val requiresTicket: Boolean = false,
 
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long? = null,

@@ -453,6 +453,104 @@
                     android:textColor="@color/md_primary" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Event Visibility Section -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:text="Event Type"
+                android:textAppearance="@style/TextAppearance.App.TitleSmall" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/toggleGroupVisibility"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_small"
+                app:checkedButton="@+id/btnPublic"
+                app:selectionRequired="true"
+                app:singleSelection="true">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPublic"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Public" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPrivate"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Private" />
+
+            </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <!-- Info Text -->
+            <TextView
+                android:id="@+id/tvVisibilityInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:text="Public: Anyone can see and join\nPrivate: Requires ticket for entry"
+                android:textAppearance="@style/TextAppearance.App.BodySmall"
+                android:textColor="@color/text_secondary" />
+
+            <!-- Requires Ticket Toggle (Only for Private Events) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardRequiresTicket"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_xlarge"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/md_surface_variant"
+                app:cardCornerRadius="@dimen/corner_radius_medium"
+                app:cardElevation="0dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_large">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Requires QR Ticket"
+                            android:textAppearance="@style/TextAppearance.App.TitleSmall"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Users will receive a digital ticket with QR code for check-in"
+                            android:textAppearance="@style/TextAppearance.App.BodySmall"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <com.google.android.material.switchmaterial.SwitchMaterial
+                        android:id="@+id/switchRequiresTicket"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:checked="true" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
         </LinearLayout>
 
     </androidx.core.widget.NestedScrollView>

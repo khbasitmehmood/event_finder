@@ -25,7 +25,9 @@ data class HomeUiState(
     val user: User? = null,
     val userEvents: List<Event> = emptyList(),
     val featuredEvents: List<Event> = emptyList(),
+    val dateFilteredEvents: List<Event> = emptyList(),
     val userCategories: List<EventCategory> = emptyList(),
+    val selectedDate: Long = System.currentTimeMillis(),
     val isLoadingUserEvents: Boolean = false,
     val isLoadingFeatured: Boolean = false,
     val error: String? = null
@@ -117,7 +119,7 @@ class HomeViewModel @Inject constructor(
             onSuccess = { events ->
                 _uiState.update { 
                     it.copy(
-                        featuredEvents = events.take(3), 
+                        featuredEvents = events.take(4),
                         isLoadingFeatured = false
                     ) 
                 }
@@ -135,5 +137,30 @@ class HomeViewModel @Inject constructor(
 
     fun clearError() {
         _uiState.update { it.copy(error = null) }
+    }
+
+    /**
+     * Filter events by selected date
+     */
+    fun selectDate(dateMillis: Long) {
+        _uiState.update { state ->
+            val filtered = state.featuredEvents.filter { event ->
+                isSameDay(event.startTime, dateMillis)
+            }
+            state.copy(
+                selectedDate = dateMillis,
+                dateFilteredEvents = filtered
+            )
+        }
+    }
+
+    /**
+     * Check if two timestamps are on the same day
+     */
+    private fun isSameDay(timestamp1: Long, timestamp2: Long): Boolean {
+        val cal1 = java.util.Calendar.getInstance().apply { timeInMillis = timestamp1 }
+        val cal2 = java.util.Calendar.getInstance().apply { timeInMillis = timestamp2 }
+        return cal1.get(java.util.Calendar.YEAR) == cal2.get(java.util.Calendar.YEAR) &&
+                cal1.get(java.util.Calendar.DAY_OF_YEAR) == cal2.get(java.util.Calendar.DAY_OF_YEAR)
     }
 }

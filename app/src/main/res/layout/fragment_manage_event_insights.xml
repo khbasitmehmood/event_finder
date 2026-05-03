@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<androidx.core.widget.NestedScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?attr/colorSurface"
@@ -36,10 +41,11 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/tvTotalBookings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_small"
-                    android:text="132"
+                    android:text="0"
                     android:textAppearance="@style/TextAppearance.App.TitleLarge"
                     android:textColor="?attr/colorOnSurface"
                     tools:text="132" />
@@ -60,10 +66,11 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/tvPaidBookings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_small"
-                    android:text="112"
+                    android:text="0"
                     android:textAppearance="@style/TextAppearance.App.TitleLarge"
                     android:textColor="?attr/colorOnSurface"
                     tools:text="112" />
@@ -84,10 +91,11 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/tvFreeBookings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_small"
-                    android:text="16"
+                    android:text="0"
                     android:textAppearance="@style/TextAppearance.App.TitleLarge"
                     android:textColor="@color/md_primary"
                     tools:text="16" />
@@ -108,10 +116,11 @@
                     android:textSize="10sp" />
 
                 <TextView
+                    android:id="@+id/tvPendingBookings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_small"
-                    android:text="4"
+                    android:text="0"
                     android:textAppearance="@style/TextAppearance.App.TitleLarge"
                     android:textColor="@color/md_secondary"
                     tools:text="4" />
@@ -140,9 +149,10 @@
             android:orientation="horizontal">
 
             <TextView
+                android:id="@+id/tvCapacityFraction"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="132 / 200"
+                android:text="0 / 200"
                 android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 android:textColor="@color/md_primary"
                 tools:text="132 / 200 " />
@@ -156,16 +166,18 @@
         </LinearLayout>
 
         <ProgressBar
+            android:id="@+id/progressCapacity"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="@dimen/spacing_medium"
             android:layout_marginTop="@dimen/spacing_medium"
             android:max="100"
-            android:progress="66"
+            android:progress="0"
             android:progressBackgroundTint="?attr/colorSurfaceVariant"
             android:progressTint="@color/md_primary" />
 
         <TextView
+            android:id="@+id/tvTicketsRemaining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_medium"
@@ -204,9 +216,10 @@
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
+                android:id="@+id/tvTotalRevenue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$4,789"
+                android:text="PKR 0.00"
                 android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 android:textColor="@color/md_primary"
                 tools:text="$4,789" />
@@ -227,9 +240,10 @@
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
             <TextView
+                android:id="@+id/tvPaidRevenue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$4,320"
+                android:text="PKR 0.00"
                 android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 android:textColor="@color/md_primary"
                 tools:text="$4,320" />
@@ -250,9 +264,10 @@
                 android:textColor="?attr/colorOnSurfaceVariant" />
 
             <TextView
+                android:id="@+id/tvPendingRevenue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="$469"
+                android:text="PKR 0.00"
                 android:textAppearance="@style/TextAppearance.App.TitleMedium"
                 android:textColor="@color/md_secondary"
                 tools:text="$469" />
@@ -288,6 +303,7 @@
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
+                android:id="@+id/tvGeneralAdmission"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.App.BodyMedium"
@@ -297,12 +313,13 @@
         </LinearLayout>
 
         <ProgressBar
+            android:id="@+id/progressGeneralAdmission"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="@dimen/spacing_medium"
             android:layout_marginTop="@dimen/spacing_medium"
             android:max="100"
-            android:progress="64"
+            android:progress="0"
             android:progressBackgroundTint="?attr/colorSurfaceVariant"
             android:progressTint="@color/md_primary" />
 
@@ -321,6 +338,7 @@
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
+                android:id="@+id/tvVip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.App.BodyMedium"
@@ -330,14 +348,91 @@
         </LinearLayout>
 
         <ProgressBar
+            android:id="@+id/progressVip"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="match_parent"
             android:layout_height="@dimen/spacing_medium"
             android:layout_marginTop="@dimen/spacing_medium"
             android:max="100"
-            android:progress="72"
+            android:progress="0"
             android:progressBackgroundTint="?attr/colorSurfaceVariant"
             android:progressTint="@color/md_secondary" />
 
+        <!-- Checked In Section -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Checked In"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurface" />
+
+            <TextView
+                android:id="@+id/tvCheckedIn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                android:textColor="?attr/colorOnSurfaceVariant"
+                android:text="0 checked in"
+                tools:text="45 checked in" />
+
+            <TextView
+                android:id="@+id/tvCheckedInPercentage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                android:textColor="@color/md_tertiary"
+                android:text="0%"
+                tools:text="34%" />
+        </LinearLayout>
+
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
+
+    <!-- Empty State -->
+    <LinearLayout
+        android:id="@+id/layoutEmpty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/ic_analytics"
+            android:alpha="0.3"
+            app:tint="?attr/colorOnSurfaceVariant"
+            android:contentDescription="No data" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_large"
+            android:text="No Data Yet"
+            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+            android:textColor="?attr/colorOnSurface" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="Statistics will appear when\npeople purchase tickets"
+            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+            android:textColor="?attr/colorOnSurfaceVariant"
+            android:gravity="center"
+            android:maxWidth="280dp" />
+
+    </LinearLayout>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.provider.CalendarContract
 import android.view.View
 import android.widget.Toast
+import androidx.core.os.bundleOf
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -18,12 +19,17 @@ import coil.transform.CircleCropTransformation
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentEventDetailBinding
 import com.eventfinder.app.domain.model.Event
+import com.eventfinder.app.domain.model.EventVisibility
+import com.eventfinder.app.domain.model.TicketStatus
+import com.eventfinder.app.utils.UserPreferences
 import com.google.android.material.chip.Chip
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
@@ -33,15 +39,19 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
 
     private val viewModel: EventDetailViewModel by viewModels()
 
+    @Inject
+    lateinit var userPreferences: UserPreferences
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentEventDetailBinding.bind(view)
 
         // Receive data from Bundle
         val eventId = arguments?.getString("EVENT_ID")
-        
+        val userId = userPreferences.getUserId()
+
         if (eventId != null) {
-            viewModel.loadEvent(eventId)
+            viewModel.loadEvent(eventId, userId)
         } else {
             Toast.makeText(context, "Event not found", Toast.LENGTH_SHORT).show()
             findNavController().navigateUp()
@@ -94,7 +104,11 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
                 startActivity(browserIntent)
             }
         }
-        
+
+        binding.btnRegister.setOnClickListener {
+            handleTicketAction()
+        }
+
         observeViewModel()
     }
 
@@ -118,10 +132,116 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
                         Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
                     } else if (state.event != null) {
                         bindEventData(state.event)
+                        updateActionButton(state.event, state.userTicket)
+                    }
+
+                    // Handle purchase success
+                    if (state.purchaseSuccess) {
+                        showTicketPurchasedDialog()
+                        viewModel.resetPurchaseSuccess()
+                    }
+
+                    // Update button loading state
+                    binding.btnRegister.isEnabled = !state.isPurchasing
+                    if (state.isPurchasing) {
+                        binding.btnRegister.text = "Processing..."
                     }
                 }
             }
         }
+    }
+
+    private fun updateActionButton(event: Event, userTicket: com.eventfinder.app.domain.model.Ticket?) {
+        when {
+            userTicket != null -> {
+                // User already has a ticket
+                when (userTicket.status) {
+                    TicketStatus.CHECKED_IN -> {
+                        binding.btnRegister.text = "Checked In ✓"
+                        binding.btnRegister.isEnabled = false
+                    }
+                    TicketStatus.CANCELLED -> {
+                        binding.btnRegister.text = "Ticket Cancelled"
+                        binding.btnRegister.isEnabled = false
+                    }
+                    else -> {
+                        binding.btnRegister.text = "View Ticket"
+                        binding.btnRegister.isEnabled = true
+                    }
+                }
+            }
+            event.visibility == EventVisibility.PUBLIC && !event.requiresTicket -> {
+                binding.btnRegister.text = "I am going"
+            }
+            event.visibility == EventVisibility.PRIVATE && event.requiresTicket -> {
+                if (event.isFree) {
+                    binding.btnRegister.text = "Get Free Ticket"
+                } else {
+                    binding.btnRegister.text = "Buy Ticket - ${event.currency} ${event.price}"
+                }
+            }
+            else -> {
+                binding.btnRegister.text = "Register"
+            }
+        }
+    }
+
+    private fun handleTicketAction() {
+        val state = viewModel.uiState.value
+        val event = state.event ?: return
+
+        // If user already has a ticket, navigate to ticket detail
+        if (state.userTicket != null) {
+            val bundle = bundleOf("TICKET_ID" to state.userTicket.ticketId)
+            findNavController().navigate(R.id.ticketDetailFragment, bundle)
+            return
+        }
+
+        // Otherwise, purchase/reserve ticket
+        val userId = userPreferences.getUserId()
+        val userName = userPreferences.getUserName()
+        val userEmail = userPreferences.getUserEmail() ?: ""
+
+        // Show confirmation dialog
+        val actionText = when {
+            event.visibility == EventVisibility.PUBLIC -> "reserve your spot"
+            event.isFree -> "get your free ticket"
+            else -> "purchase this ticket"
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Confirm Registration")
+            .setMessage("Are you sure you want to $actionText for \"${event.title}\"?")
+            .setPositiveButton("Confirm") { _, _ ->
+                viewModel.purchaseTicket(event, userId, userName, userEmail)
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
+
+    private fun showTicketPurchasedDialog() {
+        val event = viewModel.uiState.value.event ?: return
+        val isReservation = event.visibility == EventVisibility.PUBLIC
+
+        val title = if (isReservation) "Reservation Confirmed!" else "Ticket Purchased!"
+        val message = if (isReservation) {
+            "You're registered for \"${event.title}\". See you there!"
+        } else {
+            "Your ticket for \"${event.title}\" is ready. Check your tickets to view the QR code."
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle(title)
+            .setMessage(message)
+            .setPositiveButton("View Ticket") { _, _ ->
+                val ticket = viewModel.uiState.value.userTicket
+                if (ticket != null) {
+                    val bundle = bundleOf("TICKET_ID" to ticket.ticketId)
+                    findNavController().navigate(R.id.ticketDetailFragment, bundle)
+                }
+            }
+            .setNegativeButton("OK", null)
+            .show()
     }
     
     private fun bindEventData(event: Event) {

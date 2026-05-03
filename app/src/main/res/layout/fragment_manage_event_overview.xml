@@ -40,6 +40,7 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
                     <TextView
+                        android:id="@+id/tvTicketsSold"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_small"
@@ -69,6 +70,7 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
                     <TextView
+                        android:id="@+id/tvAttendeesCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_small"
@@ -106,6 +108,7 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
                     <TextView
+                        android:id="@+id/tvRevenue"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_small"
@@ -135,6 +138,7 @@
                         android:textColor="?attr/colorOnSurfaceVariant" />
 
                     <TextView
+                        android:id="@+id/tvRemaining"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/spacing_small"
@@ -222,6 +226,7 @@
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
+                android:id="@+id/tvGeneralAdmissionTickets"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/spacing_medium"
@@ -252,6 +257,7 @@
                 android:textColor="?attr/colorOnSurface" />
 
             <TextView
+                android:id="@+id/tvVipTickets"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/spacing_medium"

@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentCreateEventNewBinding
 import com.eventfinder.app.domain.model.EventCategory
+import com.eventfinder.app.domain.model.EventVisibility
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.utils.AuthNavArgs
 import com.eventfinder.app.utils.UserPreferences
@@ -300,6 +301,22 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
                 }
             }
         }
+
+        // Setup visibility toggle
+        binding.toggleGroupVisibility.addOnButtonCheckedListener { _, checkedId, isChecked ->
+            if (isChecked) {
+                val isPrivate = checkedId == R.id.btnPrivate
+                binding.cardRequiresTicket.isVisible = isPrivate
+
+                // Update info text
+                if (isPrivate) {
+                    binding.tvVisibilityInfo.text = "Private events require invitation and can have tickets with QR codes"
+                } else {
+                    binding.tvVisibilityInfo.text = "Public: Anyone can see and join\nPrivate: Requires ticket for entry"
+                    binding.switchRequiresTicket.isChecked = false
+                }
+            }
+        }
     }
 
     private fun setupImageUpload() {
@@ -330,11 +347,7 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         // Save Draft
         binding.btnSaveDraft.setOnClickListener {
             if (validateBasicInfo()) {
-                val title = binding.etEventTitle.text?.toString()?.trim() ?: ""
-                val description = binding.etDescription.text?.toString()?.trim()
-                val categoryNames = selectedCategories.map { it.name }.joinToString(", ")
-                
-                viewModel.saveDraft(title, description, categoryNames)
+                saveDraft()
             }
         }
 
@@ -397,6 +410,72 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         return true
     }
 
+    private fun saveDraft() {
+        val title = binding.etEventTitle.text?.toString()?.trim() ?: ""
+        val description = binding.etDescription.text?.toString()?.trim()
+        val location = binding.etLocation.text?.toString()?.trim()
+
+        // Combine date and time if available
+        var startTimeMillis: Long? = null
+        if (selectedDate != null && selectedStartTime != null) {
+            val startDateTime = Calendar.getInstance().apply {
+                set(Calendar.YEAR, selectedDate!!.get(Calendar.YEAR))
+                set(Calendar.MONTH, selectedDate!!.get(Calendar.MONTH))
+                set(Calendar.DAY_OF_MONTH, selectedDate!!.get(Calendar.DAY_OF_MONTH))
+                set(Calendar.HOUR_OF_DAY, selectedStartTime!!.get(Calendar.HOUR_OF_DAY))
+                set(Calendar.MINUTE, selectedStartTime!!.get(Calendar.MINUTE))
+            }
+            startTimeMillis = startDateTime.timeInMillis
+        }
+
+        var endTimeMillis: Long? = null
+        if (selectedDate != null && selectedEndTime != null) {
+            val endDateTime = Calendar.getInstance().apply {
+                set(Calendar.YEAR, selectedDate!!.get(Calendar.YEAR))
+                set(Calendar.MONTH, selectedDate!!.get(Calendar.MONTH))
+                set(Calendar.DAY_OF_MONTH, selectedDate!!.get(Calendar.DAY_OF_MONTH))
+                set(Calendar.HOUR_OF_DAY, selectedEndTime!!.get(Calendar.HOUR_OF_DAY))
+                set(Calendar.MINUTE, selectedEndTime!!.get(Calendar.MINUTE))
+            }
+            endTimeMillis = endDateTime.timeInMillis
+        }
+
+        val isFree = binding.toggleGroupPricing.checkedButtonId == R.id.btnFree
+        val price = if (!isFree) {
+            binding.etTicketPrice.text?.toString()?.toDoubleOrNull()
+        } else null
+
+        val currency = if (!isFree) {
+            "PKR"
+        } else null
+
+        val maxParticipants = binding.etMaxAttendees.text?.toString()?.toIntOrNull()
+
+        val isPrivate = binding.toggleGroupVisibility.checkedButtonId == R.id.btnPrivate
+        val visibility = if (isPrivate) EventVisibility.PRIVATE else EventVisibility.PUBLIC
+        val requiresTicket = isPrivate && binding.switchRequiresTicket.isChecked
+
+        viewModel.saveDraft(
+            title = title,
+            description = description,
+            selectedCategories = selectedCategories.toList(),
+            startTimeMillis = startTimeMillis,
+            endTimeMillis = endTimeMillis,
+            locationName = location,
+            latitude = selectedLatitude,
+            longitude = selectedLongitude,
+            address = selectedLocationAddress,
+            maxParticipants = maxParticipants,
+            isFree = isFree,
+            price = price,
+            currency = currency,
+            organizerId = userPreferences.getUserId() ?: "",
+            tags = emptyList(),
+            visibility = visibility,
+            requiresTicket = requiresTicket
+        )
+    }
+
     private fun publishEvent() {
         // Combine date and start time
         val eventStartDateTime = Calendar.getInstance().apply {
@@ -444,6 +523,11 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         val userId = userPreferences.getUserId()
         val userName = userPreferences.getUserName()
 
+        // Determine event visibility and ticket requirement
+        val isPrivate = binding.toggleGroupVisibility.checkedButtonId == R.id.btnPrivate
+        val visibility = if (isPrivate) EventVisibility.PRIVATE else EventVisibility.PUBLIC
+        val requiresTicket = isPrivate && binding.switchRequiresTicket.isChecked
+
         // Create the event
         viewModel.createEvent(
             title = title,
@@ -461,7 +545,9 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
             currency = currency,
             organizerId = userId,
             organizerName = userName,
-            tags = extraTags // Storing all selected categories as tags
+            tags = extraTags,
+            visibility = visibility,
+            requiresTicket = requiresTicket
         )
     }
 

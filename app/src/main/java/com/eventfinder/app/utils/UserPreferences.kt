@@ -23,6 +23,7 @@ class UserPreferences @Inject constructor(
         private const val PREFS_NAME = "event_finder_prefs"
         private const val KEY_USER_ID = "user_id"
         private const val KEY_USER_NAME = "user_name"
+        private const val KEY_USER_EMAIL = "user_email"
         private const val KEY_USER_TYPE = "user_type"
         private const val KEY_PENDING_AUTH_STEP = "pending_auth_step"
     }
@@ -60,6 +61,20 @@ class UserPreferences @Inject constructor(
      */
     fun setUserName(name: String) {
         prefs.edit().putString(KEY_USER_NAME, name).apply()
+    }
+
+    /**
+     * Get user email
+     */
+    fun getUserEmail(): String? {
+        return prefs.getString(KEY_USER_EMAIL, null)
+    }
+
+    /**
+     * Set user email
+     */
+    fun setUserEmail(email: String) {
+        prefs.edit().putString(KEY_USER_EMAIL, email).apply()
     }
 
     /**

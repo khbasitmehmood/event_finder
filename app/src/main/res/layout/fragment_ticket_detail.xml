@@ -1,0 +1,362 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/md_background">
+
+    <!-- App Bar -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        app:elevation="0dp">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/arrow_back_24px"
+            app:title="My Ticket"
+            app:titleTextAppearance="@style/TextAppearance.App.HeadlineSmall"
+            app:titleTextColor="@color/text_primary" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!-- Main Content -->
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingBottom="100dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_xlarge">
+
+            <!-- Ticket Status Chip -->
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipStatus"
+                style="@style/Widget.Material3.Chip.Assist"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/spacing_large"
+                tools:text="PURCHASED" />
+
+            <!-- QR Code Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_xlarge"
+                app:cardBackgroundColor="@color/md_surface"
+                app:cardCornerRadius="@dimen/corner_radius_large"
+                app:cardElevation="@dimen/elevation_medium">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_xlarge">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_large"
+                        android:text="Scan this code at the event entrance"
+                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                        android:textColor="@color/text_secondary" />
+
+                    <!-- QR Code Image -->
+                    <ImageView
+                        android:id="@+id/ivQRCode"
+                        android:layout_width="280dp"
+                        android:layout_height="280dp"
+                        android:layout_marginVertical="@dimen/spacing_large"
+                        android:contentDescription="QR Code"
+                        android:scaleType="fitCenter"
+                        tools:src="@drawable/ic_profile" />
+
+                    <!-- Ticket ID -->
+                    <TextView
+                        android:id="@+id/tvTicketId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_medium"
+                        android:textAppearance="@style/TextAppearance.App.BodySmall"
+                        android:textColor="@color/text_secondary"
+                        tools:text="Ticket ID: ABC123" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Event Details Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_large"
+                app:cardBackgroundColor="@color/md_surface"
+                app:cardCornerRadius="@dimen/corner_radius_medium"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_medium"
+                        android:text="Event Details"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textColor="@color/text_primary" />
+
+                    <!-- Event Title -->
+                    <TextView
+                        android:id="@+id/tvEventTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_medium"
+                        android:textAppearance="@style/TextAppearance.App.TitleSmall"
+                        android:textColor="@color/text_primary"
+                        tools:text="Music Festival 2024" />
+
+                    <!-- Date & Time -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_small"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="@dimen/spacing_medium"
+                            android:contentDescription="Date"
+                            android:src="@drawable/ic_select_date"
+                            app:tint="@color/text_secondary" />
+
+                        <TextView
+                            android:id="@+id/tvEventDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Saturday, 15 Dec 2024 - 7:00 PM" />
+                    </LinearLayout>
+
+                    <!-- Location -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginEnd="@dimen/spacing_medium"
+                            android:contentDescription="Location"
+                            android:src="@drawable/ic_add_location"
+                            app:tint="@color/text_secondary" />
+
+                        <TextView
+                            android:id="@+id/tvEventLocation"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Lahore Convention Center" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Ticket Info Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_large"
+                app:cardBackgroundColor="@color/md_surface"
+                app:cardCornerRadius="@dimen/corner_radius_medium"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_medium"
+                        android:text="Ticket Information"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textColor="@color/text_primary" />
+
+                    <!-- User Name -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_small"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Name:"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_secondary" />
+
+                        <TextView
+                            android:id="@+id/tvUserName"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_primary"
+                            tools:text="John Doe" />
+                    </LinearLayout>
+
+                    <!-- Ticket Type -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_small"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Type:"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_secondary" />
+
+                        <TextView
+                            android:id="@+id/tvTicketType"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_primary"
+                            tools:text="Paid Ticket" />
+                    </LinearLayout>
+
+                    <!-- Price -->
+                    <LinearLayout
+                        android:id="@+id/layoutPrice"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_small"
+                        android:orientation="horizontal"
+                        android:visibility="gone"
+                        tools:visibility="visible">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Price:"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_secondary" />
+
+                        <TextView
+                            android:id="@+id/tvPrice"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/md_primary"
+                            tools:text="PKR 500" />
+                    </LinearLayout>
+
+                    <!-- Purchase Date -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="Purchased:"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_secondary" />
+
+                        <TextView
+                            android:id="@+id/tvPurchaseDate"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                            android:textColor="@color/text_primary"
+                            tools:text="10 Dec 2024, 3:45 PM" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Check-in Info (Only if checked in) -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCheckInInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/spacing_large"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/md_tertiary_container"
+                app:cardCornerRadius="@dimen/corner_radius_medium"
+                app:cardElevation="0dp"
+                tools:visibility="visible">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/spacing_large">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_small"
+                        android:text="✓ Checked In"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textColor="@color/md_on_tertiary_container" />
+
+                    <TextView
+                        android:id="@+id/tvCheckInTime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                        android:textColor="@color/md_on_tertiary_container"
+                        tools:text="Checked in on 15 Dec 2024 at 6:45 PM" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <!-- Bottom Action Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnCancelTicket"
+        style="@style/Widget.Material3.Button.OutlinedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_margin="@dimen/spacing_xlarge"
+        android:text="Cancel Ticket"
+        android:textAppearance="@style/TextAppearance.App.LabelLarge"
+        android:textColor="@color/md_error"
+        app:cornerRadius="@dimen/corner_radius_medium"
+        app:strokeColor="@color/md_error" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
