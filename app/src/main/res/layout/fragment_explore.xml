@@ -50,6 +50,69 @@
                     android:textColorHint="@color/text_secondary" />
             </com.google.android.material.textfield.TextInputLayout>
 
+            <!-- Map View Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardMapView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/spacing_large"
+                app:cardBackgroundColor="@color/md_primary_container"
+                app:cardCornerRadius="12dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/spacing_large">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="Map view"
+                        android:src="@drawable/ic_location"
+                        app:tint="@color/md_on_primary_container" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_medium"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Find Events on Map"
+                            android:textAppearance="@style/TextAppearance.App.TitleSmall"
+                            android:textColor="@color/md_on_primary_container" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Discover events near you visually"
+                            android:textAppearance="@style/TextAppearance.App.BodySmall"
+                            android:textColor="@color/md_on_primary_container" />
+
+                    </LinearLayout>
+
+                    <com.google.android.material.chip.Chip
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/spacing_small"
+                        android:clickable="false"
+                        android:text="Coming Soon"
+                        android:textAppearance="@style/TextAppearance.App.LabelSmall"
+                        app:chipBackgroundColor="@color/md_primary"
+                        app:chipStrokeWidth="0dp" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
             <HorizontalScrollView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

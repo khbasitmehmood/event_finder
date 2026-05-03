@@ -108,6 +108,135 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
+                <!-- Calendar Section -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_large"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/spacing_large">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_medium"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvMonthYear"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                            android:textStyle="bold"
+                            tools:text="May 2026" />
+
+                        <ImageButton
+                            android:id="@+id/btnPreviousWeek"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/previous_week"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_chevron_left"
+                            app:tint="@color/md_on_surface" />
+
+                        <ImageButton
+                            android:id="@+id/btnNextWeek"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:contentDescription="@string/next_week"
+                            android:padding="8dp"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/md_on_surface" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvCalendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        tools:listitem="@layout/item_calendar_day" />
+
+                </LinearLayout>
+
+                <!-- User Interest Categories Section -->
+                <LinearLayout
+                    android:id="@+id/layoutCategoriesSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_large"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="@dimen/spacing_large"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/spacing_medium"
+                        android:text="Your Interests"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textStyle="bold" />
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupCategories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:chipSpacingHorizontal="8dp"
+                        app:singleLine="false" />
+
+                </LinearLayout>
+
+                <!-- Date Filtered Events Section -->
+                <LinearLayout
+                    android:id="@+id/layoutDateFilteredSection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/spacing_large"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tvDateFilteredTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/spacing_large"
+                        android:layout_marginBottom="@dimen/spacing_medium"
+                        android:textAppearance="@style/TextAppearance.App.TitleMedium"
+                        android:textStyle="bold"
+                        tools:text="Events on May 3" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDateFilteredEvents"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clipToPadding="false"
+                        android:nestedScrollingEnabled="false"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/spacing_large"
+                        tools:listitem="@layout/item_event_card" />
+
+                    <!-- Empty state for date filtered -->
+                    <TextView
+                        android:id="@+id/tvDateFilteredEmpty"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/spacing_large"
+                        android:gravity="center"
+                        android:padding="@dimen/spacing_xlarge"
+                        android:text="No events on this date"
+                        android:textAppearance="@style/TextAppearance.App.BodyMedium"
+                        android:textColor="@color/md_on_surface_variant"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
                 <!-- Featured Events Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -159,59 +288,18 @@
 
                 </LinearLayout>
 
-                <!-- Browse by Category Section -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/spacing_large"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/spacing_large">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/spacing_medium"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:text="Browse by Category"
-                            android:textAppearance="@style/TextAppearance.App.TitleMedium"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="See all"
-                            android:textAppearance="@style/TextAppearance.App.LabelLarge"
-                            android:textColor="@color/md_primary" />
-                    </LinearLayout>
-
-                    <!-- We use horizontal scrolling layout manager dynamically in code, so orientation="horizontal" is proper for the item preview -->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvCategories"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        android:orientation="horizontal"
-                        tools:listitem="@layout/item_category" />
-
-                </LinearLayout>
 
                 <!-- Events Near You Section -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/spacing_large"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="@dimen/spacing_large">
+                    android:orientation="vertical">
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="@dimen/spacing_large"
                         android:layout_marginBottom="@dimen/spacing_medium"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
@@ -245,8 +333,11 @@
                         android:id="@+id/rvEventsNearYou"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:clipToPadding="false"
                         android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_event_upcoming" />
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/spacing_large"
+                        tools:listitem="@layout/item_event_small" />
 
                 </LinearLayout>
 
