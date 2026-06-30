@@ -37,7 +37,7 @@ class QRScannerViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(QRScannerUiState())
     val uiState: StateFlow<QRScannerUiState> = _uiState.asStateFlow()
 
-    fun validateQRCode(qrCodeData: String, organizerId: String) {
+    fun validateQRCode(qrCodeData: String, organizerId: String, expectedEventId: String? = null) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
@@ -63,6 +63,18 @@ class QRScannerViewModel @Inject constructor(
 
                     // Validate ticket belongs to this organizer
                     if (ticket.organizerId != organizerId) {
+                        _uiState.update {
+                            it.copy(
+                                isValidating = false,
+                                error = "This ticket is for a different event",
+                                scannerActive = true
+                            )
+                        }
+                        return@fold
+                    }
+
+                    // Validate ticket belongs to the selected event when scanner is event-scoped
+                    if (!expectedEventId.isNullOrBlank() && ticket.eventId != expectedEventId) {
                         _uiState.update {
                             it.copy(
                                 isValidating = false,

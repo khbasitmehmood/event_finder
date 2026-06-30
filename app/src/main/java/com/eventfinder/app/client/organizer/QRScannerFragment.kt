@@ -47,6 +47,7 @@ class QRScannerFragment : Fragment(R.layout.fragment_qr_scanner) {
     private var cameraProvider: ProcessCameraProvider? = null
     private lateinit var cameraExecutor: ExecutorService
     private var isProcessing = false
+    private var expectedEventId: String? = null
 
     private val requestPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -62,6 +63,7 @@ class QRScannerFragment : Fragment(R.layout.fragment_qr_scanner) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentQrScannerBinding.bind(view)
+        expectedEventId = arguments?.getString("EVENT_ID")
 
         cameraExecutor = Executors.newSingleThreadExecutor()
 
@@ -144,7 +146,7 @@ class QRScannerFragment : Fragment(R.layout.fragment_qr_scanner) {
             barcode.rawValue?.let { qrCode ->
                 isProcessing = true
                 val organizerId = userPreferences.getUserId()
-                viewModel.validateQRCode(qrCode, organizerId)
+                viewModel.validateQRCode(qrCode, organizerId, expectedEventId)
                 return
             }
         }
