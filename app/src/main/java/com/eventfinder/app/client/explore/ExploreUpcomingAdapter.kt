@@ -42,8 +42,8 @@ class ExploreUpcomingAdapter(
             // Load event image with Coil
             eventImage.load(event.mainImageUrl) {
                 crossfade(true)
-                placeholder(R.drawable.ic_event_placeholder)
-                error(R.drawable.ic_event_placeholder)
+                placeholder(R.drawable.auth_gradient)
+                error(R.drawable.auth_gradient)
             }
 
             // Set date

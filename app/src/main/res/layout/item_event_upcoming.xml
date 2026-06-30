@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
-                android:src="@drawable/ic_event_placeholder" />
+                android:src="@drawable/auth_gradient" />
         </androidx.cardview.widget.CardView>
 
         <LinearLayout

@@ -45,8 +45,8 @@ class SmallEventAdapter(
             // Load image using Coil
             binding.imgCover.load(event.mainImageUrl ?: event.imageUrls.firstOrNull()) {
                 crossfade(true)
-                placeholder(R.drawable.ic_event_placeholder)
-                error(R.drawable.ic_event_placeholder)
+                placeholder(R.drawable.auth_gradient)
+                error(R.drawable.auth_gradient)
             }
 
             binding.root.setOnClickListener { onClick(event) }
