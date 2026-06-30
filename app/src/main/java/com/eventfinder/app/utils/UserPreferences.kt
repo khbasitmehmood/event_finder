@@ -29,6 +29,14 @@ class UserPreferences @Inject constructor(
         private const val KEY_PENDING_PAYMENT_CHECKOUT_ID = "pending_payment_checkout_id"
         private const val KEY_PENDING_PAYMENT_EVENT_ID = "pending_payment_event_id"
         private const val KEY_PENDING_PAYMENT_USER_ID = "pending_payment_user_id"
+        private const val KEY_NOTIFICATIONS_ENABLED = "notifications_enabled"
+        private const val KEY_THEME_MODE = "theme_mode"
+        private const val KEY_USER_LOCATION_ADDRESS = "user_location_address"
+        private const val KEY_USER_LOCATION_LAT = "user_location_lat"
+        private const val KEY_USER_LOCATION_LNG = "user_location_lng"
+        const val THEME_LIGHT = "light"
+        const val THEME_DARK = "dark"
+        const val THEME_SYSTEM = "system"
     }
 
     /**
@@ -143,10 +151,55 @@ class UserPreferences @Inject constructor(
             .apply()
     }
 
+    fun areNotificationsEnabled(): Boolean {
+        return prefs.getBoolean(KEY_NOTIFICATIONS_ENABLED, true)
+    }
+
+    fun setNotificationsEnabled(enabled: Boolean) {
+        prefs.edit().putBoolean(KEY_NOTIFICATIONS_ENABLED, enabled).apply()
+    }
+
+    fun getThemeMode(): String {
+        return prefs.getString(KEY_THEME_MODE, THEME_SYSTEM) ?: THEME_SYSTEM
+    }
+
+    fun setThemeMode(mode: String) {
+        prefs.edit().putString(KEY_THEME_MODE, mode).apply()
+    }
+
+    fun setUserLocation(address: String, latitude: Double, longitude: Double) {
+        prefs.edit()
+            .putString(KEY_USER_LOCATION_ADDRESS, address)
+            .putLong(KEY_USER_LOCATION_LAT, latitude.toRawBits())
+            .putLong(KEY_USER_LOCATION_LNG, longitude.toRawBits())
+            .apply()
+    }
+
+    fun getUserLocationAddress(): String? {
+        return prefs.getString(KEY_USER_LOCATION_ADDRESS, null)
+    }
+
+    fun getUserLocationLatitude(): Double? {
+        return if (prefs.contains(KEY_USER_LOCATION_LAT)) {
+            Double.fromBits(prefs.getLong(KEY_USER_LOCATION_LAT, 0L))
+        } else {
+            null
+        }
+    }
+
+    fun getUserLocationLongitude(): Double? {
+        return if (prefs.contains(KEY_USER_LOCATION_LNG)) {
+            Double.fromBits(prefs.getLong(KEY_USER_LOCATION_LNG, 0L))
+        } else {
+            null
+        }
+    }
+
     /**
      * Clear all preferences (for logout)
      */
     fun clear() {
         prefs.edit().clear().apply()
     }
+
 }

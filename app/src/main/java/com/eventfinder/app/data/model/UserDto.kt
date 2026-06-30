@@ -22,6 +22,9 @@ data class UserProfileDto(
     @PropertyName("photoUrl") val photoUrl: String? = null,
     @PropertyName("bio") val bio: String? = null,
     @PropertyName("city") val city: String? = null,
+    @PropertyName("locationAddress") val locationAddress: String? = null,
+    @PropertyName("latitude") val latitude: Double? = null,
+    @PropertyName("longitude") val longitude: Double? = null,
     @PropertyName("interests") val interests: List<String> = emptyList()
 )
 

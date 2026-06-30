@@ -78,6 +78,9 @@ class FillProfileViewModel @Inject constructor(
         contactPerson: String,
         description: String,
         interests: List<String>,
+        locationAddress: String? = null,
+        latitude: Double? = null,
+        longitude: Double? = null,
         imageUri: Uri?
     ) {
         viewModelScope.launch {
@@ -127,6 +130,9 @@ class FillProfileViewModel @Inject constructor(
                             fullName = name,
                             phoneNumber = contactNumber,
                             city = city.ifBlank { null },
+                            locationAddress = locationAddress ?: user.profile?.locationAddress,
+                            latitude = latitude ?: user.profile?.latitude,
+                            longitude = longitude ?: user.profile?.longitude,
                             bio = description.ifBlank { null },
                             interests = newInterests, // Keep existing if not provided here
                             photoUrl = photoUrl

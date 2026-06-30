@@ -1,8 +1,13 @@
 package com.eventfinder.app.client.profile
 
+import android.Manifest
+import android.os.Build
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -16,11 +21,13 @@ import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentProfileBinding
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.utils.AuthNavArgs
+import com.eventfinder.app.utils.UserPreferences
 import com.google.android.material.chip.Chip
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
@@ -30,10 +37,26 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private val viewModel: ProfileViewModel by viewModels()
 
+    @Inject
+    lateinit var userPreferences: UserPreferences
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        userPreferences.setNotificationsEnabled(isGranted)
+        binding.switchNotifications.isChecked = isGranted
+        Toast.makeText(
+            requireContext(),
+            if (isGranted) "Notifications enabled" else "Notifications disabled",
+            Toast.LENGTH_SHORT
+        ).show()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentProfileBinding.bind(view)
 
+        setupSettingsState()
         setupClickListeners()
         observeViewModel()
     }
@@ -56,6 +79,27 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), "Navigation failed", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        binding.btnNotifications.setOnClickListener {
+            binding.switchNotifications.isChecked = !binding.switchNotifications.isChecked
+        }
+
+        binding.switchNotifications.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                userPreferences.setNotificationsEnabled(isChecked)
+                Toast.makeText(
+                    requireContext(),
+                    if (isChecked) "Notifications enabled" else "Notifications disabled",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        binding.btnTheme.setOnClickListener {
+            showThemeDialog()
         }
 
         // Logout
@@ -81,7 +125,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     ) { user, categories ->
                         Pair(user, categories)
                     }.collect { (user, categories) ->
-                        if (user != null && categories.isNotEmpty()) {
+                        if (user != null) {
                             val displayName = user.profile?.fullName 
                                 ?: user.organizerProfile?.organizationName 
                                 ?: "Guest User"
@@ -90,18 +134,24 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                             binding.profileEmail.text = user.email
 
                             val photoUrl = if (user.userType == UserType.ORGANIZER) {
+                                binding.tvRoleBadge.text = "Organizer"
                                 binding.tvInterestsTitle.text = "Events We Offer"
                                 val offeredIds = user.organizerProfile?.offeredEvents ?: emptyList()
                                 // Map IDs back to names
-                                val names = offeredIds.mapNotNull { id -> categories.find { it.id == id }?.name }
+                                val names = offeredIds.map { id ->
+                                    categories.find { it.id == id }?.name ?: id
+                                }
                                 setupChips(names)
                                 
                                 user.organizerProfile?.logoUrl
                             } else {
+                                binding.tvRoleBadge.text = "Standard Member"
                                 binding.tvInterestsTitle.text = "Add Interests"
                                 val interestIds = user.profile?.interests ?: emptyList()
                                 // Map IDs back to names
-                                val names = interestIds.mapNotNull { id -> categories.find { it.id == id }?.name }
+                                val names = interestIds.map { id ->
+                                    categories.find { it.id == id }?.name ?: id
+                                }
                                 setupChips(names)
                                 
                                 user.profile?.photoUrl
@@ -119,6 +169,62 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                     }
                 }
             }
+        }
+    }
+
+    private fun setupSettingsState() {
+        binding.switchNotifications.setOnCheckedChangeListener(null)
+        val notificationsAllowedBySystem = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU ||
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.POST_NOTIFICATIONS
+            ) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        val notificationsEnabled = userPreferences.areNotificationsEnabled() && notificationsAllowedBySystem
+        if (!notificationsEnabled) {
+            userPreferences.setNotificationsEnabled(false)
+        }
+        binding.switchNotifications.isChecked = notificationsEnabled
+        updateThemeLabel(userPreferences.getThemeMode())
+    }
+
+    private fun showThemeDialog() {
+        val options = arrayOf("Light", "Dark", "System default")
+        val currentIndex = when (userPreferences.getThemeMode()) {
+            UserPreferences.THEME_LIGHT -> 0
+            UserPreferences.THEME_DARK -> 1
+            else -> 2
+        }
+
+        MaterialAlertDialogBuilder(requireContext())
+            .setTitle("Select Theme")
+            .setSingleChoiceItems(options, currentIndex) { dialog, which ->
+                val mode = when (which) {
+                    0 -> UserPreferences.THEME_LIGHT
+                    1 -> UserPreferences.THEME_DARK
+                    else -> UserPreferences.THEME_SYSTEM
+                }
+                userPreferences.setThemeMode(mode)
+                applyTheme(mode)
+                updateThemeLabel(mode)
+                dialog.dismiss()
+            }
+            .show()
+    }
+
+    private fun applyTheme(mode: String) {
+        val nightMode = when (mode) {
+            UserPreferences.THEME_LIGHT -> AppCompatDelegate.MODE_NIGHT_NO
+            UserPreferences.THEME_DARK -> AppCompatDelegate.MODE_NIGHT_YES
+            else -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
+        AppCompatDelegate.setDefaultNightMode(nightMode)
+    }
+
+    private fun updateThemeLabel(mode: String) {
+        binding.tvThemeValue.text = when (mode) {
+            UserPreferences.THEME_LIGHT -> "Light"
+            UserPreferences.THEME_DARK -> "Dark"
+            else -> "System"
         }
     }
 
@@ -184,6 +290,11 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
             // Fallback: welcome screen if graph route fails for any reason.
             navController.navigate(R.id.welcomeFragment, null, navOptions)
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadCurrentUser()
     }
 
     override fun onDestroyView() {

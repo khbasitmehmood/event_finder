@@ -89,6 +89,7 @@
     <string name="fill_profile_hint_organizer_name">Organizer Name</string>
     <string name="fill_profile_hint_phone_optional">Phone Number (optional)</string>
     <string name="fill_profile_hint_city">City</string>
+    <string name="fill_profile_lahore_service_caption">EventFinder service is only available in Lahore.</string>
     <string name="fill_profile_hint_org_bio">Short Bio (Tell us about your organization)</string>
     <string name="fill_profile_use_location">Use my location</string>
     <string name="fill_profile_use_location_subtitle">Show events near you.</string>

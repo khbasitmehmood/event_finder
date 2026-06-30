@@ -1,16 +1,22 @@
 package com.eventfinder.app.client.auth
 
+import android.Manifest
 import android.app.Activity
+import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.content.Intent
+import android.location.Location
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -26,14 +32,23 @@ import com.eventfinder.app.utils.AuthNavArgs
 import com.eventfinder.app.utils.AuthFlowSource
 import com.eventfinder.app.utils.AuthPendingStep
 import com.eventfinder.app.utils.UserPreferences
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.Priority
+import com.google.android.gms.tasks.CancellationTokenSource
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.Locale
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
+
+    private companion object {
+        private const val SERVICE_CITY = "Lahore"
+    }
 
     private var _binding: FragmentFillProfileBinding? = null
     private val binding get() = _binding!!
@@ -50,6 +65,10 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
     private var flowSource: String = AuthFlowSource.REGISTER
     private var isEditMode: Boolean = false
     private var hasPrefilledData: Boolean = false
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var selectedLocationAddress: String? = null
+    private var selectedLatitude: Double? = null
+    private var selectedLongitude: Double? = null
 
     private val galleryLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
         if (result.resultCode == Activity.RESULT_OK) {
@@ -60,6 +79,14 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         }
     }
 
+    private val cameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
+        if (isGranted) {
+            openCamera()
+        } else {
+            Toast.makeText(requireContext(), "Camera permission is required to capture a photo", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     private val cameraLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             selectedImageUri = cameraImageUri
@@ -67,9 +94,24 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         }
     }
 
+    private val locationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { permissions ->
+        val granted = permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true ||
+            permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true
+
+        if (granted) {
+            useCurrentLocation()
+        } else {
+            binding.switchLocation.isChecked = false
+            Toast.makeText(requireContext(), "Location permission is required to use current location", Toast.LENGTH_SHORT).show()
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentFillProfileBinding.bind(view)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         isEditMode = arguments?.getBoolean(AuthNavArgs.IS_EDIT_MODE, false) == true
         hasUserTypeArg = arguments?.containsKey(AuthNavArgs.USER_TYPE) == true
@@ -86,11 +128,16 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         }
 
         setupUI()
+        setupFragmentResultListeners()
         setupClickListeners()
         observeViewModel()
     }
 
     private fun setupUI() {
+        binding.etCity.setText(SERVICE_CITY)
+        binding.etCity.isEnabled = false
+        binding.etCity.isFocusable = false
+
         if (userType == UserType.ORGANIZER) {
             binding.tvTitle.text = getString(R.string.fill_profile_organizer_title)
             binding.tvSubtitle.text = getString(R.string.fill_profile_organizer_subtitle)
@@ -134,15 +181,26 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         binding.flProfileImage.setOnClickListener {
             showImagePickerDialog()
         }
+
+        binding.cardUseLocation.setOnClickListener {
+            if (binding.switchLocation.isEnabled) {
+                binding.switchLocation.isChecked = !binding.switchLocation.isChecked
+            }
+        }
+
+        binding.switchLocation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                requestCurrentLocation()
+            }
+        }
         
         binding.tvManualLocation.setOnClickListener {
-            // Future location picker integration
-            Toast.makeText(requireContext(), getString(R.string.fill_profile_manual_location_soon), Toast.LENGTH_SHORT).show()
+            findNavController().navigate(R.id.mapLocationPickerFragment)
         }
 
         binding.btnSaveProfile.setOnClickListener {
             val name = binding.etName.text.toString().trim()
-            val city = binding.etCity.text.toString().trim()
+            val city = SERVICE_CITY
             val phone = binding.etContact.text.toString().trim()
             val description = binding.etDescription.text.toString().trim()
             
@@ -162,8 +220,32 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
                 contactPerson = name, // Use as fallback
                 description = description,
                 interests = emptyList(), // Interests moved to next screen
+                locationAddress = selectedLocationAddress.takeIf { userType == UserType.USER },
+                latitude = selectedLatitude.takeIf { userType == UserType.USER },
+                longitude = selectedLongitude.takeIf { userType == UserType.USER },
                 imageUri = selectedImageUri
             )
+        }
+    }
+
+    private fun setupFragmentResultListeners() {
+        setFragmentResultListener("location_request") { _, bundle ->
+            val address = bundle.getString("address")
+            val lat = bundle.getDouble("lat")
+            val lng = bundle.getDouble("lng")
+
+            if (!address.isNullOrBlank()) {
+                selectedLocationAddress = address
+                selectedLatitude = lat
+                selectedLongitude = lng
+                userPreferences.setUserLocation(address, lat, lng)
+                showSelectedLocation(
+                    address = address,
+                    switchChecked = false,
+                    switchEnabled = false
+                )
+                Toast.makeText(requireContext(), "Nearby-events location selected", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
@@ -189,6 +271,11 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
     }
 
     private fun openCamera() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+            return
+        }
+
         val photoFile = File(requireContext().cacheDir, "profile_pic_${System.currentTimeMillis()}.jpg")
         cameraImageUri = FileProvider.getUriForFile(
             requireContext(),
@@ -196,6 +283,148 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
             photoFile
         )
         cameraLauncher.launch(cameraImageUri)
+    }
+
+    private fun requestCurrentLocation() {
+        val hasFineLocation = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+        val hasCoarseLocation = ContextCompat.checkSelfPermission(
+            requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED
+
+        if (hasFineLocation || hasCoarseLocation) {
+            useCurrentLocation()
+        } else {
+            locationPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                )
+            )
+        }
+    }
+
+    private fun useCurrentLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            binding.switchLocation.isChecked = false
+            return
+        }
+
+        setLocationLoading(true)
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location ->
+                if (location != null) {
+                    applyLocation(location)
+                } else {
+                    requestFreshLocation()
+                }
+            }
+            .addOnFailureListener {
+                setLocationLoading(false)
+                binding.switchLocation.isChecked = false
+                Toast.makeText(requireContext(), "Unable to get current location", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    private fun requestFreshLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            setLocationLoading(false)
+            binding.switchLocation.isChecked = false
+            return
+        }
+
+        val cancellationTokenSource = CancellationTokenSource()
+        fusedLocationClient.getCurrentLocation(
+            Priority.PRIORITY_BALANCED_POWER_ACCURACY,
+            cancellationTokenSource.token
+        ).addOnSuccessListener { location ->
+            if (location != null) {
+                applyLocation(location)
+            } else {
+                setLocationLoading(false)
+                binding.switchLocation.isChecked = false
+                Toast.makeText(requireContext(), "Unable to get current location", Toast.LENGTH_SHORT).show()
+            }
+        }.addOnFailureListener {
+            setLocationLoading(false)
+            binding.switchLocation.isChecked = false
+            Toast.makeText(requireContext(), "Unable to get current location", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun applyLocation(location: Location) {
+        val address = resolveAddress(location)
+        setLocationLoading(false)
+        if (address.isNullOrBlank()) {
+            binding.switchLocation.isChecked = false
+            Toast.makeText(requireContext(), "Unable to resolve current location", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        selectedLocationAddress = address
+        selectedLatitude = location.latitude
+        selectedLongitude = location.longitude
+        userPreferences.setUserLocation(address, location.latitude, location.longitude)
+        showSelectedLocation(
+            address = address,
+            switchChecked = true,
+            switchEnabled = true
+        )
+        Toast.makeText(requireContext(), "Nearby-events location set", Toast.LENGTH_SHORT).show()
+    }
+
+    private fun resolveAddress(location: Location): String? {
+        return try {
+            val addresses = Geocoder(requireContext(), Locale.getDefault())
+                .getFromLocation(location.latitude, location.longitude, 1)
+            val address = addresses?.firstOrNull()
+            address?.getAddressLine(0)
+                ?: address?.locality
+                ?: address?.subAdminArea
+                ?: address?.adminArea
+                ?: address?.countryName
+        } catch (_: Exception) {
+            null
+        }
+    }
+
+    private fun setLocationLoading(isLoading: Boolean) {
+        binding.switchLocation.isEnabled = !isLoading
+        binding.cardUseLocation.isEnabled = !isLoading
+        binding.tvUseLocationTitle.text = if (isLoading) {
+            "Getting location..."
+        } else {
+            getString(R.string.fill_profile_use_location)
+        }
+    }
+
+    private fun showSelectedLocation(
+        address: String,
+        switchChecked: Boolean,
+        switchEnabled: Boolean
+    ) {
+        binding.switchLocation.setOnCheckedChangeListener(null)
+        binding.switchLocation.isChecked = switchChecked
+        binding.switchLocation.isEnabled = switchEnabled
+        binding.switchLocation.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                requestCurrentLocation()
+            } else {
+                selectedLocationAddress = null
+                selectedLatitude = null
+                selectedLongitude = null
+                binding.tvSelectedLocation.isVisible = false
+            }
+        }
+        binding.tvSelectedLocation.text = address
+        binding.tvSelectedLocation.isVisible = true
     }
 
     private fun observeViewModel() {
@@ -268,7 +497,7 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         binding.progressBar.isVisible = isLoading
         binding.btnSaveProfile.isEnabled = !isLoading
         binding.etName.isEnabled = !isLoading
-        binding.etCity.isEnabled = !isLoading
+        binding.etCity.isEnabled = false
         binding.etContact.isEnabled = !isLoading
         binding.etDescription.isEnabled = !isLoading
     }
@@ -281,7 +510,7 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
             val profile = user.organizerProfile
             binding.etName.setText(profile?.organizationName ?: defaultName.orEmpty())
             binding.etContact.setText(profile?.phoneNumber.orEmpty())
-            binding.etCity.setText(profile?.city.orEmpty())
+            binding.etCity.setText(SERVICE_CITY)
             binding.etDescription.setText(profile?.description.orEmpty())
 
             val logoUrl = profile?.logoUrl
@@ -296,7 +525,17 @@ class FillProfileFragment : Fragment(R.layout.fragment_fill_profile) {
         } else {
             val profile = user.profile
             binding.etName.setText(profile?.fullName ?: defaultName.orEmpty())
-            binding.etCity.setText(profile?.city.orEmpty())
+            binding.etCity.setText(SERVICE_CITY)
+            selectedLocationAddress = profile?.locationAddress ?: userPreferences.getUserLocationAddress()
+            selectedLatitude = profile?.latitude ?: userPreferences.getUserLocationLatitude()
+            selectedLongitude = profile?.longitude ?: userPreferences.getUserLocationLongitude()
+            selectedLocationAddress?.let {
+                showSelectedLocation(
+                    address = it,
+                    switchChecked = true,
+                    switchEnabled = true
+                )
+            }
 
             val photoUrl = profile?.photoUrl
             if (!photoUrl.isNullOrBlank()) {

@@ -44,6 +44,9 @@ object UserMapper {
             photoUrl = dto.photoUrl,
             bio = dto.bio,
             city = dto.city,
+            locationAddress = dto.locationAddress,
+            latitude = dto.latitude,
+            longitude = dto.longitude,
             interests = dto.interests
         )
     }
@@ -55,6 +58,9 @@ object UserMapper {
             photoUrl = profile.photoUrl,
             bio = profile.bio,
             city = profile.city,
+            locationAddress = profile.locationAddress,
+            latitude = profile.latitude,
+            longitude = profile.longitude,
             interests = profile.interests
         )
     }

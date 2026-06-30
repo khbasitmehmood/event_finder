@@ -168,7 +168,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:boxBackgroundMode="none"
-                app:errorEnabled="true"
+                app:helperText="@string/fill_profile_lahore_service_caption"
+                app:helperTextTextAppearance="@style/TextAppearance.App.BodySmall"
                 app:hintEnabled="false">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -176,8 +177,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_input_pill"
+                    android:enabled="false"
+                    android:focusable="false"
                     android:hint="@string/fill_profile_hint_city"
                     android:inputType="text"
+                    android:text="Lahore"
                     android:textAppearance="@style/TextAppearance.App.BodyMedium"
                     android:textColor="@color/text_primary" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -190,6 +194,7 @@
                 android:layout_marginStart="@dimen/spacing_small"
                 android:layout_marginBottom="@dimen/spacing_medium"
                 android:text="@string/hint_org_description"
+                android:layout_marginTop="@dimen/spacing_large"
                 android:textAppearance="@style/TextAppearance.App.TitleSmall"
                 android:visibility="gone" />
 
@@ -245,6 +250,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
+                    android:id="@+id/tvUseLocationSubtitle"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:text="@string/fill_profile_use_location_subtitle"
@@ -252,6 +258,20 @@
                     android:textColor="@color/text_secondary"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/tvUseLocationTitle" />
+
+                <TextView
+                    android:id="@+id/tvSelectedLocation"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:ellipsize="end"
+                    android:maxLines="2"
+                    android:textAppearance="@style/TextAppearance.App.BodySmall"
+                    android:textColor="@color/md_primary"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toStartOf="@id/switchLocation"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvUseLocationSubtitle" />
 
                 <com.google.android.material.materialswitch.MaterialSwitch
                     android:id="@+id/switchLocation"

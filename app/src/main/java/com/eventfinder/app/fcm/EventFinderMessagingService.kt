@@ -9,6 +9,7 @@ import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.eventfinder.app.MainActivity
 import com.eventfinder.app.R
+import com.eventfinder.app.utils.UserPreferences
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 
@@ -28,6 +29,11 @@ class EventFinderMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(message: RemoteMessage) {
         super.onMessageReceived(message)
+
+        if (!UserPreferences(this).areNotificationsEnabled()) {
+            android.util.Log.d(TAG, "Notifications disabled by user preference")
+            return
+        }
 
         android.util.Log.d(TAG, "Message received from: ${message.from}")
 

@@ -21,6 +21,9 @@ data class UserProfile(
     val photoUrl: String? = null,
     val bio: String? = null,
     val city: String? = null,
+    val locationAddress: String? = null,
+    val latitude: Double? = null,
+    val longitude: Double? = null,
     val interests: List<String> = emptyList()
 )
 

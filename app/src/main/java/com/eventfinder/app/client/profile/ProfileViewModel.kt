@@ -53,7 +53,7 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun loadCurrentUser() {
+    fun loadCurrentUser() {
         viewModelScope.launch {
             getCurrentUserUseCase().fold(
                 onSuccess = { user ->
