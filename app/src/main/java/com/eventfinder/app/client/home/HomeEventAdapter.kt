@@ -74,12 +74,12 @@ class HomeEventAdapter(
                 }
 
                 // Price
-                if (event.isFree) {
-                    eventPrice.text = "Free"
-                    eventPrice.visibility = android.view.View.GONE
-                } else {
+                if (event.hasPaidTicket()) {
                     eventPrice.text = "${event.currency ?: "PKR"} ${event.price?.toInt() ?: 0}"
                     eventPrice.visibility = android.view.View.VISIBLE
+                } else {
+                    eventPrice.text = "Free"
+                    eventPrice.visibility = android.view.View.GONE
                 }
 
                 // Image

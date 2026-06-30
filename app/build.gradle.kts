@@ -9,6 +9,9 @@ plugins {
 android {
     namespace = "com.eventfinder.app"
     compileSdk = 35
+    val paymentApiBaseUrl = providers.gradleProperty("PAYMENT_API_BASE_URL")
+        .orElse("https://eventfinder-payments.YOUR_SUBDOMAIN.workers.dev")
+        .get()
 
     // Enable 16KB page size support (AGP 8.7+)
     @Suppress("UnstableApiUsage")
@@ -22,6 +25,7 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        buildConfigField("String", "PAYMENT_API_BASE_URL", "\"$paymentApiBaseUrl\"")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -98,6 +102,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.storage)
+    implementation(libs.firebase.ai)
     implementation(libs.firebase.messaging)
 
     // Maps & Location

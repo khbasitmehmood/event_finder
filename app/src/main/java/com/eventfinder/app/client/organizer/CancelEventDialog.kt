@@ -55,13 +55,13 @@ class CancelEventDialog : DialogFragment() {
         }
 
         // Refund information
-        if (!event.isFree && event.currentParticipantCount > 0) {
+        if (event.hasPaidTicket() && event.currentParticipantCount > 0) {
             val refundPerTicket = event.price ?: 0.0
             impactLines.add("• Refunds of ${event.currency} ${String.format("%.2f", refundPerTicket)} per ticket will be initiated")
 
             val totalRefund = refundPerTicket * event.currentParticipantCount
             impactLines.add("• Total refund amount: ${event.currency} ${String.format("%.2f", totalRefund)}")
-        } else if (event.isFree) {
+        } else if (!event.hasPaidTicket()) {
             impactLines.add("• This is a free event, no refunds needed")
         }
 

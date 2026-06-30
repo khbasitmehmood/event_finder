@@ -256,7 +256,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="4dp"
-                                android:text="12"
+                                android:text="0"
                                 android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
                                 android:textColor="@color/md_primary" />
 
@@ -294,7 +294,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginBottom="4dp"
-                                android:text="56"
+                                android:text="0"
                                 android:textAppearance="@style/TextAppearance.App.HeadlineMedium"
                                 android:textColor="@color/md_secondary" />
 

@@ -10,7 +10,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.eventfinder.app.R
 import com.eventfinder.app.client.home.CalendarAdapter
 import com.eventfinder.app.client.home.CalendarDay
@@ -34,6 +36,7 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
 
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var eventsAdapter: HomeEventAdapter
+    private val upcomingEventsSnapHelper = LinearSnapHelper()
 
     private var currentWeekStart = Calendar.getInstance()
     private val monthYearFormat = SimpleDateFormat("MMMM yyyy", Locale.getDefault())
@@ -49,11 +52,22 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
 
     private fun setupUI() {
         // Setup events RecyclerView
-        eventsAdapter = HomeEventAdapter { event -> navigateToEventDetail(event) }
+        eventsAdapter = HomeEventAdapter(isHorizontal = true) { event ->
+            viewModel.selectEvent(event.dashboardEventId())
+        }
         binding.rvUpcomingEvents.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
             adapter = eventsAdapter
             setHasFixedSize(false)
+            upcomingEventsSnapHelper.attachToRecyclerView(this)
+            addOnScrollListener(object : RecyclerView.OnScrollListener() {
+                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                    super.onScrollStateChanged(recyclerView, newState)
+                    if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                        selectSnappedUpcomingEvent(recyclerView)
+                    }
+                }
+            })
         }
 
         // Create Event buttons
@@ -68,7 +82,7 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
         }
 
         binding.btnScanTicket.setOnClickListener {
-            Toast.makeText(context, "Scan Ticket feature coming soon", Toast.LENGTH_SHORT).show()
+            navigateToScannerForSelectedEvent()
         }
 
 
@@ -169,8 +183,9 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
                     }
 
                     // Update events list
-                    eventsAdapter.submitList(state.userEvents)
-                    updateEventsVisibility(state.userEvents)
+                    eventsAdapter.submitList(state.upcomingEvents)
+                    updateEventsVisibility(state.upcomingEvents)
+                    updateSelectedEventStats(state)
 
                     // Handle errors
                     state.error?.let {
@@ -186,10 +201,54 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
         if (events.isEmpty()) {
             binding.emptyLayout.isVisible = true
             binding.eventListLayout.isVisible = false
+            binding.btnScanTicket.isEnabled = false
         } else {
             binding.eventListLayout.isVisible = true
             binding.emptyLayout.isVisible = false
         }
+    }
+
+    private fun updateSelectedEventStats(state: OrganizerDashboardViewModel.OrganizerDashboardUiState) {
+        binding.tvTicketsSoldValue.text = if (state.isLoadingSelectedStats) {
+            "..."
+        } else {
+            state.selectedEventStats.ticketsSold.toString()
+        }
+        binding.tvAttendeeValue.text = if (state.isLoadingSelectedStats) {
+            "..."
+        } else {
+            state.selectedEventStats.peopleAttending.toString()
+        }
+
+        val canScan = state.selectedEventId != null && state.upcomingEvents.isNotEmpty()
+        binding.btnScanTicket.isEnabled = canScan
+        binding.btnScanTicket.alpha = if (canScan) 1f else 0.5f
+    }
+
+    private fun selectSnappedUpcomingEvent(recyclerView: RecyclerView) {
+        val layoutManager = recyclerView.layoutManager as? LinearLayoutManager ?: return
+        val snappedView = upcomingEventsSnapHelper.findSnapView(layoutManager) ?: return
+        val position = layoutManager.getPosition(snappedView)
+        val event = eventsAdapter.currentList.getOrNull(position) ?: return
+        viewModel.selectEvent(event.dashboardEventId())
+    }
+
+    private fun navigateToScannerForSelectedEvent() {
+        val state = viewModel.uiState.value
+        val selectedEvent = state.upcomingEvents.firstOrNull {
+            it.dashboardEventId() == state.selectedEventId
+        }
+
+        if (selectedEvent == null) {
+            Toast.makeText(context, "Select an event first", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val bundle = Bundle().apply {
+            putString("EVENT_ID", selectedEvent.dashboardEventId())
+            putString("EVENT_TITLE", selectedEvent.title)
+        }
+        findNavController().navigate(R.id.qrScannerFragment, bundle)
     }
 
     private fun navigateToEventDetail(event: Event) {
@@ -208,5 +267,9 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    private fun Event.dashboardEventId(): String {
+        return eventId.ifBlank { id }
     }
 }

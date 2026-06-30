@@ -42,6 +42,10 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
     @Inject
     lateinit var userPreferences: UserPreferences
 
+    private var launchedCheckoutId: String? = null
+    private var waitingForCheckoutReturn: Boolean = false
+    private var handledReturnCheckoutId: String? = null
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentEventDetailBinding.bind(view)
@@ -132,30 +136,63 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
                         Toast.makeText(context, state.error, Toast.LENGTH_SHORT).show()
                     } else if (state.event != null) {
                         bindEventData(state.event)
-                        updateActionButton(state.event, state.userTicket)
+                        updateActionButton(state.event, state.userTicket, state.confirmedTicketId)
+                        handlePendingPaymentReturn(state.event)
+                    }
+
+                    val checkout = state.checkout
+                    if (checkout != null && launchedCheckoutId != checkout.checkoutId) {
+                        launchedCheckoutId = checkout.checkoutId
+                        waitingForCheckoutReturn = true
+                        val eventId = state.event?.eventId.orEmpty()
+                        if (eventId.isNotBlank()) {
+                            userPreferences.setPendingPayment(
+                                checkoutId = checkout.checkoutId,
+                                eventId = eventId,
+                                userId = userPreferences.getUserId()
+                            )
+                        }
+                        startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(checkout.checkoutUrl)))
+                    }
+
+                    if (!state.checkoutStatusMessage.isNullOrBlank()) {
+                        Toast.makeText(requireContext(), state.checkoutStatusMessage, Toast.LENGTH_SHORT).show()
+                        viewModel.clearCheckoutStatusMessage()
                     }
 
                     // Handle purchase success
                     if (state.purchaseSuccess) {
+                        userPreferences.clearPendingPayment()
                         showTicketPurchasedDialog()
                         viewModel.resetPurchaseSuccess()
+                    }
+
+                    if (!state.failedCheckoutId.isNullOrBlank()) {
+                        if (state.failedCheckoutId == userPreferences.getPendingPaymentCheckoutId()) {
+                            userPreferences.clearPendingPayment()
+                        }
+                        viewModel.clearFailedCheckout()
                     }
 
                     // Update button loading state
                     binding.btnRegister.isEnabled = !state.isPurchasing
                     if (state.isPurchasing) {
-                        binding.btnRegister.text = "Processing..."
+                        binding.btnRegister.text = if (state.checkoutInProgress) "Opening Safepay..." else "Processing..."
                     }
                 }
             }
         }
     }
 
-    private fun updateActionButton(event: Event, userTicket: com.eventfinder.app.domain.model.Ticket?) {
+    private fun updateActionButton(
+        event: Event,
+        userTicket: com.eventfinder.app.domain.model.Ticket?,
+        confirmedTicketId: String?
+    ) {
         when {
-            userTicket != null -> {
+            userTicket != null || !confirmedTicketId.isNullOrBlank() -> {
                 // User already has a ticket
-                when (userTicket.status) {
+                when (userTicket?.status) {
                     TicketStatus.CHECKED_IN -> {
                         binding.btnRegister.text = "Checked In ✓"
                         binding.btnRegister.isEnabled = false
@@ -174,10 +211,10 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
                 binding.btnRegister.text = "I am going"
             }
             event.visibility == EventVisibility.PRIVATE && event.requiresTicket -> {
-                if (event.isFree) {
-                    binding.btnRegister.text = "Get Free Ticket"
+                if (event.requiresPaidCheckout()) {
+                    binding.btnRegister.text = "Buy Ticket"
                 } else {
-                    binding.btnRegister.text = "Buy Ticket - ${event.currency} ${event.price}"
+                    binding.btnRegister.text = "Get Free Ticket"
                 }
             }
             else -> {
@@ -191,8 +228,9 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
         val event = state.event ?: return
 
         // If user already has a ticket, navigate to ticket detail
-        if (state.userTicket != null) {
-            val bundle = bundleOf("TICKET_ID" to state.userTicket.ticketId)
+        val existingTicketId = state.userTicket?.ticketId ?: state.confirmedTicketId
+        if (!existingTicketId.isNullOrBlank()) {
+            val bundle = bundleOf("TICKET_ID" to existingTicketId)
             findNavController().navigate(R.id.ticketDetailFragment, bundle)
             return
         }
@@ -205,15 +243,19 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
         // Show confirmation dialog
         val actionText = when {
             event.visibility == EventVisibility.PUBLIC -> "reserve your spot"
-            event.isFree -> "get your free ticket"
-            else -> "purchase this ticket"
+            event.requiresPaidCheckout() -> "purchase this ticket"
+            else -> "get your free ticket"
         }
 
         MaterialAlertDialogBuilder(requireContext())
             .setTitle("Confirm Registration")
             .setMessage("Are you sure you want to $actionText for \"${event.title}\"?")
             .setPositiveButton("Confirm") { _, _ ->
-                viewModel.purchaseTicket(event, userId, userName, userEmail)
+                if (event.requiresPaidCheckout()) {
+                    viewModel.startPaidCheckout(event, userId, userName, userEmail)
+                } else {
+                    viewModel.purchaseTicket(event, userId, userName, userEmail)
+                }
             }
             .setNegativeButton("Cancel", null)
             .show()
@@ -234,9 +276,10 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
             .setTitle(title)
             .setMessage(message)
             .setPositiveButton("View Ticket") { _, _ ->
-                val ticket = viewModel.uiState.value.userTicket
-                if (ticket != null) {
-                    val bundle = bundleOf("TICKET_ID" to ticket.ticketId)
+                val ticketId = viewModel.uiState.value.userTicket?.ticketId
+                    ?: viewModel.uiState.value.confirmedTicketId
+                if (!ticketId.isNullOrBlank()) {
+                    val bundle = bundleOf("TICKET_ID" to ticketId)
                     findNavController().navigate(R.id.ticketDetailFragment, bundle)
                 }
             }
@@ -262,7 +305,7 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
         }
         
         // Price
-        if (event.isFree || event.price == null || event.price == 0.0) {
+        if (!event.hasPaidTicket()) {
             binding.tvDetailPrice.text = "Free"
         } else {
             binding.tvDetailPrice.text = "${event.currency} ${event.price}"
@@ -320,5 +363,40 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (!waitingForCheckoutReturn || launchedCheckoutId.isNullOrBlank()) return
+
+        waitingForCheckoutReturn = false
+        val event = viewModel.uiState.value.event ?: return
+        viewModel.completePaidCheckout(
+            event = event,
+            userId = userPreferences.getUserId(),
+            userName = userPreferences.getUserName(),
+            userEmail = userPreferences.getUserEmail() ?: "",
+            checkoutId = launchedCheckoutId
+        )
+    }
+
+    private fun handlePendingPaymentReturn(event: Event) {
+        val checkoutId = arguments?.getString("PAYMENT_CHECKOUT_ID") ?: return
+        val outcome = arguments?.getString("PAYMENT_OUTCOME")
+        if (outcome == "cancel") {
+            userPreferences.clearPendingPayment()
+            Toast.makeText(requireContext(), "Payment cancelled", Toast.LENGTH_SHORT).show()
+            return
+        }
+        if (handledReturnCheckoutId == checkoutId) return
+        handledReturnCheckoutId = checkoutId
+
+        viewModel.completePaidCheckout(
+            event = event,
+            userId = userPreferences.getUserId(),
+            userName = userPreferences.getUserName(),
+            userEmail = userPreferences.getUserEmail() ?: "",
+            checkoutId = checkoutId
+        )
     }
 }

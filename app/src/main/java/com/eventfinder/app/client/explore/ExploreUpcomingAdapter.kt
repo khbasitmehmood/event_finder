@@ -64,13 +64,13 @@ class ExploreUpcomingAdapter(
             eventDateTime.text = DateFormatter.formatTime(event.startTime)
 
             // Set price
-            if (!event.isFree && event.price != null) {
+            if (event.hasPaidTicket() && event.price != null) {
                 val formattedPrice = NumberFormat.getCurrencyInstance(Locale("en", "PK"))
                     .apply { currency = java.util.Currency.getInstance(event.currency ?: "PKR") }
                     .format(event.price)
                 eventPrice.text = formattedPrice
                 eventPrice.isVisible = true
-            } else if (event.isFree) {
+            } else if (!event.hasPaidTicket()) {
                 eventPrice.text = "FREE"
                 eventPrice.isVisible = true
             } else {

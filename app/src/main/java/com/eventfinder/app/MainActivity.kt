@@ -1,6 +1,7 @@
 package com.eventfinder.app
 
 import android.Manifest
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.View
@@ -17,6 +18,7 @@ import com.eventfinder.app.databinding.ActivityMainBinding
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.usecase.SeedCategoriesUseCase
 import com.eventfinder.app.fcm.FcmTokenManager
+import com.eventfinder.app.utils.UserPreferences
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -34,6 +36,9 @@ class MainActivity : AppCompatActivity() {
 
     @Inject
     lateinit var fcmTokenManager: FcmTokenManager
+
+    @Inject
+    lateinit var userPreferences: UserPreferences
 
     private var currentUserType: UserType? = null
 
@@ -71,9 +76,16 @@ class MainActivity : AppCompatActivity() {
         updateBottomNavForUserType() // Setup dynamic bottom nav based on user type
         setupNavigation()
         observeViewModel()
+        handlePaymentDeepLink(intent)
 
         // Request notification permission
         requestNotificationPermission()
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        handlePaymentDeepLink(intent)
     }
 
     private fun observeViewModel() {
@@ -137,6 +149,32 @@ class MainActivity : AppCompatActivity() {
             true
         } catch (e: Exception) {
             false
+        }
+    }
+
+    private fun handlePaymentDeepLink(intent: Intent?) {
+        val uri = intent?.data ?: return
+        if (uri.scheme != "eventfinder" || uri.host != "payment") return
+
+        val checkoutId = uri.getQueryParameter("checkoutId") ?: userPreferences.getPendingPaymentCheckoutId()
+        val eventId = uri.getQueryParameter("eventId") ?: userPreferences.getPendingPaymentEventId()
+        val outcome = uri.lastPathSegment ?: ""
+
+        android.util.Log.d(
+            "MainActivity",
+            "Payment deep link outcome=$outcome checkoutId=$checkoutId eventId=$eventId"
+        )
+
+        if (navController.currentDestination?.id == R.id.eventDetailFragment) {
+            return
+        }
+
+        if (!eventId.isNullOrBlank()) {
+            navController.navigate(R.id.eventDetailFragment, Bundle().apply {
+                putString("EVENT_ID", eventId)
+                putString("PAYMENT_CHECKOUT_ID", checkoutId)
+                putString("PAYMENT_OUTCOME", outcome)
+            })
         }
     }
 

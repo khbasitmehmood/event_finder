@@ -1,6 +1,7 @@
 package com.eventfinder.app.data.mapper
 
 import com.eventfinder.app.data.model.TicketDto
+import com.eventfinder.app.domain.model.PaymentStatus
 import com.eventfinder.app.domain.model.Ticket
 import com.eventfinder.app.domain.model.TicketStatus
 import com.eventfinder.app.domain.model.TicketType
@@ -27,8 +28,12 @@ object TicketMapper {
             ticketType = safeValueOfTicketType(dto.ticketType),
             status = safeValueOfTicketStatus(dto.status),
             qrCodeData = dto.qrCodeData,
-            purchasePrice = dto.purchasePrice,
+            purchasePrice = dto.purchasePrice.toDouble(),
             currency = dto.currency,
+            paymentStatus = safeValueOfPaymentStatus(dto.paymentStatus),
+            paymentProvider = dto.paymentProvider,
+            paymentTransactionId = dto.paymentTransactionId,
+            paidAt = dto.paidAt?.toDate()?.time,
             purchasedAt = dto.purchasedAt?.toDate()?.time ?: System.currentTimeMillis(),
             checkedInAt = dto.checkedInAt?.toDate()?.time,
             checkedInBy = dto.checkedInBy,
@@ -59,6 +64,12 @@ object TicketMapper {
             qrCodeData = ticket.qrCodeData,
             purchasePrice = ticket.purchasePrice,
             currency = ticket.currency,
+            paymentStatus = ticket.paymentStatus.name,
+            paymentProvider = ticket.paymentProvider,
+            paymentTransactionId = ticket.paymentTransactionId,
+            paidAt = ticket.paidAt?.let {
+                Timestamp(it / 1000, ((it % 1000) * 1000000).toInt())
+            },
             purchasedAt = Timestamp(
                 ticket.purchasedAt / 1000,
                 ((ticket.purchasedAt % 1000) * 1000000).toInt()
@@ -92,6 +103,14 @@ object TicketMapper {
             value?.let { TicketStatus.valueOf(it) } ?: TicketStatus.RESERVED
         } catch (e: IllegalArgumentException) {
             TicketStatus.RESERVED
+        }
+    }
+
+    private fun safeValueOfPaymentStatus(value: String?): PaymentStatus {
+        return try {
+            value?.let { PaymentStatus.valueOf(it) } ?: PaymentStatus.NOT_REQUIRED
+        } catch (e: IllegalArgumentException) {
+            PaymentStatus.NOT_REQUIRED
         }
     }
 }

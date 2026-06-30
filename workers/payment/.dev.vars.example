@@ -1,0 +1,5 @@
+SAFEPAY_SECRET_KEY=sec_test_xxx
+SAFEPAY_API_KEY=pk_test_xxx
+SAFEPAY_WEBHOOK_HMAC_KEY=
+FIREBASE_CLIENT_EMAIL=firebase-adminsdk-xxxxx@eventfinder-alpha-1.iam.gserviceaccount.com
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n"

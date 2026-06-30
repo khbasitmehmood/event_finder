@@ -1,0 +1,11 @@
+name = "eventfinder-payments"
+main = "src/index.js"
+compatibility_date = "2026-06-30"
+
+[vars]
+SAFEPAY_ENVIRONMENT = "sandbox"
+SAFEPAY_INTENT = "CYBERSOURCE"
+SAFEPAY_ENTRY_MODE = "raw"
+SAFEPAY_REDIRECT_URL = "eventfinder://payment/complete"
+SAFEPAY_CANCEL_URL = "eventfinder://payment/cancel"
+FIREBASE_PROJECT_ID = "eventfinder-alpha-1"

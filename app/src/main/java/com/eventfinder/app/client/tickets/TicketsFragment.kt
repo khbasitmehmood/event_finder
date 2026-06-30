@@ -44,6 +44,13 @@ class TicketsFragment : Fragment(R.layout.fragment_tickets) {
         viewModel.loadUserTickets(userId)
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (_binding != null) {
+            viewModel.refreshTickets(userPreferences.getUserId())
+        }
+    }
+
     private fun setupViewPager() {
         pagerAdapter = TicketsPagerAdapter(this, emptyList(), emptyList(), emptyList())
         binding.viewPager.adapter = pagerAdapter

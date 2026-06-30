@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.eventfinder.app.R
-import com.eventfinder.app.client.user.model.ChatMessage
+import com.eventfinder.app.client.chatbot.ChatMessage
 
 class ChatAdapter(private val messages: List<ChatMessage>) :
     RecyclerView.Adapter<ChatAdapter.ChatViewHolder>() {
@@ -16,11 +16,11 @@ class ChatAdapter(private val messages: List<ChatMessage>) :
     }
 
     override fun getItemViewType(position: Int): Int {
-        return if (messages[position].isUser) 1 else 0
+        return if (messages[position].isUser) VIEW_TYPE_USER else VIEW_TYPE_BOT
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
-        val layout = if (viewType == 1)
+        val layout = if (viewType == VIEW_TYPE_USER)
             R.layout.item_user_message
         else
             R.layout.item_bot_message
@@ -32,14 +32,22 @@ class ChatAdapter(private val messages: List<ChatMessage>) :
     override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
         val chat = messages[position]
 
-        if (chat.isTyping) {
-            holder.tvMessage.text = "Bot is typing..."
-            holder.tvMessage.alpha = 0.6f
-        } else {
-            holder.tvMessage.text = chat.message
-            holder.tvMessage.alpha = 1f
+        when {
+            chat.isTyping -> {
+                holder.tvMessage.text = "Bot is typing..."
+                holder.tvMessage.alpha = 0.6f
+            }
+            else -> {
+                holder.tvMessage.text = chat.message
+                holder.tvMessage.alpha = 1f
+            }
         }
     }
 
     override fun getItemCount(): Int = messages.size
+
+    companion object {
+        private const val VIEW_TYPE_BOT = 0
+        private const val VIEW_TYPE_USER = 1
+    }
 }
