@@ -2,8 +2,10 @@ package com.eventfinder.app.client.auth
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eventfinder.app.domain.model.User
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.usecase.auth.LoginUseCase
+import com.eventfinder.app.fcm.FcmTokenManager
 import com.eventfinder.app.utils.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -16,7 +18,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LoginViewModel @Inject constructor(
     private val loginUseCase: LoginUseCase,
-    private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferences,
+    private val fcmTokenManager: FcmTokenManager
 ) : ViewModel() {
 
     companion object {
@@ -48,21 +51,14 @@ class LoginViewModel @Inject constructor(
                             }
 
                             userPreferences.setUserType(user.userType.name)
+                            fcmTokenManager.saveCurrentTokenForUser(
+                                userId = user.uid,
+                                notificationsEnabled = userPreferences.areNotificationsEnabled()
+                            )
 
-                            // Dynamically check if profile is complete
-                            val isComplete = if (user.userType == UserType.USER) {
-                                user.profile != null &&
-                                    user.profile.fullName.isNotBlank() &&
-                                    !user.profile.photoUrl.isNullOrBlank()
-                            } else {
-                                user.organizerProfile != null &&
-                                    user.organizerProfile.organizationName.isNotBlank() &&
-                                    user.organizerProfile.contactPerson.isNotBlank() &&
-                                    user.organizerProfile.phoneNumber.isNotBlank() &&
-                                    !user.organizerProfile.logoUrl.isNullOrBlank()
-                            }
-
-                            _uiState.value = AuthUiState.Success(user.copy(isProfileComplete = isComplete))
+                            _uiState.value = AuthUiState.Success(
+                                user.copy(isProfileComplete = user.isOnboardingComplete())
+                            )
                         },
                         onFailure = { error ->
                             _uiState.value = AuthUiState.Error(
@@ -81,5 +77,18 @@ class LoginViewModel @Inject constructor(
 
     fun resetState() {
         _uiState.value = AuthUiState.Idle
+    }
+}
+
+private fun User.isOnboardingComplete(): Boolean {
+    if (isProfileComplete) return true
+
+    return if (userType == UserType.USER) {
+        profile?.fullName?.isNotBlank() == true
+    } else {
+        val organizer = organizerProfile ?: return false
+        organizer.organizationName.isNotBlank() &&
+            organizer.contactPerson.isNotBlank() &&
+            organizer.phoneNumber.isNotBlank()
     }
 }

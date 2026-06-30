@@ -99,10 +99,10 @@ class CreateEventViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = CreateEventUiState.Loading
 
-            val normalizedPrice = price?.takeIf { visibility != EventVisibility.PUBLIC && it > 0.0 }
+            val normalizedPrice = price?.takeIf { it > 0.0 }
             val normalizedIsFree = normalizedPrice == null
             val normalizedCurrency = if (normalizedIsFree) null else currency?.takeIf { it.isNotBlank() } ?: "PKR"
-            val normalizedRequiresTicket = visibility != EventVisibility.PUBLIC && (requiresTicket || !normalizedIsFree)
+            val normalizedRequiresTicket = requiresTicket || !normalizedIsFree
 
             try {
                 val event = Event(
@@ -195,10 +195,10 @@ class CreateEventViewModel @Inject constructor(
             _draftState.value = DraftState.Saving
 
             try {
-                val normalizedPrice = price?.takeIf { visibility != EventVisibility.PUBLIC && it > 0.0 }
+                val normalizedPrice = price?.takeIf { it > 0.0 }
                 val normalizedIsFree = normalizedPrice == null
                 val normalizedCurrency = if (normalizedIsFree) null else currency?.takeIf { it.isNotBlank() } ?: "PKR"
-                val normalizedRequiresTicket = visibility != EventVisibility.PUBLIC && (requiresTicket || !normalizedIsFree)
+                val normalizedRequiresTicket = requiresTicket || !normalizedIsFree
 
                 val draft = com.eventfinder.app.domain.model.EventDraft(
                     title = title.trim(),

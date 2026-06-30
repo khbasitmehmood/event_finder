@@ -20,11 +20,20 @@ class EventFinderMessagingService : FirebaseMessagingService() {
 
     override fun onNewToken(token: String) {
         super.onNewToken(token)
-        android.util.Log.d(TAG, "New FCM token: $token")
+        android.util.Log.d(TAG, "New FCM token received")
 
-        // TODO: Send token to your server to enable push notifications for this device
-        // For now, just log it
-        // In production: sendTokenToServer(token)
+        val userPreferences = UserPreferences(this)
+        val userId = userPreferences.getStoredUserId()
+        if (userId.isNullOrBlank()) {
+            android.util.Log.d(TAG, "Skipping FCM token save because no signed-in user is stored")
+            return
+        }
+
+        saveFcmTokenForUser(
+            userId = userId,
+            token = token,
+            notificationsEnabled = userPreferences.areNotificationsEnabled()
+        )
     }
 
     override fun onMessageReceived(message: RemoteMessage) {

@@ -176,10 +176,9 @@ data class Event(
 
     /**
      * Returns true when the event has a paid ticket.
-     * Public events are free reservations in the current product flow.
      */
     fun hasPaidTicket(): Boolean {
-        return visibility != EventVisibility.PUBLIC && (price ?: 0.0) > 0.0
+        return (price ?: 0.0) > 0.0
     }
 
     fun requiresPaidCheckout(): Boolean {

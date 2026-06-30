@@ -80,7 +80,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     updateYourEventsVisibility(state.userEvents)
 
                     featuredAdapter.submitList(state.featuredEvents)
-                    eventsNearYouAdapter.submitList(state.featuredEvents)
+                    eventsNearYouAdapter.submitList(state.nearbyEvents)
 
                     // Update Loading states
                     val isAnyLoading = state.isLoadingFeatured || state.isLoadingUserEvents
@@ -88,7 +88,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                     // Show placeholders if empty and loading
                     binding.progressBarFeatured.isVisible = state.isLoadingFeatured && state.featuredEvents.isEmpty()
-                    binding.progressBarNearYou.isVisible = state.isLoadingFeatured && state.featuredEvents.isEmpty()
+                    binding.progressBarNearYou.isVisible = state.isLoadingFeatured && state.nearbyEvents.isEmpty()
                     binding.progressBarYourEvents.isVisible = state.isLoadingUserEvents && state.userEvents.isEmpty()
 
                     // 5. Handle Errors

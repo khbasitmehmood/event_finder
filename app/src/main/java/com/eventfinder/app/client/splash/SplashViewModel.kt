@@ -2,8 +2,10 @@ package com.eventfinder.app.client.splash
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.eventfinder.app.domain.model.User
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.usecase.auth.GetCurrentUserUseCase
+import com.eventfinder.app.fcm.FcmTokenManager
 import com.eventfinder.app.utils.AuthFlowSource
 import com.eventfinder.app.utils.AuthPendingStep
 import com.eventfinder.app.utils.UserPreferences
@@ -18,7 +20,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SplashViewModel @Inject constructor(
     private val getCurrentUserUseCase: GetCurrentUserUseCase,
-    private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferences,
+    private val fcmTokenManager: FcmTokenManager
 ) : ViewModel() {
 
     private val _navigationState = MutableStateFlow<SplashNavigationState>(SplashNavigationState.Idle)
@@ -35,11 +38,27 @@ class SplashViewModel @Inject constructor(
                         // User is logged in, update preferences
                         userPreferences.setUserId(user.uid)
                         userPreferences.setUserType(user.userType.name)
+                        fcmTokenManager.saveCurrentTokenForUser(
+                            userId = user.uid,
+                            notificationsEnabled = userPreferences.areNotificationsEnabled()
+                        )
                         
                         user.profile?.fullName?.let {
                             userPreferences.setUserName(it)
                         } ?: user.organizerProfile?.organizationName?.let {
                             userPreferences.setUserName(it)
+                        }
+
+                        val isComplete = user.isOnboardingComplete()
+                        val pendingAuthStep = userPreferences.getPendingAuthStep()
+                        val shouldClearPendingStep = isComplete && when (pendingAuthStep) {
+                            AuthPendingStep.FILL_PROFILE_REGISTER,
+                            AuthPendingStep.FILL_PROFILE_LOGIN -> true
+                            AuthPendingStep.CHOOSE_INTERESTS -> user.hasSelectedInterests()
+                            else -> false
+                        }
+                        if (shouldClearPendingStep) {
+                            userPreferences.clearPendingAuthStep()
                         }
 
                         when (userPreferences.getPendingAuthStep()) {
@@ -57,21 +76,7 @@ class SplashViewModel @Inject constructor(
                             }
                         }
 
-                        // Verify profile completeness
-                        val isComplete = if (user.userType == UserType.USER) {
-                            user.profile != null &&
-                            user.profile.fullName.isNotBlank() &&
-                            !user.profile.photoUrl.isNullOrBlank()
-                        } else {
-                            user.organizerProfile != null &&
-                            user.organizerProfile.organizationName.isNotBlank() &&
-                            user.organizerProfile.contactPerson.isNotBlank() &&
-                            user.organizerProfile.phoneNumber.isNotBlank() &&
-                            !user.organizerProfile.logoUrl.isNullOrBlank()
-                        }
-
                         if (isComplete) {
-                            userPreferences.clearPendingAuthStep()
                             // Navigate to appropriate home based on user type
                             _navigationState.value = if (user.userType == UserType.ORGANIZER) {
                                 SplashNavigationState.NavigateToDashboard
@@ -102,4 +107,25 @@ sealed class SplashNavigationState {
     object NavigateToLogin : SplashNavigationState()
     data class NavigateToFillProfile(val userType: UserType, val flowSource: String) : SplashNavigationState()
     data class NavigateToChooseInterests(val userType: UserType) : SplashNavigationState()
+}
+
+private fun User.isOnboardingComplete(): Boolean {
+    if (isProfileComplete) return true
+
+    return if (userType == UserType.USER) {
+        profile?.fullName?.isNotBlank() == true
+    } else {
+        val organizer = organizerProfile ?: return false
+        organizer.organizationName.isNotBlank() &&
+            organizer.contactPerson.isNotBlank() &&
+            organizer.phoneNumber.isNotBlank()
+    }
+}
+
+private fun User.hasSelectedInterests(): Boolean {
+    return if (userType == UserType.USER) {
+        profile?.interests?.isNotEmpty() == true
+    } else {
+        organizerProfile?.offeredEvents?.isNotEmpty() == true
+    }
 }

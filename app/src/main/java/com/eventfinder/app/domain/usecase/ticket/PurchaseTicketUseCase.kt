@@ -8,6 +8,7 @@ import com.eventfinder.app.domain.model.Ticket
 import com.eventfinder.app.domain.model.TicketStatus
 import com.eventfinder.app.domain.model.TicketType
 import com.eventfinder.app.domain.repository.TicketRepository
+import com.eventfinder.app.domain.service.NotificationService
 import java.util.UUID
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -17,7 +18,8 @@ import javax.inject.Singleton
  */
 @Singleton
 class PurchaseTicketUseCase @Inject constructor(
-    private val ticketRepository: TicketRepository
+    private val ticketRepository: TicketRepository,
+    private val notificationService: NotificationService
 ) {
 
     suspend operator fun invoke(
@@ -85,6 +87,15 @@ class PurchaseTicketUseCase @Inject constructor(
                 ticketType = ticketType,
                 amount = ticket.purchasePrice
             )
+            notificationService.notifyTicketCreated(
+                event = event,
+                buyerName = userName,
+                ticketType = ticketType.name,
+                amount = ticket.purchasePrice,
+                currency = ticket.currency
+            ).onFailure { error ->
+                android.util.Log.e("PurchaseTicketUseCase", "Failed to notify organizer about ticket", error)
+            }
         }
 
         return result

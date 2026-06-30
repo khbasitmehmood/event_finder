@@ -2,13 +2,15 @@ package com.eventfinder.app.domain.usecase
 
 import com.eventfinder.app.domain.model.Event
 import com.eventfinder.app.domain.repository.EventRepository
+import com.eventfinder.app.domain.service.NotificationService
 import javax.inject.Inject
 
 /**
  * Use case for creating a new event
  */
 class CreateEventUseCase @Inject constructor(
-    private val eventRepository: EventRepository
+    private val eventRepository: EventRepository,
+    private val notificationService: NotificationService
 ) {
     suspend operator fun invoke(event: Event): Result<Event> {
         return try {
@@ -16,7 +18,14 @@ class CreateEventUseCase @Inject constructor(
             validateEvent(event)
 
             // Create event in repository
-            eventRepository.createEvent(event)
+            val result = eventRepository.createEvent(event)
+            result.onSuccess { createdEvent ->
+                notificationService.notifyPublicEventDiscovery(createdEvent)
+                    .onFailure { error ->
+                        android.util.Log.e("CreateEventUseCase", "Failed to notify matching users", error)
+                    }
+            }
+            result
         } catch (e: IllegalArgumentException) {
             Result.failure(e)
         } catch (e: Exception) {

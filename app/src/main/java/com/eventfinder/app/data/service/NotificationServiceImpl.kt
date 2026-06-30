@@ -128,6 +128,38 @@ class NotificationServiceImpl @Inject constructor(
         }
     }
 
+    override suspend fun notifyPublicEventDiscovery(event: Event): Result<Int> {
+        return Result.success(0)
+    }
+
+    override suspend fun notifyTicketCreated(
+        event: Event,
+        buyerName: String,
+        ticketType: String,
+        amount: Double,
+        currency: String
+    ): Result<EventNotification> {
+        val eventIdToUse = event.eventId.ifEmpty { event.id }
+        val isPaidTicket = amount > 0.0
+        return notifyEventOrganizer(
+            eventId = eventIdToUse,
+            organizerId = event.organizerId,
+            type = if (isPaidTicket) NotificationType.TICKET_SOLD else NotificationType.NEW_ATTENDEE,
+            title = if (isPaidTicket) "Ticket sold" else "New attendee",
+            message = if (isPaidTicket) {
+                "$buyerName bought a ticket for ${event.title}."
+            } else {
+                "$buyerName reserved a ticket for ${event.title}."
+            },
+            metadata = mapOf(
+                "buyerName" to buyerName,
+                "ticketType" to ticketType,
+                "amount" to amount.toString(),
+                "currency" to currency
+            )
+        )
+    }
+
     override suspend fun notifyEventPostponed(
         event: Event,
         reason: String,

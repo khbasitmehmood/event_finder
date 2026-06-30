@@ -459,7 +459,7 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
 
         val isPrivate = binding.toggleGroupVisibility.checkedButtonId == R.id.btnPrivate
         val visibility = if (isPrivate) EventVisibility.PRIVATE else EventVisibility.PUBLIC
-        val requiresTicket = isPrivate && binding.switchRequiresTicket.isChecked
+        val requiresTicket = !isFree || binding.switchRequiresTicket.isChecked
 
         viewModel.saveDraft(
             title = title,
@@ -532,7 +532,7 @@ class CreateEventFragment : Fragment(R.layout.fragment_create_event_new) {
         // Determine event visibility and ticket requirement
         val isPrivate = binding.toggleGroupVisibility.checkedButtonId == R.id.btnPrivate
         val visibility = if (isPrivate) EventVisibility.PRIVATE else EventVisibility.PUBLIC
-        val requiresTicket = isPrivate && binding.switchRequiresTicket.isChecked
+        val requiresTicket = !isFree || binding.switchRequiresTicket.isChecked
 
         // Create the event
         viewModel.createEvent(

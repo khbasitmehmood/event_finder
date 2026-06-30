@@ -42,6 +42,22 @@ interface NotificationService {
     ): Result<EventNotification>
 
     /**
+     * Notify users whose interests or saved location match a newly published public event.
+     */
+    suspend fun notifyPublicEventDiscovery(event: Event): Result<Int>
+
+    /**
+     * Notify organizer when a ticket is sold or reserved.
+     */
+    suspend fun notifyTicketCreated(
+        event: Event,
+        buyerName: String,
+        ticketType: String,
+        amount: Double,
+        currency: String
+    ): Result<EventNotification>
+
+    /**
      * Create notification for event postponement
      */
     suspend fun notifyEventPostponed(

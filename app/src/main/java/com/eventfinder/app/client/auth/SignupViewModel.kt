@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.eventfinder.app.domain.model.UserType
 import com.eventfinder.app.domain.usecase.auth.SignupUseCase
+import com.eventfinder.app.fcm.FcmTokenManager
 import com.eventfinder.app.utils.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -15,7 +16,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SignupViewModel @Inject constructor(
     private val signupUseCase: SignupUseCase,
-    private val userPreferences: UserPreferences
+    private val userPreferences: UserPreferences,
+    private val fcmTokenManager: FcmTokenManager
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow<AuthUiState>(AuthUiState.Idle)
@@ -36,6 +38,10 @@ class SignupViewModel @Inject constructor(
                     userPreferences.setUserId(user.uid)
                     // Keep signup name so Fill Profile can prefill it before the profile document is completed.
                     userPreferences.setUserName(fullName)
+                    fcmTokenManager.saveCurrentTokenForUser(
+                        userId = user.uid,
+                        notificationsEnabled = userPreferences.areNotificationsEnabled()
+                    )
                     _uiState.value = AuthUiState.Success(user)
                 },
                 onFailure = { error ->

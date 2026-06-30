@@ -47,15 +47,7 @@ class MainActivity : AppCompatActivity() {
     ) { isGranted ->
         if (isGranted) {
             android.util.Log.d("MainActivity", "Notification permission granted")
-            // Get and log FCM token
-            lifecycleScope.launch {
-                fcmTokenManager.getToken().onSuccess { token ->
-                    android.util.Log.d("FCM_TOKEN", "========================================")
-                    android.util.Log.d("FCM_TOKEN", "YOUR FCM TOKEN:")
-                    android.util.Log.d("FCM_TOKEN", token)
-                    android.util.Log.d("FCM_TOKEN", "========================================")
-                }
-            }
+            saveFcmTokenForCurrentUser()
         } else {
             android.util.Log.d("MainActivity", "Notification permission denied")
         }
@@ -66,19 +58,16 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Run the seeding logic once in the background
         lifecycleScope.launch {
             seedCategoriesUseCase()
         }
 
         navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
 
-        updateBottomNavForUserType() // Setup dynamic bottom nav based on user type
+        updateBottomNavForUserType()
         setupNavigation()
         observeViewModel()
         handlePaymentDeepLink(intent)
-
-        // Request notification permission
         requestNotificationPermission()
     }
 
@@ -89,23 +78,10 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun observeViewModel() {
-        // Admin mode observation - COMMENTED OUT (preserved for future admin features)
-        /*
-        viewModel.adminHeaderData.observe(this) { headerData ->
-            updateAdminHeader(headerData)
-        }
-
-        viewModel.switchModeEvent.observe(this) { event ->
-            event?.let {
-                handleSwitchModeEvent(it)
-                viewModel.onSwitchModeEventHandled()
-            }
-        }
-        */
+        // Admin mode observation is preserved for future admin features.
     }
 
     private fun setupNavigation() {
-        // Setup role-based bottom navigation handling
         var isUpdatingSelection = false
 
         binding.bottomNavigation.setOnItemReselectedListener {
@@ -114,18 +90,15 @@ class MainActivity : AppCompatActivity() {
 
         binding.bottomNavigation.setOnItemSelectedListener { item ->
             if (isUpdatingSelection) return@setOnItemSelectedListener true
-
             navigateToTopLevelDestination(item.itemId)
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
-            // Ensure the correct menu is loaded for the current user type (e.g. after login)
             updateBottomNavForUserType()
 
             val uiState = viewModel.onDestinationChanged(destination.id)
             applyNavigationUIState(uiState, destination.label?.toString())
 
-            // Update selected item based on current destination (prevent loops)
             isUpdatingSelection = true
             if (binding.bottomNavigation.menu.findItem(destination.id) != null) {
                 binding.bottomNavigation.selectedItemId = destination.id
@@ -178,16 +151,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    /**
-     * Loads role-specific bottom navigation tabs.
-     */
     fun updateBottomNavForUserType() {
         val userType = viewModel.getUserType()
 
         if (currentUserType == userType) return
         currentUserType = userType
 
-        // Clear any old admin mode preference to prevent confusion
         @Suppress("DEPRECATION")
         com.eventfinder.app.utils.ModeManager.setAdminMode(this, false)
 
@@ -208,7 +177,6 @@ class MainActivity : AppCompatActivity() {
                 else DrawerLayout.LOCK_MODE_UNLOCKED
             )
 
-            // Update admin title if in admin mode
             if (uiState.showAdminTopBar) {
                 tvAdminTitle.text = destinationLabel ?: getString(R.string.admin_dashboard)
             }
@@ -219,14 +187,35 @@ class MainActivity : AppCompatActivity() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
         } else {
-            // For older Android versions, get FCM token directly
-            lifecycleScope.launch {
-                fcmTokenManager.getToken().onSuccess { token ->
-                    android.util.Log.d("FCM_TOKEN", "========================================")
-                    android.util.Log.d("FCM_TOKEN", "YOUR FCM TOKEN:")
-                    android.util.Log.d("FCM_TOKEN", token)
-                    android.util.Log.d("FCM_TOKEN", "========================================")
-                }
+            saveFcmTokenForCurrentUser()
+            logFcmTokenForDebugging()
+        }
+    }
+
+    private fun saveFcmTokenForCurrentUser() {
+        val userId = userPreferences.getStoredUserId()
+        if (userId.isNullOrBlank()) {
+            android.util.Log.d("MainActivity", "Skipping FCM token save until a user is signed in")
+            return
+        }
+
+        lifecycleScope.launch {
+            fcmTokenManager.saveCurrentTokenForUser(
+                userId = userId,
+                notificationsEnabled = userPreferences.areNotificationsEnabled()
+            ).onSuccess {
+                android.util.Log.d("MainActivity", "FCM token saved for current user")
+            }
+        }
+    }
+
+    private fun logFcmTokenForDebugging() {
+        lifecycleScope.launch {
+            fcmTokenManager.getToken().onSuccess { token ->
+                android.util.Log.d("FCM_TOKEN", "========================================")
+                android.util.Log.d("FCM_TOKEN", "YOUR FCM TOKEN:")
+                android.util.Log.d("FCM_TOKEN", token)
+                android.util.Log.d("FCM_TOKEN", "========================================")
             }
         }
     }

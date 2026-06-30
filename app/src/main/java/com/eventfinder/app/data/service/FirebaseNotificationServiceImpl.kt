@@ -1,6 +1,9 @@
 package com.eventfinder.app.data.service
 
+import com.eventfinder.app.BuildConfig
 import com.eventfinder.app.domain.model.Event
+import com.eventfinder.app.domain.model.EventState
+import com.eventfinder.app.domain.model.EventVisibility
 import com.eventfinder.app.domain.model.EventNotification
 import com.eventfinder.app.domain.model.NotificationRecipientType
 import com.eventfinder.app.domain.model.NotificationType
@@ -8,10 +11,21 @@ import com.eventfinder.app.domain.repository.EventRepository
 import com.eventfinder.app.domain.service.NotificationService
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
+import com.google.gson.Gson
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.tasks.await
+import kotlinx.coroutines.withContext
+import java.io.OutputStreamWriter
+import java.net.HttpURLConnection
+import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.UUID
+import kotlin.math.atan2
+import kotlin.math.cos
+import kotlin.math.pow
+import kotlin.math.sin
+import kotlin.math.sqrt
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,6 +41,7 @@ class FirebaseNotificationServiceImpl @Inject constructor(
 
     private val notificationsCollection = firestore.collection("notifications")
     private val dateTimeFormat = SimpleDateFormat("MMM dd, yyyy 'at' hh:mm a", Locale.getDefault())
+    private val gson = Gson()
 
     override suspend fun sendNotification(notification: EventNotification): Result<EventNotification> {
         return try {
@@ -41,8 +56,10 @@ class FirebaseNotificationServiceImpl @Inject constructor(
                 .set(notificationWithId.toMap())
                 .await()
 
-            // TODO: Send FCM push notification
-            // sendFcmNotification(notificationWithId)
+            deliverPushNotification(notificationWithId)
+                .onFailure { error ->
+                    android.util.Log.e(TAG, "Failed to trigger push delivery", error)
+                }
 
             android.util.Log.d(TAG, "Notification saved: ${notification.type} to ${notification.recipientUserId}")
 
@@ -55,26 +72,35 @@ class FirebaseNotificationServiceImpl @Inject constructor(
 
     override suspend fun sendBulkNotifications(notifications: List<EventNotification>): Result<Int> {
         return try {
-            var successCount = 0
-
             // Use batch write for better performance
             val batch = firestore.batch()
-
-            notifications.forEach { notification ->
-                val notificationWithId = notification.copy(
+            val notificationsWithIds = notifications.map { notification ->
+                notification.copy(
                     id = UUID.randomUUID().toString(),
                     notificationId = UUID.randomUUID().toString()
                 ).markAsDelivered()
+            }
 
+            notificationsWithIds.forEach { notificationWithId ->
                 val docRef = notificationsCollection.document(notificationWithId.notificationId)
                 batch.set(docRef, notificationWithId.toMap())
-                successCount++
             }
 
             batch.commit().await()
 
-            android.util.Log.d(TAG, "Bulk notifications sent: $successCount")
-            Result.success(successCount)
+            notificationsWithIds.forEach { notificationWithId ->
+                deliverPushNotification(notificationWithId)
+                    .onFailure { error ->
+                        android.util.Log.e(
+                            TAG,
+                            "Failed to trigger push delivery for ${notificationWithId.notificationId}",
+                            error
+                        )
+                    }
+            }
+
+            android.util.Log.d(TAG, "Bulk notifications sent: ${notificationsWithIds.size}")
+            Result.success(notificationsWithIds.size)
         } catch (e: Exception) {
             android.util.Log.e(TAG, "Failed to send bulk notifications", e)
             Result.failure(e)
@@ -177,6 +203,109 @@ class FirebaseNotificationServiceImpl @Inject constructor(
         } catch (e: Exception) {
             Result.failure(e)
         }
+    }
+
+    override suspend fun notifyPublicEventDiscovery(event: Event): Result<Int> {
+        return try {
+            if (event.visibility != EventVisibility.PUBLIC) {
+                return Result.success(0)
+            }
+            if (event.state !in listOf(EventState.SCHEDULED, EventState.POSTPONED)) {
+                return Result.success(0)
+            }
+
+            val eventIdToUse = event.eventId.ifEmpty { event.id }
+            val users = firestore.collection("users")
+                .whereEqualTo("userType", "USER")
+                .get()
+                .await()
+
+            val eventTerms = buildSet {
+                event.category?.id?.takeIf { it.isNotBlank() }?.let { add(it.normalized()) }
+                event.category?.name?.takeIf { it.isNotBlank() }?.let { add(it.normalized()) }
+                event.tags.forEach { tag ->
+                    tag.takeIf { it.isNotBlank() }?.let { add(it.normalized()) }
+                }
+            }
+
+            val notifications = users.documents.mapNotNull { doc ->
+                val profile = doc.get("profile") as? Map<*, *> ?: return@mapNotNull null
+                val interestMatch = userInterests(profile).any { it in eventTerms }
+                val nearbyDistanceKm = distanceFromProfileToEvent(profile, event)
+                val nearbyMatch = nearbyDistanceKm?.let { it <= NEARBY_EVENT_RADIUS_KM } ?: false
+
+                if (!interestMatch && !nearbyMatch) return@mapNotNull null
+                if (doc.id == event.organizerId) return@mapNotNull null
+
+                val type = if (interestMatch) {
+                    NotificationType.NEW_EVENT_INTEREST_MATCH
+                } else {
+                    NotificationType.NEW_EVENT_NEARBY
+                }
+
+                EventNotification(
+                    type = type,
+                    title = if (interestMatch) "New event for your interests" else "New event near you",
+                    message = if (interestMatch) {
+                        "${event.title} matches your interests."
+                    } else {
+                        "${event.title} is near your selected location."
+                    },
+                    recipientUserId = doc.id,
+                    recipientUserType = NotificationRecipientType.ATTENDEE,
+                    eventId = eventIdToUse,
+                    eventTitle = event.title,
+                    eventImageUrl = event.mainImageUrl,
+                    organizerId = event.organizerId,
+                    organizerName = event.organizerName,
+                    metadata = buildMap {
+                        put("matchInterest", interestMatch.toString())
+                        put("matchNearby", nearbyMatch.toString())
+                        nearbyDistanceKm?.let { put("distanceKm", "%.2f".format(Locale.US, it)) }
+                    },
+                    actionUrl = "eventfinder://event/$eventIdToUse",
+                    actionLabel = "View Event"
+                )
+            }
+
+            if (notifications.isEmpty()) {
+                android.util.Log.d(TAG, "No matching users found for public event: $eventIdToUse")
+                return Result.success(0)
+            }
+
+            sendBulkNotifications(notifications)
+        } catch (e: Exception) {
+            android.util.Log.e(TAG, "Failed to notify matching users for public event", e)
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun notifyTicketCreated(
+        event: Event,
+        buyerName: String,
+        ticketType: String,
+        amount: Double,
+        currency: String
+    ): Result<EventNotification> {
+        val eventIdToUse = event.eventId.ifEmpty { event.id }
+        val isPaidTicket = amount > 0.0
+        return notifyEventOrganizer(
+            eventId = eventIdToUse,
+            organizerId = event.organizerId,
+            type = if (isPaidTicket) NotificationType.TICKET_SOLD else NotificationType.NEW_ATTENDEE,
+            title = if (isPaidTicket) "Ticket sold" else "New attendee",
+            message = if (isPaidTicket) {
+                "$buyerName bought a $currency ${"%.2f".format(Locale.US, amount)} ticket for ${event.title}."
+            } else {
+                "$buyerName reserved a ticket for ${event.title}."
+            },
+            metadata = mapOf(
+                "buyerName" to buyerName,
+                "ticketType" to ticketType,
+                "amount" to amount.toString(),
+                "currency" to currency
+            )
+        )
     }
 
     override suspend fun notifyEventPostponed(
@@ -461,10 +590,81 @@ class FirebaseNotificationServiceImpl @Inject constructor(
         }
     }
 
+    private suspend fun deliverPushNotification(notification: EventNotification): Result<Unit> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val baseUrl = BuildConfig.PAYMENT_API_BASE_URL.trimEnd('/')
+                if (baseUrl.isBlank() || baseUrl.contains("YOUR_SUBDOMAIN")) {
+                    return@withContext Result.failure(
+                        IllegalStateException("Notification delivery backend URL is not configured")
+                    )
+                }
+
+                val connection = (URL("$baseUrl/deliver-notification").openConnection() as HttpURLConnection).apply {
+                    requestMethod = "POST"
+                    connectTimeout = 20_000
+                    readTimeout = 30_000
+                    doOutput = true
+                    setRequestProperty("Content-Type", "application/json")
+                    setRequestProperty("Accept", "application/json")
+                }
+
+                OutputStreamWriter(connection.outputStream).use { writer ->
+                    writer.write(gson.toJson(mapOf("notificationId" to notification.notificationId)))
+                }
+
+                val responseBody = if (connection.responseCode in 200..299) {
+                    connection.inputStream.bufferedReader().use { it.readText() }
+                } else {
+                    connection.errorStream?.bufferedReader()?.use { it.readText() }.orEmpty()
+                }
+
+                if (connection.responseCode !in 200..299) {
+                    return@withContext Result.failure(
+                        IllegalStateException("Push backend failed with HTTP ${connection.responseCode}: $responseBody")
+                    )
+                }
+
+                android.util.Log.d(TAG, "Push delivery triggered for ${notification.notificationId}: $responseBody")
+                Result.success(Unit)
+            } catch (e: Exception) {
+                Result.failure(e)
+            }
+        }
+    }
+
     companion object {
         private const val TAG = "FirebaseNotificationService"
+        private const val NEARBY_EVENT_RADIUS_KM = 25.0
     }
 }
+
+private fun userInterests(profile: Map<*, *>): List<String> {
+    val interests = profile["interests"] as? List<*> ?: return emptyList()
+    return interests.mapNotNull { (it as? String)?.normalized() }
+}
+
+private fun distanceFromProfileToEvent(profile: Map<*, *>, event: Event): Double? {
+    val userLatitude = (profile["latitude"] as? Number)?.toDouble() ?: return null
+    val userLongitude = (profile["longitude"] as? Number)?.toDouble() ?: return null
+    return haversineKm(
+        lat1 = userLatitude,
+        lon1 = userLongitude,
+        lat2 = event.location.latitude,
+        lon2 = event.location.longitude
+    )
+}
+
+private fun haversineKm(lat1: Double, lon1: Double, lat2: Double, lon2: Double): Double {
+    val earthRadiusKm = 6371.0
+    val dLat = Math.toRadians(lat2 - lat1)
+    val dLon = Math.toRadians(lon2 - lon1)
+    val a = sin(dLat / 2).pow(2.0) +
+        cos(Math.toRadians(lat1)) * cos(Math.toRadians(lat2)) * sin(dLon / 2).pow(2.0)
+    return earthRadiusKm * 2 * atan2(sqrt(a), sqrt(1 - a))
+}
+
+private fun String.normalized(): String = trim().lowercase(Locale.US)
 
 /**
  * Extension function to convert EventNotification to Map for Firestore

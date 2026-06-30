@@ -15,6 +15,8 @@ enum class NotificationType {
     EVENT_COMPLETED,
     EVENT_EXPIRED,
     EVENT_DETAILS_CHANGED,
+    NEW_EVENT_INTEREST_MATCH,
+    NEW_EVENT_NEARBY,
 
     // Tickets - For Attendees
     TICKET_PURCHASED,
@@ -41,6 +43,7 @@ enum class NotificationType {
     LOW_ATTENDANCE_ALERT,
 
     // Financial - For Organizers
+    TICKET_SOLD,
     REFUNDS_INITIATED,
     REFUNDS_COMPLETED,
     REFUND_ACTION_NEEDED,
@@ -60,6 +63,8 @@ enum class NotificationType {
         EVENT_COMPLETED -> "Event Completed"
         EVENT_EXPIRED -> "Event Expired"
         EVENT_DETAILS_CHANGED -> "Event Updated"
+        NEW_EVENT_INTEREST_MATCH -> "New Event For You"
+        NEW_EVENT_NEARBY -> "New Event Nearby"
 
         TICKET_PURCHASED -> "Ticket Purchased"
         TICKET_CONFIRMED -> "Booking Confirmed"
@@ -82,6 +87,7 @@ enum class NotificationType {
         CAPACITY_FULL -> "Event Full"
         LOW_ATTENDANCE_ALERT -> "Low Attendance"
 
+        TICKET_SOLD -> "Ticket Sold"
         REFUNDS_INITIATED -> "Refunds Initiated"
         REFUNDS_COMPLETED -> "Refunds Completed"
         REFUND_ACTION_NEEDED -> "Refund Action Needed"
@@ -91,7 +97,7 @@ enum class NotificationType {
     }
 
     fun getIconResource(): String = when (this) {
-        EVENT_PUBLISHED, EVENT_PUBLISHED_SUCCESS -> "ic_event"
+        EVENT_PUBLISHED, EVENT_PUBLISHED_SUCCESS, NEW_EVENT_INTEREST_MATCH, NEW_EVENT_NEARBY -> "ic_event"
         EVENT_POSTPONED, EVENT_RESCHEDULED -> "ic_select_date"
         EVENT_CANCELLED -> "ic_delete_outline"
         EVENT_STARTING_SOON_24H, EVENT_STARTING_SOON_1H, EVENT_ABOUT_TO_START -> "ic_notification"
@@ -99,7 +105,7 @@ enum class NotificationType {
         EVENT_COMPLETED -> "ic_check"
         EVENT_EXPIRED, EVENT_AUTO_EXPIRED -> "ic_warning"
 
-        TICKET_PURCHASED, TICKET_CONFIRMED, NEW_ATTENDEE -> "ic_ticket"
+        TICKET_PURCHASED, TICKET_CONFIRMED, NEW_ATTENDEE, TICKET_SOLD -> "ic_ticket"
         TICKET_CANCELLED, TICKET_SCANNED -> "ic_qr_code"
         REFUND_INITIATED, REFUND_COMPLETED, REFUNDS_INITIATED, REFUNDS_COMPLETED -> "ic_payment"
         REFUND_FAILED, REFUND_ACTION_NEEDED -> "ic_error"
@@ -121,7 +127,7 @@ enum class NotificationType {
         EVENT_POSTPONED, EVENT_RESCHEDULED, EVENT_STARTING_SOON_1H,
         CAPACITY_FULL, EVENT_ABOUT_TO_START -> NotificationPriority.HIGH
 
-        EVENT_STARTING_SOON_24H, NEW_ATTENDEE, TICKET_SCANNED,
+        EVENT_STARTING_SOON_24H, NEW_ATTENDEE, TICKET_SCANNED, TICKET_SOLD,
         CAPACITY_MILESTONE_90, EVENT_ENDED_MARK_COMPLETE -> NotificationPriority.NORMAL
 
         else -> NotificationPriority.LOW
@@ -131,6 +137,7 @@ enum class NotificationType {
         EVENT_PUBLISHED, EVENT_POSTPONED, EVENT_RESCHEDULED, EVENT_CANCELLED,
         EVENT_STARTING_SOON_24H, EVENT_STARTING_SOON_1H, EVENT_STARTED,
         EVENT_COMPLETED, EVENT_EXPIRED, EVENT_DETAILS_CHANGED,
+        NEW_EVENT_INTEREST_MATCH, NEW_EVENT_NEARBY,
         TICKET_PURCHASED, TICKET_CONFIRMED, TICKET_CANCELLED,
         REFUND_INITIATED, REFUND_COMPLETED, REFUND_FAILED,
         ORGANIZER_MESSAGE
@@ -139,7 +146,7 @@ enum class NotificationType {
     fun isForOrganizer(): Boolean = this in listOf(
         EVENT_PUBLISHED_SUCCESS, EVENT_STATE_CHANGED, EVENT_ABOUT_TO_START,
         EVENT_ENDED_MARK_COMPLETE, EVENT_AUTO_EXPIRED,
-        NEW_ATTENDEE, TICKET_SCANNED,
+        NEW_ATTENDEE, TICKET_SCANNED, TICKET_SOLD,
         CAPACITY_MILESTONE_50, CAPACITY_MILESTONE_75, CAPACITY_MILESTONE_90,
         CAPACITY_FULL, LOW_ATTENDANCE_ALERT,
         REFUNDS_INITIATED, REFUNDS_COMPLETED, REFUND_ACTION_NEEDED

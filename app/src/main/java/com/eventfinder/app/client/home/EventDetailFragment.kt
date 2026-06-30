@@ -207,15 +207,14 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
                     }
                 }
             }
-            event.visibility == EventVisibility.PUBLIC && !event.requiresTicket -> {
-                binding.btnRegister.text = "I am going"
+            event.requiresPaidCheckout() -> {
+                binding.btnRegister.text = "Buy Ticket"
             }
-            event.visibility == EventVisibility.PRIVATE && event.requiresTicket -> {
-                if (event.requiresPaidCheckout()) {
-                    binding.btnRegister.text = "Buy Ticket"
-                } else {
-                    binding.btnRegister.text = "Get Free Ticket"
-                }
+            event.requiresTicket -> {
+                binding.btnRegister.text = "Get Free Ticket"
+            }
+            event.visibility == EventVisibility.PUBLIC -> {
+                binding.btnRegister.text = "I am going"
             }
             else -> {
                 binding.btnRegister.text = "Register"
@@ -242,8 +241,8 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
 
         // Show confirmation dialog
         val actionText = when {
-            event.visibility == EventVisibility.PUBLIC -> "reserve your spot"
             event.requiresPaidCheckout() -> "purchase this ticket"
+            event.visibility == EventVisibility.PUBLIC -> "reserve your spot"
             else -> "get your free ticket"
         }
 
@@ -263,7 +262,7 @@ class EventDetailFragment : Fragment(R.layout.fragment_event_detail) {
 
     private fun showTicketPurchasedDialog() {
         val event = viewModel.uiState.value.event ?: return
-        val isReservation = event.visibility == EventVisibility.PUBLIC
+        val isReservation = event.visibility == EventVisibility.PUBLIC && !event.requiresTicket
 
         val title = if (isReservation) "Reservation Confirmed!" else "Ticket Purchased!"
         val message = if (isReservation) {

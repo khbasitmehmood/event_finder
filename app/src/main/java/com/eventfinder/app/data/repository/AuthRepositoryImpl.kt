@@ -134,7 +134,10 @@ class AuthRepositoryImpl @Inject constructor(
             }
 
             val user = snapshot.toObject(UserDto::class.java)?.let { dto ->
-                UserMapper.toDomain(dto)
+                val profileComplete = snapshot.getBoolean("isProfileComplete")
+                    ?: snapshot.getBoolean("profileComplete")
+                    ?: dto.isProfileComplete
+                UserMapper.toDomain(dto.copy(isProfileComplete = profileComplete))
             }
 
             Result.success(user)

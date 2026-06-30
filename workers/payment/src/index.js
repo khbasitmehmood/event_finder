@@ -2,6 +2,7 @@ const CHECKOUT_COLLECTION = "payment_checkouts";
 const TICKETS_COLLECTION = "tickets";
 const EVENTS_COLLECTION = "events";
 const STATS_COLLECTION = "event_stats";
+const NOTIFICATIONS_COLLECTION = "notifications";
 
 export default {
   async fetch(request, env) {
@@ -17,6 +18,9 @@ export default {
       }
       if (request.method === "POST" && url.pathname === "/safepay-webhook") {
         return await safepayWebhook(request, env);
+      }
+      if (request.method === "POST" && url.pathname === "/deliver-notification") {
+        return corsResponse(await deliverNotification(request, env));
       }
       if (request.method === "GET" && url.pathname === "/payment-complete") {
         return appRedirectResponse("complete", url);
@@ -63,7 +67,7 @@ async function createTicketCheckout(request, env) {
   const isFree = booleanField(event.fields.isFree);
   const visibility = stringField(event.fields.visibility) || "PUBLIC";
   const requiresTicket = booleanField(event.fields.requiresTicket);
-  const requiresPayment = visibility !== "PUBLIC" && requiresTicket && eventPrice > 0;
+  const requiresPayment = requiresTicket && eventPrice > 0;
 
   console.log("checkout.create.event_state", {
     eventId,
@@ -151,6 +155,55 @@ async function createTicketCheckout(request, env) {
     amount,
     currency,
   };
+}
+
+async function deliverNotification(request, env) {
+  const input = await request.json();
+  const notificationId = requireString(input.notificationId, "notificationId");
+  const accessToken = await getGoogleAccessToken(env);
+  return deliverNotificationById(env, accessToken, notificationId);
+}
+
+async function deliverNotificationById(env, accessToken, notificationId) {
+  const notificationDoc = await getFirestoreDocument(env, accessToken, NOTIFICATIONS_COLLECTION, notificationId);
+  if (!notificationDoc) throw httpError("Notification not found", 404);
+
+  const notification = documentToObject(notificationDoc.fields);
+  if (!notification.recipientUserId) throw httpError("Notification recipient is missing", 412);
+
+  const tokens = await getUserFcmTokens(env, accessToken, notification.recipientUserId);
+  if (tokens.length === 0) {
+    console.log("notification.deliver.no_tokens", {
+      notificationId,
+      recipientUserId: notification.recipientUserId,
+    });
+    return {notificationId, sent: 0, failed: 0};
+  }
+
+  let sent = 0;
+  let failed = 0;
+  for (const token of tokens) {
+    try {
+      await sendFcmMessage(env, accessToken, token.token, notification);
+      sent += 1;
+    } catch (error) {
+      failed += 1;
+      console.error("notification.deliver.token_failed", {
+        notificationId,
+        recipientUserId: notification.recipientUserId,
+        message: error.message,
+      });
+    }
+  }
+
+  console.log("notification.deliver.complete", {
+    notificationId,
+    recipientUserId: notification.recipientUserId,
+    sent,
+    failed,
+  });
+
+  return {notificationId, sent, failed};
 }
 
 async function confirmTicketCheckout(request, env) {
@@ -335,6 +388,7 @@ async function confirmCheckoutAndIssueTicket(env, checkoutId) {
     lastUpdated: paidAt,
   };
   await setFirestoreDocument(env, accessToken, STATS_COLLECTION, checkout.eventId, nextStats);
+  await createAndDeliverTicketSoldNotification(env, accessToken, checkout, ticketId, paidAt);
   console.log("checkout.confirm.ticket_issued", {
     checkoutId,
     eventId: checkout.eventId,
@@ -344,6 +398,46 @@ async function confirmCheckoutAndIssueTicket(env, checkoutId) {
   });
 
   return receiptResponse({...checkout, status: "PAID", ticketId, paidAt});
+}
+
+async function createAndDeliverTicketSoldNotification(env, accessToken, checkout, ticketId, paidAt) {
+  if (!checkout.organizerId) return;
+
+  const notificationId = crypto.randomUUID();
+  const notification = {
+    id: notificationId,
+    notificationId,
+    type: "TICKET_SOLD",
+    title: "Ticket sold",
+    message: `${checkout.userName} bought a ${checkout.currency} ${Number(checkout.amount).toFixed(2)} ticket for ${checkout.eventTitle}.`,
+    priority: "NORMAL",
+    recipientUserId: checkout.organizerId,
+    recipientUserType: "ORGANIZER",
+    eventId: checkout.eventId,
+    eventTitle: checkout.eventTitle,
+    eventImageUrl: null,
+    organizerId: checkout.organizerId,
+    organizerName: checkout.organizerName || "",
+    metadata: {
+      buyerName: checkout.userName,
+      ticketId,
+      ticketType: "PAID",
+      amount: String(checkout.amount),
+      currency: checkout.currency,
+    },
+    actionUrl: `eventfinder://event/${checkout.eventId}`,
+    actionLabel: "View Event",
+    isRead: false,
+    isDelivered: true,
+    deliveredAt: Date.now(),
+    readAt: null,
+    createdAt: Date.now(),
+    scheduledFor: null,
+    expiresAt: null,
+  };
+
+  await setFirestoreDocument(env, accessToken, NOTIFICATIONS_COLLECTION, notificationId, notification);
+  await deliverNotificationById(env, accessToken, notificationId);
 }
 
 async function safepayFetch(env, path, options) {
@@ -487,7 +581,7 @@ async function getGoogleAccessToken(env) {
   const now = Math.floor(Date.now() / 1000);
   const claim = {
     iss: env.FIREBASE_CLIENT_EMAIL,
-    scope: "https://www.googleapis.com/auth/datastore",
+    scope: "https://www.googleapis.com/auth/datastore https://www.googleapis.com/auth/firebase.messaging",
     aud: "https://oauth2.googleapis.com/token",
     exp: now + 3600,
     iat: now,
@@ -504,6 +598,63 @@ async function getGoogleAccessToken(env) {
   const body = await response.json();
   if (!response.ok) throw httpError(`Google auth failed: ${JSON.stringify(body)}`, response.status);
   return body.access_token;
+}
+
+async function getUserFcmTokens(env, accessToken, userId) {
+  const response = await fetch(
+    `https://firestore.googleapis.com/v1/projects/${env.FIREBASE_PROJECT_ID}/databases/(default)/documents/users/${encodeURIComponent(userId)}/fcmTokens`,
+    {headers: {Authorization: `Bearer ${accessToken}`}},
+  );
+  if (response.status === 404) return [];
+  const body = await response.json();
+  if (!response.ok) throw httpError(`Firestore token read failed: ${JSON.stringify(body)}`, response.status);
+  return (body.documents || [])
+    .map((doc) => documentToObject(doc.fields))
+    .filter((entry) => entry.token && entry.notificationsEnabled !== false);
+}
+
+async function sendFcmMessage(env, accessToken, token, notification) {
+  const response = await fetch(
+    `https://fcm.googleapis.com/v1/projects/${env.FIREBASE_PROJECT_ID}/messages:send`,
+    {
+      method: "POST",
+      headers: firestoreHeaders(accessToken),
+      body: JSON.stringify({
+        message: {
+          token,
+          notification: {
+            title: notification.title || "EventFinder",
+            body: notification.message || "",
+          },
+          data: notificationData(notification),
+          android: {
+            priority: notification.priority === "HIGH" || notification.priority === "URGENT" ? "HIGH" : "NORMAL",
+            notification: {
+              channel_id: notification.priority === "URGENT" ? "event_notifications_urgent" : "event_notifications",
+            },
+          },
+        },
+      }),
+    },
+  );
+  const body = await response.json().catch(() => ({}));
+  if (!response.ok) throw httpError(`FCM send failed: ${JSON.stringify(body)}`, response.status);
+  return body;
+}
+
+function notificationData(notification) {
+  const metadata = notification.metadata && typeof notification.metadata === "object" ? notification.metadata : {};
+  return Object.fromEntries(Object.entries({
+    notificationId: notification.notificationId || notification.id || "",
+    type: notification.type || "SYSTEM_ANNOUNCEMENT",
+    title: notification.title || "EventFinder",
+    message: notification.message || "",
+    priority: notification.priority || "NORMAL",
+    eventId: notification.eventId || "",
+    eventTitle: notification.eventTitle || "",
+    actionUrl: notification.actionUrl || "",
+    ...metadata,
+  }).map(([key, value]) => [key, String(value ?? "")]));
 }
 
 async function signJwt(privateKeyPem, payload) {

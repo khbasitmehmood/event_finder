@@ -54,6 +54,7 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
         // Setup events RecyclerView
         eventsAdapter = HomeEventAdapter(isHorizontal = true) { event ->
             viewModel.selectEvent(event.dashboardEventId())
+            navigateToEventDetail(event)
         }
         binding.rvUpcomingEvents.apply {
             layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
@@ -253,7 +254,7 @@ class OrganizerDashboardFragment : Fragment(R.layout.fragment_organizer_dashboar
 
     private fun navigateToEventDetail(event: Event) {
         val bundle = Bundle().apply {
-            putString("EVENT_ID", event.id)
+            putString("EVENT_ID", event.dashboardEventId())
             putString("EVENT_TITLE", event.title)
         }
         findNavController().navigate(R.id.action_organizerDashboardFragment_to_manageEventFragment, bundle)

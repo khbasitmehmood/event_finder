@@ -15,12 +15,12 @@
           <targets>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="PhysicalDevice" identifier="serial=41290DLJH0042A" />
+                <DeviceId pluginId="PhysicalDevice" identifier="serial=31031JEGR03250" />
               </handle>
             </Target>
             <Target type="DEFAULT_BOOT">
               <handle>
-                <DeviceId pluginId="LocalEmulator" identifier="path=/Users/muhammad.ansari/.android/avd/Pixel_9a_-_Dealer_App.avd" />
+                <DeviceId pluginId="PhysicalDevice" identifier="serial=41290DLJH0042A" />
               </handle>
             </Target>
           </targets>

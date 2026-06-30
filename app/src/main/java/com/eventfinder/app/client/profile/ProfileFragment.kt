@@ -20,6 +20,7 @@ import coil.transform.CircleCropTransformation
 import com.eventfinder.app.R
 import com.eventfinder.app.databinding.FragmentProfileBinding
 import com.eventfinder.app.domain.model.UserType
+import com.eventfinder.app.fcm.FcmTokenManager
 import com.eventfinder.app.utils.AuthNavArgs
 import com.eventfinder.app.utils.UserPreferences
 import com.google.android.material.chip.Chip
@@ -40,10 +41,14 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
     @Inject
     lateinit var userPreferences: UserPreferences
 
+    @Inject
+    lateinit var fcmTokenManager: FcmTokenManager
+
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         userPreferences.setNotificationsEnabled(isGranted)
+        saveNotificationPreferenceToToken(isGranted)
         binding.switchNotifications.isChecked = isGranted
         Toast.makeText(
             requireContext(),
@@ -90,6 +95,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
                 notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
             } else {
                 userPreferences.setNotificationsEnabled(isChecked)
+                saveNotificationPreferenceToToken(isChecked)
                 Toast.makeText(
                     requireContext(),
                     if (isChecked) "Notifications enabled" else "Notifications disabled",
@@ -185,6 +191,16 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         }
         binding.switchNotifications.isChecked = notificationsEnabled
         updateThemeLabel(userPreferences.getThemeMode())
+    }
+
+    private fun saveNotificationPreferenceToToken(enabled: Boolean) {
+        val userId = userPreferences.getStoredUserId() ?: return
+        viewLifecycleOwner.lifecycleScope.launch {
+            fcmTokenManager.saveCurrentTokenForUser(
+                userId = userId,
+                notificationsEnabled = enabled
+            )
+        }
     }
 
     private fun showThemeDialog() {

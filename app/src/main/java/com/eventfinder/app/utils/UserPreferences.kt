@@ -53,6 +53,10 @@ class UserPreferences @Inject constructor(
         return userId
     }
 
+    fun getStoredUserId(): String? {
+        return prefs.getString(KEY_USER_ID, null)
+    }
+
     /**
      * Set user ID (for Firebase Auth integration)
      */
