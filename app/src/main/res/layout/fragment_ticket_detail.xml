@@ -348,7 +348,7 @@
     <!-- Bottom Action Button -->
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnCancelTicket"
-        style="@style/Widget.Material3.Button.OutlinedButton"
+        style="@style/Widget.Material3.Button.TonalButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

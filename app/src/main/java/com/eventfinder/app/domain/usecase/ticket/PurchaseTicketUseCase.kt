@@ -2,6 +2,8 @@ package com.eventfinder.app.domain.usecase.ticket
 
 import com.eventfinder.app.domain.model.Event
 import com.eventfinder.app.domain.model.EventVisibility
+import com.eventfinder.app.domain.model.PaymentReceipt
+import com.eventfinder.app.domain.model.PaymentStatus
 import com.eventfinder.app.domain.model.Ticket
 import com.eventfinder.app.domain.model.TicketStatus
 import com.eventfinder.app.domain.model.TicketType
@@ -22,7 +24,8 @@ class PurchaseTicketUseCase @Inject constructor(
         event: Event,
         userId: String,
         userName: String,
-        userEmail: String
+        userEmail: String,
+        paymentReceipt: PaymentReceipt? = null
     ): Result<Ticket> {
         // Generate unique QR code
         val qrCodeData = generateUniqueQRCode(event.eventId, userId)
@@ -32,14 +35,20 @@ class PurchaseTicketUseCase @Inject constructor(
             event.visibility == EventVisibility.PUBLIC && !event.requiresTicket -> {
                 TicketType.PUBLIC_RESERVATION
             }
-            event.isFree -> TicketType.FREE_PRIVATE
-            else -> TicketType.PAID
+            event.requiresPaidCheckout() -> TicketType.PAID
+            else -> TicketType.FREE_PRIVATE
         }
 
         // Determine status
         val status = when (ticketType) {
             TicketType.PUBLIC_RESERVATION -> TicketStatus.RESERVED
             else -> TicketStatus.PURCHASED
+        }
+
+        val price = event.price ?: 0.0
+        val currency = event.currency ?: "PKR"
+        if (ticketType == TicketType.PAID && paymentReceipt?.status != PaymentStatus.PAID) {
+            return Result.failure(IllegalStateException("Payment must be completed before ticket purchase"))
         }
 
         // Create ticket
@@ -54,8 +63,12 @@ class PurchaseTicketUseCase @Inject constructor(
             ticketType = ticketType,
             status = status,
             qrCodeData = qrCodeData,
-            purchasePrice = event.price ?: 0.0,
-            currency = event.currency ?: "PKR",
+            purchasePrice = price,
+            currency = currency,
+            paymentStatus = paymentReceipt?.status ?: PaymentStatus.NOT_REQUIRED,
+            paymentProvider = paymentReceipt?.provider,
+            paymentTransactionId = paymentReceipt?.transactionId,
+            paidAt = paymentReceipt?.paidAt,
             purchasedAt = System.currentTimeMillis(),
             eventLocation = event.address,
             organizerId = event.organizerId,

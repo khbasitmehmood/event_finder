@@ -154,7 +154,7 @@ class ChatRepositoryImpl @Inject constructor(
 
         return events.joinToString(separator = "\n") { event ->
             val dateText = DateFormatter.formatDate(event.startTime)
-            val priceText = if (event.isFree) "Free" else "${event.price} ${event.currency}"
+            val priceText = if (event.hasPaidTicket()) "${event.price} ${event.currency}" else "Free"
             val categoryText = event.category?.name ?: "Uncategorized"
 
             "- ${event.title} | Category: $categoryText | Date: $dateText | " +

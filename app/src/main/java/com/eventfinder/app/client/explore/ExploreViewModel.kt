@@ -218,8 +218,8 @@ class ExploreViewModel @Inject constructor(
 
         // Filter by price
         filtered = when (filters.priceFilter) {
-            PriceFilter.FREE -> filtered.filter { it.isFree }
-            PriceFilter.PAID -> filtered.filter { !it.isFree }
+            PriceFilter.FREE -> filtered.filter { !it.hasPaidTicket() }
+            PriceFilter.PAID -> filtered.filter { it.hasPaidTicket() }
             PriceFilter.ALL -> filtered
         }
 

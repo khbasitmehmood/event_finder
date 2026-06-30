@@ -26,6 +26,9 @@ class UserPreferences @Inject constructor(
         private const val KEY_USER_EMAIL = "user_email"
         private const val KEY_USER_TYPE = "user_type"
         private const val KEY_PENDING_AUTH_STEP = "pending_auth_step"
+        private const val KEY_PENDING_PAYMENT_CHECKOUT_ID = "pending_payment_checkout_id"
+        private const val KEY_PENDING_PAYMENT_EVENT_ID = "pending_payment_event_id"
+        private const val KEY_PENDING_PAYMENT_USER_ID = "pending_payment_user_id"
     }
 
     /**
@@ -110,6 +113,34 @@ class UserPreferences @Inject constructor(
      */
     fun clearPendingAuthStep() {
         prefs.edit().remove(KEY_PENDING_AUTH_STEP).apply()
+    }
+
+    fun setPendingPayment(checkoutId: String, eventId: String, userId: String) {
+        prefs.edit()
+            .putString(KEY_PENDING_PAYMENT_CHECKOUT_ID, checkoutId)
+            .putString(KEY_PENDING_PAYMENT_EVENT_ID, eventId)
+            .putString(KEY_PENDING_PAYMENT_USER_ID, userId)
+            .apply()
+    }
+
+    fun getPendingPaymentCheckoutId(): String? {
+        return prefs.getString(KEY_PENDING_PAYMENT_CHECKOUT_ID, null)
+    }
+
+    fun getPendingPaymentEventId(): String? {
+        return prefs.getString(KEY_PENDING_PAYMENT_EVENT_ID, null)
+    }
+
+    fun getPendingPaymentUserId(): String? {
+        return prefs.getString(KEY_PENDING_PAYMENT_USER_ID, null)
+    }
+
+    fun clearPendingPayment() {
+        prefs.edit()
+            .remove(KEY_PENDING_PAYMENT_CHECKOUT_ID)
+            .remove(KEY_PENDING_PAYMENT_EVENT_ID)
+            .remove(KEY_PENDING_PAYMENT_USER_ID)
+            .apply()
     }
 
     /**

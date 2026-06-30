@@ -33,3 +33,12 @@ app/build/
 
 # Logs and OS files
 *.log
+functions/.env
+functions/.env.*
+!functions/.env.example
+functions/node_modules/
+workers/payment/.dev.vars
+workers/payment/node_modules/
+workers/payment/*service-account*.json
+workers/payment/firebase-admin*.json
+*service-account*.json

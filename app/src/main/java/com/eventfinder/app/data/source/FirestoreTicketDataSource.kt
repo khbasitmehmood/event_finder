@@ -9,6 +9,7 @@ import com.eventfinder.app.domain.model.Ticket
 import com.eventfinder.app.domain.model.TicketStatus
 import com.eventfinder.app.domain.model.TicketType
 import com.google.firebase.Timestamp
+import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.channels.awaitClose
@@ -51,9 +52,10 @@ class FirestoreTicketDataSource @Inject constructor(
     override suspend fun getTicketById(ticketId: String): Ticket? {
         return try {
             val snapshot = ticketsCollection.document(ticketId).get().await()
-            val dto = snapshot.toObject(TicketDto::class.java)
+            val dto = snapshot.toTicketDtoSafely()
             dto?.let { TicketMapper.toDomain(it) }
         } catch (e: Exception) {
+            android.util.Log.e("FirestoreTicketDataSource", "Failed to fetch ticket by id=$ticketId", e)
             null
         }
     }
@@ -65,10 +67,16 @@ class FirestoreTicketDataSource @Inject constructor(
                 .get()
                 .await()
 
+            android.util.Log.d(
+                "FirestoreTicketDataSource",
+                "Fetched ${snapshot.size()} ticket document(s) for userId=$userId"
+            )
+
             snapshot.documents.mapNotNull { doc ->
-                doc.toObject(TicketDto::class.java)?.let { TicketMapper.toDomain(it) }
+                doc.toTicketDtoSafely()?.let { TicketMapper.toDomain(it) }
             }
         } catch (e: Exception) {
+            android.util.Log.e("FirestoreTicketDataSource", "Failed to fetch user tickets for userId=$userId", e)
             emptyList()
         }
     }
@@ -81,7 +89,7 @@ class FirestoreTicketDataSource @Inject constructor(
                 .await()
 
             snapshot.documents.mapNotNull { doc ->
-                doc.toObject(TicketDto::class.java)?.let { TicketMapper.toDomain(it) }
+                doc.toTicketDtoSafely()?.let { TicketMapper.toDomain(it) }
             }
         } catch (e: Exception) {
             emptyList()
@@ -96,7 +104,7 @@ class FirestoreTicketDataSource @Inject constructor(
                 .get()
                 .await()
 
-            val dto = snapshot.documents.firstOrNull()?.toObject(TicketDto::class.java)
+            val dto = snapshot.documents.firstOrNull()?.toTicketDtoSafely()
             dto?.let { TicketMapper.toDomain(it) }
         } catch (e: Exception) {
             null
@@ -125,7 +133,7 @@ class FirestoreTicketDataSource @Inject constructor(
 
         // Fetch and return updated ticket
         val updatedSnapshot = docRef.get().await()
-        val dto = updatedSnapshot.toObject(TicketDto::class.java)
+        val dto = updatedSnapshot.toTicketDtoSafely()
             ?: throw Exception("Failed to fetch updated ticket")
 
         return TicketMapper.toDomain(dto)
@@ -225,7 +233,7 @@ class FirestoreTicketDataSource @Inject constructor(
                 if (snapshot != null) {
                     val tickets = snapshot.documents.mapNotNull { doc ->
                         try {
-                            val dto = doc.toObject(TicketDto::class.java)
+                            val dto = doc.toTicketDtoSafely()
                             dto?.let { TicketMapper.toDomain(it) }
                         } catch (e: Exception) {
                             null
@@ -271,10 +279,50 @@ class FirestoreTicketDataSource @Inject constructor(
                 .await()
 
             snapshot.documents.mapNotNull { doc ->
-                doc.toObject(TicketDto::class.java)?.let { TicketMapper.toDomain(it) }
+                doc.toTicketDtoSafely()?.let { TicketMapper.toDomain(it) }
             }
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+
+    private fun DocumentSnapshot.toTicketDtoSafely(): TicketDto? {
+        if (!exists()) return null
+
+        return runCatching {
+            toObject(TicketDto::class.java)
+        }.getOrElse { error ->
+            android.util.Log.w(
+                "FirestoreTicketDataSource",
+                "Falling back to manual ticket mapping for id=$id: ${error.message}"
+            )
+            TicketDto(
+                id = id,
+                ticketId = getString("ticketId").orEmpty().ifBlank { id },
+                eventId = getString("eventId").orEmpty(),
+                eventTitle = getString("eventTitle").orEmpty(),
+                eventStartTime = getTimestamp("eventStartTime"),
+                userId = getString("userId").orEmpty(),
+                userName = getString("userName").orEmpty(),
+                userEmail = getString("userEmail").orEmpty(),
+                ticketType = getString("ticketType") ?: TicketType.PUBLIC_RESERVATION.name,
+                status = getString("status") ?: TicketStatus.RESERVED.name,
+                qrCodeData = getString("qrCodeData").orEmpty(),
+                purchasePrice = getDouble("purchasePrice")
+                    ?: getLong("purchasePrice")
+                    ?: 0.0,
+                currency = getString("currency") ?: "PKR",
+                paymentStatus = getString("paymentStatus") ?: "NOT_REQUIRED",
+                paymentProvider = getString("paymentProvider"),
+                paymentTransactionId = getString("paymentTransactionId"),
+                paidAt = getTimestamp("paidAt"),
+                purchasedAt = getTimestamp("purchasedAt"),
+                checkedInAt = getTimestamp("checkedInAt"),
+                checkedInBy = getString("checkedInBy"),
+                eventLocation = getString("eventLocation"),
+                organizerId = getString("organizerId").orEmpty(),
+                organizerName = getString("organizerName").orEmpty()
+            )
         }
     }
 }

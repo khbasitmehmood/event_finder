@@ -62,7 +62,7 @@ class CancelEventUseCase @Inject constructor(
             }
 
             // Determine refund status
-            val refundStatus = if (currentEvent.isFree) {
+            val refundStatus = if (!currentEvent.hasPaidTicket()) {
                 RefundStatus.NOT_APPLICABLE
             } else {
                 // For paid events, initiate refund process
@@ -77,8 +77,8 @@ class CancelEventUseCase @Inject constructor(
                 refundStatus = refundStatus,
                 notificationSent = false,
                 attendeeCount = currentEvent.currentParticipantCount,
-                refundAmount = if (!currentEvent.isFree) currentEvent.price else null,
-                refundCurrency = if (!currentEvent.isFree) currentEvent.currency else null
+                refundAmount = if (currentEvent.hasPaidTicket()) currentEvent.price else null,
+                refundCurrency = if (currentEvent.hasPaidTicket()) currentEvent.currency else null
             )
 
             // Cancel the event
@@ -145,9 +145,9 @@ class CancelEventUseCase @Inject constructor(
     fun getCancellationImpact(event: Event): CancellationImpact {
         return CancellationImpact(
             attendeeCount = event.currentParticipantCount,
-            requiresRefund = !event.isFree,
-            refundAmount = if (!event.isFree) event.price else null,
-            refundCurrency = if (!event.isFree) event.currency else null
+            requiresRefund = event.hasPaidTicket(),
+            refundAmount = if (event.hasPaidTicket()) event.price else null,
+            refundCurrency = if (event.hasPaidTicket()) event.currency else null
         )
     }
 }

@@ -179,7 +179,7 @@ class NotificationServiceImpl @Inject constructor(
     ): Result<Int> {
         val message = buildString {
             append("The event has been cancelled. Reason: $reason")
-            if (!event.isFree) {
+            if (event.hasPaidTicket()) {
                 append("\nRefunds will be processed automatically. Status: $refundStatus")
             }
         }

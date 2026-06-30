@@ -1,8 +1,10 @@
 package com.eventfinder.app.di
 
+import com.eventfinder.app.data.payment.CloudflareWorkerPaymentGateway
 import com.eventfinder.app.data.repository.TicketRepositoryImpl
 import com.eventfinder.app.data.source.FirestoreTicketDataSource
 import com.eventfinder.app.data.source.TicketDataSource
+import com.eventfinder.app.domain.repository.PaymentGateway
 import com.eventfinder.app.domain.repository.TicketRepository
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -32,5 +34,13 @@ object TicketModule {
         ticketDataSource: TicketDataSource
     ): TicketRepository {
         return TicketRepositoryImpl(ticketDataSource)
+    }
+
+    @Provides
+    @Singleton
+    fun providePaymentGateway(
+        cloudflareWorkerPaymentGateway: CloudflareWorkerPaymentGateway
+    ): PaymentGateway {
+        return cloudflareWorkerPaymentGateway
     }
 }
